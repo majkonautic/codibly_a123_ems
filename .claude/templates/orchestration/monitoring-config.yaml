@@ -1,0 +1,402 @@
+# Agent Health Monitoring and Management Configuration
+# Based on lessons from managing 20+ agent swarms
+# Version: 1.0
+
+meta:
+  version: "1.0"
+  framework: "CCU 2.0"
+  purpose: "Monitor and manage agent health during parallel orchestration"
+  principles:
+    - "A long-running agent is a bug, not a feature"
+    - "Be ruthless about restarting stuck agents"
+    - "Checkpoint frequently to preserve progress"
+    - "Trust the autonomous loop with clear validation"
+
+# ===================================================================
+# CORE MONITORING SETTINGS
+# ===================================================================
+
+monitoring:
+  # ===================================================================
+  # TIMING CONSTRAINTS
+  # ===================================================================
+  timing:
+    max_runtime_minutes: 10
+    warning_at_minutes: 8
+    critical_at_minutes: 9
+    auto_terminate_at_minutes: 10
+
+    stuck_detection:
+      no_output_threshold_seconds: 120
+      no_checkpoint_threshold_seconds: 300
+      auto_restart_on_stuck: true
+      max_restart_attempts: 3
+
+    checkpoint_intervals:
+      standard_minutes: 5
+      rapid_minutes: 3
+      before_timeout_minutes: 1
+
+  # ===================================================================
+  # CONTEXT MANAGEMENT
+  # ===================================================================
+  context_management:
+    max_tokens_per_agent: 200000
+    warning_at_tokens: 150000
+    critical_at_tokens: 180000
+
+    optimization:
+      compress_at_tokens: 140000
+      clear_on_restart: true
+      preserve_checkpoints: true
+
+    isolation:
+      enforce_isolation: true
+      shared_artifacts_only: true
+      no_cross_agent_context: true
+
+  # ===================================================================
+  # HEALTH INDICATORS
+  # ===================================================================
+  health_indicators:
+    healthy:
+      criteria:
+        - "output_within_last_seconds <= 60"
+        - "context_usage < 150000"
+        - "runtime < 8 minutes"
+        - "restart_count == 0"
+      icon: "✅"
+      color: "green"
+
+    warning:
+      criteria:
+        - "output_within_last_seconds > 60 AND <= 120"
+        - "context_usage >= 150000 AND < 180000"
+        - "runtime >= 8 AND < 9 minutes"
+        - "restart_count == 1"
+      icon: "⚠️"
+      color: "yellow"
+      action: "prepare_checkpoint"
+
+    critical:
+      criteria:
+        - "output_within_last_seconds > 120"
+        - "context_usage >= 180000"
+        - "runtime >= 9 minutes"
+        - "restart_count == 2"
+      icon: "🔴"
+      color: "red"
+      action: "immediate_checkpoint_and_restart"
+
+    failed:
+      criteria:
+        - "runtime >= 10 minutes"
+        - "restart_count >= 3"
+        - "critical_error_encountered"
+      icon: "❌"
+      color: "red"
+      action: "escalate_to_user"
+
+# ===================================================================
+# AUTO-RECOVERY PROTOCOLS
+# ===================================================================
+
+auto_recovery:
+  # ===================================================================
+  # RESTART STRATEGIES
+  # ===================================================================
+  restart_strategies:
+    soft_restart:
+      description: "Restart with same task and checkpoint"
+      when:
+        - "stuck_detected"
+        - "no_output_for_2_minutes"
+      preserves:
+        - "checkpoints"
+        - "partial_outputs"
+        - "task_progress"
+      clears:
+        - "context"
+        - "temporary_state"
+
+    hard_restart:
+      description: "Restart from last checkpoint with fresh context"
+      when:
+        - "context_limit_reached"
+        - "critical_error"
+        - "timeout_approaching"
+      preserves:
+        - "checkpoints"
+      clears:
+        - "context"
+        - "partial_outputs"
+        - "temporary_state"
+
+    task_reassignment:
+      description: "Assign task to different agent"
+      when:
+        - "multiple_restart_failures"
+        - "agent_consistently_failing"
+      strategy:
+        - "Try alternate agent if available"
+        - "Split task if possible"
+        - "Escalate to user if no alternatives"
+
+  # ===================================================================
+  # CHECKPOINT RECOVERY
+  # ===================================================================
+  checkpoint_recovery:
+    automatic_recovery:
+      enabled: true
+      trigger: "agent_restart"
+
+    recovery_process:
+      1_load_metadata: "Load checkpoint metadata.json"
+      2_restore_state: "Restore task progress and completed items"
+      3_load_artifacts: "Load any generated artifacts"
+      4_resume_point: "Identify exact resume point"
+      5_fresh_context: "Start with fresh context from resume point"
+
+    validation:
+      verify_checkpoint_integrity: true
+      test_recovered_artifacts: true
+      confirm_no_work_lost: true
+
+# ===================================================================
+# MONITORING DASHBOARD
+# ===================================================================
+
+dashboard:
+  # ===================================================================
+  # REAL-TIME DISPLAY
+  # ===================================================================
+  real_time_display:
+    update_frequency_seconds: 5
+
+    layout: |
+      ╔═══════════════════════════════════════════════════════════════╗
+      ║  📊 AGENT SWARM HEALTH DASHBOARD                              ║
+      ╚═══════════════════════════════════════════════════════════════╝
+
+      Active Agents: {active_count}/{total_count}
+      Wave: {current_wave}/{total_waves}
+      Overall Health: {overall_health_icon}
+
+      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+      Agent           | Runtime | Context | Health | Last Output | Action
+      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+      {agent_rows}
+      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+    agent_row_format: |
+      {agent_name:15} | {runtime:7} | {context:7} | {health:6} | {last_out:11} | {action}
+
+  # ===================================================================
+  # ALERT SYSTEM
+  # ===================================================================
+  alerts:
+    visual_alerts:
+      stuck_agent:
+        display: "🚨 STUCK: {agent_name} - No output for {duration}"
+        color: "red"
+        blink: true
+
+      approaching_timeout:
+        display: "⏰ TIMEOUT WARNING: {agent_name} - {time_remaining} remaining"
+        color: "yellow"
+        blink: false
+
+      context_limit:
+        display: "📊 CONTEXT WARNING: {agent_name} - {percentage}% used"
+        color: "yellow"
+        blink: false
+
+      restart_occurring:
+        display: "🔄 RESTARTING: {agent_name} - Attempt {attempt}/{max}"
+        color: "blue"
+        blink: true
+
+    audio_alerts:
+      enabled: false
+      critical_only: true
+
+# ===================================================================
+# METRICS COLLECTION
+# ===================================================================
+
+metrics:
+  # ===================================================================
+  # PERFORMANCE METRICS
+  # ===================================================================
+  performance_metrics:
+    track:
+      - metric: "agent_runtime"
+        unit: "seconds"
+        aggregation: ["min", "max", "avg", "p95"]
+
+      - metric: "context_usage"
+        unit: "tokens"
+        aggregation: ["max", "avg", "p95"]
+
+      - metric: "restart_count"
+        unit: "count"
+        aggregation: ["sum", "per_agent"]
+
+      - metric: "checkpoint_frequency"
+        unit: "per_minute"
+        aggregation: ["avg"]
+
+      - metric: "success_rate"
+        unit: "percentage"
+        aggregation: ["per_wave", "overall"]
+
+  # ===================================================================
+  # QUALITY METRICS
+  # ===================================================================
+  quality_metrics:
+    track:
+      - metric: "artifacts_generated"
+        validate: true
+        check: "file_exists_and_not_empty"
+
+      - metric: "test_coverage"
+        threshold: 80
+        unit: "percentage"
+
+      - metric: "code_quality"
+        check: "no_syntax_errors"
+
+      - metric: "completion_rate"
+        unit: "percentage"
+        target: 100
+
+  # ===================================================================
+  # OPTIMIZATION METRICS
+  # ===================================================================
+  optimization_metrics:
+    parallel_efficiency:
+      formula: "sequential_time / parallel_time"
+      target: "> 2.0"
+
+    resource_utilization:
+      formula: "active_agents / available_agents"
+      target: "> 0.8"
+
+    checkpoint_overhead:
+      formula: "checkpoint_time / total_time"
+      target: "< 0.05"
+
+# ===================================================================
+# SWARM MANAGEMENT RULES
+# ===================================================================
+
+swarm_rules:
+  # Based on Zach Wills' 8 Rules
+
+  rule_1_align_on_plan:
+    enforcement: "strict"
+    requirement: "Detailed plan must exist before execution"
+    validation: "orchestration-plan.json exists and is valid"
+
+  rule_2_no_long_running:
+    enforcement: "automatic"
+    max_runtime: "10 minutes"
+    action: "terminate_and_checkpoint"
+
+  rule_3_active_memory_management:
+    enforcement: "automatic"
+    checkpoint_frequency: "5 minutes"
+    checkpoint_location: "filesystem"
+
+  rule_4_context_isolation:
+    enforcement: "strict"
+    max_context_per_agent: "200k"
+    no_context_sharing: true
+
+  rule_5_trust_autonomous_loop:
+    enforcement: "configurable"
+    max_retry_attempts: 3
+    self_validation: true
+
+  rule_6_automate_system:
+    pattern_learning: true
+    self_documentation: true
+    continuous_improvement: true
+
+  rule_7_ruthless_restart:
+    immediate_restart_on_stuck: true
+    no_waiting_for_completion: true
+    clear_instructions_on_restart: true
+
+  rule_8_checkpoint_frequently:
+    frequency_minutes: 5
+    to_filesystem: true
+    preserve_on_failure: true
+
+# ===================================================================
+# ESCALATION PROTOCOLS
+# ===================================================================
+
+escalation:
+  levels:
+    level_1_auto_recovery:
+      triggers:
+        - "single_agent_stuck"
+        - "minor_timeout"
+      actions:
+        - "auto_restart"
+        - "checkpoint_and_continue"
+
+    level_2_wave_intervention:
+      triggers:
+        - "multiple_agents_stuck"
+        - "wave_timeout"
+      actions:
+        - "checkpoint_all"
+        - "restart_wave"
+        - "notify_user"
+
+    level_3_user_intervention:
+      triggers:
+        - "repeated_failures"
+        - "critical_error"
+        - "all_restart_attempts_exhausted"
+      actions:
+        - "stop_execution"
+        - "preserve_all_state"
+        - "detailed_error_report"
+        - "await_user_decision"
+
+  user_options:
+    - action: "retry_with_modifications"
+      description: "Modify plan and retry"
+
+    - action: "switch_to_sequential"
+      description: "Abandon parallel, go sequential"
+
+    - action: "partial_completion"
+      description: "Accept partial results"
+
+    - action: "abort"
+      description: "Stop and clean up"
+
+# ===================================================================
+# OPTIMIZATION RECOMMENDATIONS
+# ===================================================================
+
+optimizations:
+  based_on_metrics:
+    - condition: "avg_runtime > 8 minutes"
+      recommendation: "Split tasks into smaller chunks"
+
+    - condition: "restart_count > 2 per wave"
+      recommendation: "Simplify task complexity"
+
+    - condition: "context_usage > 150k average"
+      recommendation: "Reduce artifact verbosity"
+
+    - condition: "parallel_efficiency < 1.5"
+      recommendation: "Increase parallelization"
+
+    - condition: "checkpoint_overhead > 0.1"
+      recommendation: "Reduce checkpoint frequency"

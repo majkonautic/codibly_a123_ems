@@ -1,0 +1,133 @@
+# Specification Questions - SIMPLIFIED
+# SINGLE SOURCE OF TRUTH for requirements and business rules
+# This file focuses ONLY on WHAT to build, not HOW
+
+meta:
+  version: "2.0"
+  framework: "Claude Code Ultimate 2.0"
+  phase: 2
+  domain: "Functional Requirements & Business Rules"
+  principle: "Define WHAT the system does, not HOW it's built"
+
+# Track-Based Questions (Simplified)
+complexity_levels:
+
+  # INSTANT - Zero Questions, Auto-Generation
+  instant:
+    philosophy: "Auto-generate specs from discovery data"
+    questions_count: 0
+    auto_decisions:
+      - "Apply module patterns from discovery"
+      - "Generate basic user stories"
+      - "Use standard business rules"
+
+  # RAPID - 2 Essential Questions
+  rapid:
+    philosophy: "Transform discovered features into requirements"
+    questions_count: 2
+    requires_discovery: true
+
+    questions:
+      - question: "Key business rules for discovered modules?"
+        default: "Standard validation and constraints"
+        examples:
+          - "File uploads: 10MB limit, PDF/CSV only"
+          - "User sessions: 30min timeout, 5 login attempts"
+          - "Payments: $1-$10K range, 30-day refunds"
+
+      - question: "Success metrics to track?"
+        default: "Performance and user satisfaction"
+        examples:
+          - "Login time < 2 seconds"
+          - "File processing accuracy > 95%"
+          - "User task completion rate > 80%"
+
+  # STANDARD - 3 Comprehensive Questions
+  standard:
+    philosophy: "Detailed requirements with edge cases"
+    questions_count: 3
+    requires_discovery: true
+
+    questions:
+      - question: "User stories and acceptance criteria?"
+        default: "Generated from discovery workflows"
+        note: "Focus on 'GIVEN-WHEN-THEN' format for testability"
+
+      - question: "Business validation rules?"
+        default: "Standard data validation"
+        examples:
+          - "Required fields and formats"
+          - "Business logic constraints"
+          - "Data integrity rules"
+
+      - question: "Integration behavior requirements?"
+        default: "Basic external service needs"
+        examples:
+          - "Payment processing: Handle failures gracefully"
+          - "Email delivery: 60-second timeout"
+          - "File storage: 99.9% uptime requirement"
+
+  # ENTERPRISE - 4 Governance Questions
+  enterprise:
+    philosophy: "Enterprise-grade requirements with compliance"
+    questions_count: 4
+    requires_discovery: true
+
+    questions:
+      - question: "Compliance requirements (GDPR, HIPAA, SOX)?"
+        default: "Standard data protection"
+        options: ["GDPR", "HIPAA", "SOX", "PCI-DSS", "ISO-27001"]
+
+      - question: "Audit and traceability needs?"
+        default: "Basic user action logging"
+        examples:
+          - "All user actions logged"
+          - "Data changes with timestamps"
+          - "Admin access tracking"
+
+      - question: "Enterprise user roles and permissions?"
+        default: "Admin, Manager, User hierarchy"
+        note: "Define WHAT permissions, not HOW to implement"
+
+      - question: "Business continuity requirements?"
+        default: "Standard backup and recovery"
+        examples:
+          - "99.9% uptime target"
+          - "4-hour recovery time"
+          - "Daily data backups"
+
+# Question Processing Instructions
+processing:
+  instant:
+    - "Skip all questions"
+    - "Load module patterns from discovery"
+    - "Apply defaults from module-patterns.yaml"
+
+  rapid:
+    - "Ask 2 questions with pre-filled defaults"
+    - "Show progress: [1/2] [2/2]"
+    - "Allow Enter for defaults"
+
+  standard:
+    - "Ask 3 questions with examples"
+    - "Show progress: [1/3] [2/3] [3/3]"
+    - "Provide context from discovery"
+
+  enterprise:
+    - "Ask 4 questions with compliance focus"
+    - "Show progress: [1/4] [2/4] [3/4] [4/4]"
+    - "Include regulatory guidance"
+
+# Output Format (All Tracks)
+output_structure:
+  user_stories:
+    format: "As a [user], I want [action], so that [benefit]"
+    acceptance_criteria: "Given [context], When [action], Then [result]"
+
+  business_rules:
+    format: "[Module]: [Rule] - [Constraint]"
+    validation: "How to verify rule is met"
+
+  success_metrics:
+    format: "[Metric]: [Target] - [Measurement method]"
+    frequency: "How often to measure"

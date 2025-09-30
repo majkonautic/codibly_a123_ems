@@ -1,0 +1,214 @@
+{
+  "projectName": "{{PROJECT_NAME}}",
+  "version": "1.0.0",
+  "architecturePattern": "simple-application|modular-application|distributed-services",
+
+  "frontend": {
+    "framework": {
+      "name": "next.js|remix|vite|create-react-app",
+      "version": "{{VERSION}}",
+      "rendering": "ssr|ssg|csr|isr"
+    },
+    "ui": {
+      "library": "shadcn-ui",
+      "base": "radix-ui",
+      "styling": "tailwindcss",
+      "icons": "lucide-react|heroicons|tabler-icons"
+    },
+    "state": {
+      "management": "zustand|redux-toolkit|context-api|jotai",
+      "async": "tanstack-query|swr|apollo-client",
+      "forms": "react-hook-form|formik"
+    },
+    "routing": {
+      "type": "app-router|pages-router|react-router",
+      "version": "{{VERSION}}"
+    },
+    "build": {
+      "bundler": "webpack|vite|turbopack|esbuild",
+      "transpiler": "swc|babel",
+      "typeChecker": "typescript"
+    },
+    "testing": {
+      "unit": "jest|vitest",
+      "component": "react-testing-library",
+      "e2e": "playwright|cypress",
+      "visual": "chromatic|percy"
+    }
+  },
+
+  "backend": {
+    "runtime": {
+      "name": "node.js|bun|deno",
+      "version": "{{VERSION}}"
+    },
+    "framework": {
+      "name": "next.js-api|express|fastify|nest.js|fastapi|django|rails",
+      "version": "{{VERSION}}"
+    },
+    "api": {
+      "style": "rest|graphql|trpc|grpc",
+      "documentation": "openapi|swagger|graphql-schema",
+      "versioning": "url|header|accept"
+    },
+    "database": {
+      "primary": {
+        "type": "postgresql|mysql|mongodb|dynamodb",
+        "version": "{{VERSION}}",
+        "hosting": "managed|self-hosted"
+      },
+      "orm": {
+        "name": "prisma|drizzle|typeorm|mongoose|sequelize",
+        "version": "{{VERSION}}"
+      },
+      "migrations": {
+        "tool": "prisma-migrate|drizzle-kit|typeorm-migrations",
+        "strategy": "auto|manual"
+      }
+    },
+    "cache": {
+      "provider": "redis|memcached|in-memory",
+      "strategy": "aside|through|refresh-ahead",
+      "ttl": "{{SECONDS}}"
+    },
+    "queue": {
+      "provider": "bull|bullmq|sqs|rabbitmq",
+      "workers": "{{NUMBER}}"
+    },
+    "storage": {
+      "provider": "s3|cloudinary|uploadthing|local",
+      "cdn": "cloudfront|cloudflare|fastly"
+    },
+    "testing": {
+      "unit": "jest|vitest|mocha",
+      "integration": "supertest|newman",
+      "contract": "pact|spring-cloud-contract"
+    }
+  },
+
+  "infrastructure": {
+    "hosting": {
+      "platform": "vercel|netlify|aws|azure|gcp|railway|fly.io",
+      "type": "serverless|container|vm",
+      "region": "{{REGION}}"
+    },
+    "container": {
+      "orchestration": "kubernetes|docker-compose|ecs|cloud-run",
+      "registry": "dockerhub|ecr|gcr|github"
+    },
+    "ci_cd": {
+      "platform": "github-actions|gitlab-ci|jenkins|circleci",
+      "deployment": "continuous|manual|scheduled",
+      "environments": ["development", "staging", "production"]
+    },
+    "monitoring": {
+      "apm": "newrelic|datadog|sentry|elastic-apm",
+      "logging": "winston|pino|bunyan|cloudwatch",
+      "metrics": "prometheus|cloudwatch|datadog",
+      "tracing": "jaeger|zipkin|x-ray"
+    },
+    "security": {
+      "secrets": "vault|aws-secrets-manager|doppler|env",
+      "scanning": "snyk|dependabot|sonarqube",
+      "waf": "cloudflare|aws-waf|akamai"
+    }
+  },
+
+  "development": {
+    "version_control": {
+      "system": "git",
+      "platform": "github|gitlab|bitbucket",
+      "strategy": "gitflow|github-flow|gitlab-flow"
+    },
+    "code_quality": {
+      "linter": "eslint|biome",
+      "formatter": "prettier|biome",
+      "pre_commit": "husky|pre-commit",
+      "type_checking": "typescript"
+    },
+    "documentation": {
+      "code": "jsdoc|typedoc",
+      "api": "swagger-ui|redoc|graphql-playground",
+      "project": "markdown|docusaurus|gitbook"
+    },
+    "local_development": {
+      "package_manager": "pnpm|npm|yarn|bun",
+      "env_management": "dotenv|direnv",
+      "hot_reload": true,
+      "docker": "optional|required"
+    }
+  },
+
+  "integrations": {
+    "authentication": {
+      "provider": "auth0|clerk|supabase|firebase-auth|custom",
+      "methods": ["email", "oauth", "magic-link", "passkey"]
+    },
+    "payments": {
+      "provider": "stripe|paddle|lemonsqueezy|paypal",
+      "subscription": true
+    },
+    "email": {
+      "provider": "resend|sendgrid|postmark|ses",
+      "templates": "react-email|mjml|handlebars"
+    },
+    "analytics": {
+      "provider": "posthog|mixpanel|google-analytics|plausible",
+      "events": "automatic|manual"
+    },
+    "search": {
+      "provider": "algolia|elasticsearch|typesense|meilisearch",
+      "indexing": "real-time|batch"
+    },
+    "cms": {
+      "provider": "contentful|strapi|sanity|payload",
+      "type": "headless|traditional"
+    }
+  },
+
+  "performance": {
+    "targets": {
+      "ttfb": "< 200ms",
+      "fcp": "< 1s",
+      "lcp": "< 2.5s",
+      "cls": "< 0.1",
+      "fid": "< 100ms",
+      "bundleSize": "< 200kb"
+    },
+    "optimization": {
+      "code_splitting": true,
+      "lazy_loading": true,
+      "tree_shaking": true,
+      "compression": "gzip|brotli",
+      "caching": "aggressive|moderate|minimal",
+      "cdn": true
+    }
+  },
+
+  "scalability": {
+    "architecture": {
+      "pattern": "monolith|microservices|serverless",
+      "scaling": "horizontal|vertical|auto",
+      "load_balancing": "round-robin|least-connections|ip-hash"
+    },
+    "targets": {
+      "concurrent_users": "{{NUMBER}}",
+      "requests_per_second": "{{NUMBER}}",
+      "database_connections": "{{NUMBER}}",
+      "message_throughput": "{{NUMBER}}/sec"
+    }
+  },
+
+  "compliance": {
+    "standards": ["gdpr", "hipaa", "pci-dss", "sox", "iso-27001"],
+    "data_residency": "{{REGION}}",
+    "encryption": {
+      "at_rest": "aes-256",
+      "in_transit": "tls-1.3"
+    },
+    "audit": {
+      "logging": "comprehensive",
+      "retention": "{{DAYS}} days"
+    }
+  }
+}

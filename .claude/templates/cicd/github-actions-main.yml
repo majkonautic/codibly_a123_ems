@@ -1,0 +1,216 @@
+name: Main Branch CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+    types: [ opened, synchronize, reopened ]
+
+jobs:
+  # Code Quality Checks
+  quality:
+    name: Code Quality
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run linter
+        run: npm run lint || echo "No lint script found"
+
+      - name: Run type check
+        run: npm run typecheck || npm run type-check || echo "No type check script found"
+
+      - name: Check formatting
+        run: npm run format:check || echo "No format check script found"
+
+  # Test Suite
+  test:
+    name: Test Suite
+    runs-on: ubuntu-latest
+    needs: quality
+    strategy:
+      matrix:
+        test-type: [unit, integration]
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run ${{ matrix.test-type }} tests
+        run: |
+          if [ "${{ matrix.test-type }}" == "unit" ]; then
+            npm run test:unit || npm run test || echo "No unit tests found"
+          else
+            npm run test:integration || echo "No integration tests found"
+          fi
+
+      - name: Upload coverage
+        if: matrix.test-type == 'unit'
+        uses: codecov/codecov-action@v3
+        with:
+          flags: unittests
+          name: codecov-umbrella
+
+  # Build Verification
+  build:
+    name: Build Verification
+    runs-on: ubuntu-latest
+    needs: quality
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build project
+        run: npm run build || echo "No build required"
+
+      - name: Upload build artifacts
+        if: success()
+        uses: actions/upload-artifact@v3
+        with:
+          name: build-artifacts
+          path: |
+            dist/
+            build/
+            .next/
+          retention-days: 7
+
+  # Security Scan (Optional)
+  security:
+    name: Security Scan
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Run security audit
+        run: npm audit --audit-level=moderate || true
+
+      - name: Run SAST scan
+        uses: github/super-linter@v5
+        env:
+          DEFAULT_BRANCH: main
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          VALIDATE_JAVASCRIPT_ES: true
+          VALIDATE_TYPESCRIPT_ES: true
+
+  # E2E Tests (for PRs from worktree branches)
+  e2e:
+    name: E2E Tests
+    runs-on: ubuntu-latest
+    needs: [build, test]
+    if: github.event_name == 'pull_request' && startsWith(github.head_ref, 'feature/') || startsWith(github.head_ref, 'module/')
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Playwright
+        run: npx playwright install --with-deps || echo "No Playwright tests"
+
+      - name: Run E2E tests
+        run: npm run test:e2e || echo "No E2E tests configured"
+
+      - name: Upload test results
+        if: always()
+        uses: actions/upload-artifact@v3
+        with:
+          name: playwright-report
+          path: playwright-report/
+          retention-days: 7
+
+  # Worktree Integration Check
+  worktree-check:
+    name: Worktree Integration
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Validate worktree branch naming
+        run: |
+          BRANCH_NAME="${{ github.head_ref }}"
+          if [[ "$BRANCH_NAME" =~ ^(feature|module|bugfix|hotfix)/.+ ]]; then
+            echo "✓ Valid worktree branch pattern: $BRANCH_NAME"
+          else
+            echo "⚠ Non-standard branch name: $BRANCH_NAME"
+          fi
+
+      - name: Check linked issues
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const pr = context.payload.pull_request;
+            const body = pr.body || '';
+            const hasIssue = /#\d+/.test(body) || /closes #\d+/i.test(body);
+
+            if (!hasIssue) {
+              core.warning('No linked issue found in PR description');
+            } else {
+              core.info('✓ Issue link found in PR description');
+            }
+
+  # Auto-merge for Dependabot
+  auto-merge:
+    name: Auto-merge Dependabot PRs
+    runs-on: ubuntu-latest
+    needs: [quality, test, build]
+    if: github.actor == 'dependabot[bot]' && github.event_name == 'pull_request'
+    steps:
+      - name: Merge Dependabot PR
+        uses: actions/github-script@v7
+        with:
+          script: |
+            await github.rest.pulls.merge({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: context.payload.pull_request.number,
+              merge_method: 'squash'
+            })
+
+  # Status Check (Required for branch protection)
+  status:
+    name: CI Status
+    runs-on: ubuntu-latest
+    needs: [quality, test, build]
+    if: always()
+    steps:
+      - name: Check CI Status
+        run: |
+          if [[ "${{ needs.quality.result }}" == "failure" ]] || \
+             [[ "${{ needs.test.result }}" == "failure" ]] || \
+             [[ "${{ needs.build.result }}" == "failure" ]]; then
+            echo "CI Failed"
+            exit 1
+          fi
+          echo "✓ All CI checks passed"

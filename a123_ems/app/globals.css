@@ -1,0 +1,225 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* A123 Systems Brand Colors */
+:root {
+  /* Primary A123 Orange */
+  --a123-orange: #FF8C00;
+  --a123-orange-light: #FFA500;
+  --a123-orange-dark: #E67E00;
+  --a123-orange-glow: rgba(255, 140, 0, 0.3);
+
+  /* A123 Dark Theme */
+  --a123-dark-bg: #1A1D23;
+  --a123-card-bg: #252932;
+  --a123-card-hover: #2D323C;
+  --a123-border: #3A3F4B;
+
+  /* Battery Status Colors */
+  --status-charging: #4A90E2;
+  --status-discharging: #FF8C00;
+  --status-online: #10B981;
+  --status-warning: #F59E0B;
+  --status-critical: #EF4444;
+  --status-offline: #4B5563;
+}
+
+@layer base {
+  :root {
+    /* Updated with A123 theme colors */
+    --background: 210 40% 98%;
+    --foreground: 222.2 84% 4.9%;
+    --card: 0 0% 100%;
+    --card-foreground: 222.2 84% 4.9%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 222.2 84% 4.9%;
+    --primary: 30 100% 50%; /* A123 Orange */
+    --primary-foreground: 0 0% 100%;
+    --secondary: 210 40% 96%;
+    --secondary-foreground: 222.2 84% 4.9%;
+    --muted: 210 40% 96%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+    --accent: 30 100% 50%; /* A123 Orange accent */
+    --accent-foreground: 0 0% 100%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+    --ring: 30 100% 50%; /* A123 Orange ring */
+    --radius: 0.5rem;
+  }
+
+  .dark {
+    /* A123 Dark Theme as default */
+    --background: 220 17% 12%; /* A123 dark bg */
+    --foreground: 210 40% 98%;
+    --card: 220 14% 16%; /* A123 card bg */
+    --card-foreground: 210 40% 98%;
+    --popover: 220 14% 16%;
+    --popover-foreground: 210 40% 98%;
+    --primary: 30 100% 50%; /* A123 Orange */
+    --primary-foreground: 0 0% 100%;
+    --secondary: 220 14% 20%;
+    --secondary-foreground: 210 40% 98%;
+    --muted: 220 14% 20%;
+    --muted-foreground: 215 20.2% 65.1%;
+    --accent: 30 100% 50%; /* A123 Orange accent */
+    --accent-foreground: 0 0% 100%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 220 13% 26%; /* A123 border */
+    --input: 220 13% 26%;
+    --ring: 30 100% 50%; /* A123 Orange ring */
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+    font-feature-settings: "rlig" 1, "calt" 1;
+  }
+}
+
+/* EMS/SCADA Specific Dark Theme */
+html {
+  color-scheme: dark;
+}
+
+body {
+  background: #111827;
+  color: #f9fafb;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+}
+
+/* Custom scrollbar for dark theme */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #1f2937;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #4b5563;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #6b7280;
+}
+
+/* Control room optimized color scheme */
+.control-room-theme {
+  /* High contrast for readability in low-light conditions */
+  --text-primary: #f9fafb;
+  --text-secondary: #d1d5db;
+  --text-muted: #9ca3af;
+
+  /* Background layers */
+  --bg-primary: #111827;
+  --bg-secondary: #1f2937;
+  --bg-tertiary: #374151;
+
+  /* Status colors */
+  --status-online: #10b981;
+  --status-warning: #f59e0b;
+  --status-error: #ef4444;
+  --status-info: #3b82f6;
+
+  /* Interactive elements */
+  --interactive-primary: #2563eb;
+  --interactive-hover: #1d4ed8;
+  --interactive-active: #1e40af;
+}
+
+/* Focus styles for accessibility */
+*:focus-visible {
+  outline: 2px solid #3b82f6;
+  outline-offset: 2px;
+}
+
+/* Chart container styling */
+.recharts-wrapper {
+  font-family: inherit;
+}
+
+.recharts-cartesian-grid line {
+  stroke: #374151;
+}
+
+.recharts-tooltip-wrapper {
+  border-radius: 6px;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3);
+}
+
+/* Animation for loading states */
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+.animate-pulse {
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+/* Custom badge colors for status */
+.badge-success {
+  background-color: #10b981;
+  color: white;
+}
+
+.badge-warning {
+  background-color: #f59e0b;
+  color: white;
+}
+
+.badge-error {
+  background-color: #ef4444;
+  color: white;
+}
+
+.badge-info {
+  background-color: #3b82f6;
+  color: white;
+}
+
+/* High contrast text for control rooms */
+.text-high-contrast {
+  color: #ffffff;
+  font-weight: 600;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+/* Glowing effect for critical alerts */
+.glow-red {
+  box-shadow: 0 0 10px rgba(239, 68, 68, 0.5);
+  animation: glow-pulse 2s infinite;
+}
+
+@keyframes glow-pulse {
+  0%, 100% {
+    box-shadow: 0 0 10px rgba(239, 68, 68, 0.5);
+  }
+  50% {
+    box-shadow: 0 0 20px rgba(239, 68, 68, 0.8);
+  }
+}
+
+/* Performance optimizations */
+.will-change-transform {
+  will-change: transform;
+}
+
+.will-change-opacity {
+  will-change: opacity;
+}

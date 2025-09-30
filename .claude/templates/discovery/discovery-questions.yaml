@@ -1,0 +1,823 @@
+# Discovery Questions - SINGLE SOURCE OF TRUTH
+# CCU Framework 2.0 - Anti-Duplication Standard
+# This file is THE ONLY place where discovery questions are defined
+
+meta:
+  version: "2.0"
+  framework: "Claude Code Ultimate 2.0"
+  principle: "Single Source of Truth - Reference, Don't Repeat"
+  last_updated: "2025-01-13"
+
+# ===================================================================
+# TARGET-SPECIFIC QUESTIONS - Platform, Module, Feature
+# ===================================================================
+# Questions are organized by target scope to ensure appropriate context
+targets:
+
+  # Platform target uses existing track questions (below in tracks section)
+  platform:
+    description: "Full application/platform discovery"
+    uses: "tracks"  # References the tracks section below
+
+  # Module target - questions for discovering a module within a platform
+  module:
+    description: "Module discovery within existing platform context"
+    context_required: ["platform"]
+
+    instant:
+      philosophy: "AI-powered module extraction with platform context"
+      questions_count: 0
+
+    rapid:
+      philosophy: "Essential module questions with platform awareness"
+      questions_count: 5
+      questions:
+        - id: "module_purpose"
+          category: "📦 MODULE PURPOSE"
+          question: "What is this module's primary responsibility within the platform?"
+          description: "Define the core purpose of this module:"
+          emoji: "🎯"
+          format_type: "suggestion_list"
+          suggestions:
+            - "User authentication and authorization management"
+            - "Data analytics and reporting capabilities"
+            - "Content management and publishing"
+            - "Integration with external services"
+
+        - id: "module_capabilities"
+          category: "⚡ KEY CAPABILITIES"
+          question: "What specific capabilities will this module provide?"
+          description: "List 3-5 core features of this module:"
+          emoji: "🚀"
+          format_type: "suggestion_list"
+          suggestions:
+            - "CRUD operations for specific entities"
+            - "Real-time data processing and analysis"
+            - "Automated workflows and notifications"
+            - "API endpoints for other modules"
+
+        - id: "module_dependencies"
+          category: "🔗 MODULE DEPENDENCIES"
+          question: "Which other modules does this depend on or interact with?"
+          description: "Identify module relationships:"
+          emoji: "🔄"
+          format_type: "suggestion_list"
+          suggestions:
+            - "Depends on auth module for user context"
+            - "Provides data to analytics module"
+            - "Consumes events from notification module"
+            - "Standalone with minimal dependencies"
+
+        - id: "module_data"
+          category: "💾 DATA & STORAGE"
+          question: "What data entities and storage does this module manage?"
+          description: "Specify data ownership and persistence needs:"
+          emoji: "📊"
+          format_type: "suggestion_list"
+          suggestions:
+            - "User profiles and preferences"
+            - "Transactional data with audit trails"
+            - "Configuration and settings"
+            - "Temporary cache/session data only"
+
+        - id: "module_interface"
+          category: "🖥️ USER INTERFACE"
+          question: "What UI components or pages will this module provide?"
+          description: "List the user-facing elements:"
+          emoji: "🎨"
+          format_type: "suggestion_list"
+          suggestions:
+            - "Dashboard with widgets and metrics"
+            - "CRUD forms and data tables"
+            - "Settings/configuration pages"
+            - "API-only, no UI components"
+
+    standard:
+      philosophy: "Comprehensive module discovery"
+      questions_count: 15
+      categories:
+        module_definition:
+          name: "📦 MODULE DEFINITION (3 QUESTIONS)"
+          questions:
+            - id: "module_purpose"
+              question: "What is this module's core responsibility?"
+              format_type: "text_input"
+            - id: "module_boundaries"
+              question: "What is explicitly IN and OUT of scope for this module?"
+              format_type: "scope_definition"
+            - id: "module_success_criteria"
+              question: "How will you measure this module's success?"
+              format_type: "metrics_definition"
+
+        module_architecture:
+          name: "🏗️ MODULE ARCHITECTURE (4 QUESTIONS)"
+          questions:
+            - id: "module_patterns"
+              question: "What architectural patterns will this module follow?"
+              format_type: "pattern_selection"
+              options: ["MVC", "Repository", "Service Layer", "Event-Driven"]
+            - id: "module_api"
+              question: "What APIs will this module expose?"
+              format_type: "api_definition"
+            - id: "module_events"
+              question: "What events will this module publish/consume?"
+              format_type: "event_mapping"
+            - id: "module_security"
+              question: "What security boundaries does this module enforce?"
+              format_type: "security_definition"
+
+        module_integration:
+          name: "🔗 MODULE INTEGRATION (3 QUESTIONS)"
+          questions:
+            - id: "module_dependencies"
+              question: "What are the hard and soft dependencies?"
+              format_type: "dependency_matrix"
+            - id: "module_contracts"
+              question: "What contracts/interfaces with other modules?"
+              format_type: "contract_definition"
+            - id: "module_data_flow"
+              question: "How does data flow in/out of this module?"
+              format_type: "data_flow_diagram"
+
+        module_features:
+          name: "⚙️ MODULE FEATURES (5 QUESTIONS)"
+          questions:
+            - id: "module_unique_features"
+              question: "What unique features does this module provide?"
+              format_type: "feature_list"
+            - id: "module_user_interaction"
+              question: "How do users interact with this module?"
+              format_type: "interaction_flow"
+            - id: "module_customization"
+              question: "What customization options should users have?"
+              format_type: "settings_options"
+            - id: "module_workflows"
+              question: "What are the key workflows in this module?"
+              format_type: "workflow_mapping"
+            - id: "module_edge_cases"
+              question: "What edge cases or special scenarios exist?"
+              format_type: "scenario_exploration"
+
+    enterprise:
+      philosophy: "Enterprise-grade module discovery"
+      questions_count: 25
+      # Extended enterprise module questions...
+
+  # Feature target - questions for discovering a feature within a module
+  feature:
+    description: "Feature discovery within module and platform context"
+    context_required: ["platform", "module"]
+
+    instant:
+      philosophy: "AI-powered feature extraction with module context"
+      questions_count: 0
+
+    rapid:
+      philosophy: "Essential feature questions with module awareness - CONSOLIDATED"
+      questions_count: 4
+      questions:
+        - id: "feature_overview"
+          category: "📋 FEATURE OVERVIEW"
+          question: "In one sentence, what does this feature do?"
+          description: "Describe the core functionality (combines capability & description):"
+          emoji: "🎯"
+          format_type: "text_with_followup"
+          follow_up:
+            - "How should it work? (one-click/multi-step/automated)"
+            - "What's the main user benefit?"
+          dynamic_suggestions: true  # Suggestions based on module context
+
+        - id: "feature_user_flow"
+          category: "👤 USER FLOW"
+          question: "How will users interact with this feature?"
+          description: "Combine user story with technical approach:"
+          emoji: "🔄"
+          format_type: "interactive_choice"
+          options:
+            - "Click button → Immediate action"
+            - "Fill form → Process → Result"
+            - "Select items → Bulk operation"
+            - "Automatic/background process"
+            - "Multi-step wizard/workflow"
+          generates_acceptance_criteria: true
+
+        - id: "feature_data_handling"
+          category: "💾 DATA & INTEGRATION"
+          question: "What data does this feature work with?"
+          description: "Input/output and integration in one:"
+          emoji: "🔌"
+          format_type: "smart_checklist"
+          pre_filled_based_on_context: true
+          options:
+            - "Uses existing {module} data"
+            - "Creates new data entities"
+            - "Modifies current data"
+            - "Integrates with external API"
+            - "Generates exports/reports"
+
+        - id: "feature_success_criteria"
+          category: "✅ COMPLETION CRITERIA"
+          question: "This feature is complete when..."
+          description: "Auto-generated from previous answers, confirm or modify:"
+          emoji: "🎯"
+          format_type: "pre_filled_criteria"
+          auto_generated: true
+          default_criteria:
+            - "User can {action from Q2}"
+            - "Data is {handled per Q3}"
+            - "No errors for valid input"
+            - "Success feedback shown"
+
+    standard:
+      philosophy: "Comprehensive feature discovery - OPTIMIZED"
+      questions_count: 8
+      categories:
+        feature_core:
+          name: "📋 CORE UNDERSTANDING (2 QUESTIONS)"
+          questions:
+            - id: "feature_complete_overview"
+              question: "What does this feature do and why is it valuable?"
+              description: "Combines description, value, and priority:"
+              format_type: "structured_response"
+              sections:
+                - "Core functionality (one paragraph)"
+                - "Business value (2-3 bullets)"
+                - "Priority: Critical/High/Medium/Low with reason"
+            - id: "feature_user_journey"
+              question: "Walk through the complete user journey:"
+              description: "Step-by-step from start to finish"
+              format_type: "journey_mapping"
+              auto_detect_ui_needs: true
+
+        feature_design:
+          name: "🎨 FEATURE DESIGN (3 QUESTIONS)"
+          questions:
+            - id: "feature_ui"
+              question: "UI/UX requirements for this feature?"
+              format_type: "ui_specification"
+            - id: "feature_workflow"
+              question: "User workflow and interactions?"
+              format_type: "workflow_diagram"
+            - id: "feature_edge_cases"
+              question: "Edge cases and error scenarios?"
+              format_type: "scenario_mapping"
+
+        feature_technical:
+          name: "🔧 TECHNICAL IMPLEMENTATION (3 QUESTIONS)"
+          questions:
+            - id: "feature_data_model"
+              question: "Data model changes required?"
+              format_type: "schema_changes"
+            - id: "feature_api_changes"
+              question: "API additions or modifications?"
+              format_type: "api_specification"
+            - id: "feature_performance"
+              question: "Performance considerations?"
+              format_type: "performance_requirements"
+
+        feature_validation:
+          name: "✅ VALIDATION & TESTING (3 QUESTIONS)"
+          questions:
+            - id: "feature_testing"
+              question: "How will this feature be tested?"
+              format_type: "test_plan"
+            - id: "feature_acceptance"
+              question: "Acceptance criteria?"
+              format_type: "acceptance_criteria"
+            - id: "feature_rollout"
+              question: "Rollout and feature flag strategy?"
+              format_type: "rollout_plan"
+
+    enterprise:
+      philosophy: "Enterprise-grade feature discovery"
+      questions_count: 20
+      # Extended enterprise feature questions...
+
+# Track Definitions - Four Complexity Levels
+# These are used for PLATFORM target discovery
+tracks:
+
+  # ===================================================================
+  # INSTANT TRACK - Zero Friction Discovery with AI Exploration
+  # ===================================================================
+  instant:
+    philosophy: "AI-powered feature exploration with intelligent assumptions"
+    questions_count: 0
+    interaction_type: "ai_exploration_only"
+    uses_sequential_thinking: true
+
+    pattern_detection:
+      mobile_keywords: ["mobile", "app", "iOS", "Android", "React Native"]
+      enterprise_keywords: ["enterprise", "SSO", "SAML", "compliance"]
+      ai_keywords: ["AI", "ML", "GPT", "OpenAI", "LLM", "chatbot"]
+      ecommerce_keywords: ["shop", "cart", "payment", "checkout", "product"]
+      realtime_keywords: ["realtime", "live", "websocket", "chat", "collaborative"]
+
+    confirmation_format: |
+      ┌─────────────────────────────────────────────────────────────┐
+      │  🎯  AI FEATURE EXPLORATION COMPLETE                        │
+      └─────────────────────────────────────────────────────────────┘
+
+      Based on your concept, I've explored how your application should work:
+
+      ✓ **Application Type**: {detected_type}
+      ✓ **Core Modules**: {identified_modules}
+      ✓ **Key Features & Functionality**:
+        {feature_list_with_how_they_work}
+      ✓ **Target Users**: {detected_users}
+      ✓ **Integrations**: {only_explicit_mentions}
+
+      🚀 **Vision**: {expanded_concept}
+
+      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+      💡 **Accept this feature exploration?** [Y/n/modify]:
+
+  # ===================================================================
+  # RAPID TRACK - Essential Feature Exploration
+  # ===================================================================
+  rapid:
+    philosophy: "5 essential questions with deep feature exploration via sequential thinking"
+    questions_count: 5
+    interaction_type: "interactive_feature_exploration"
+    uses_sequential_thinking: true
+
+    questions:
+      - id: "problem_solution"
+        category: "🎯 PROBLEM & SOLUTION EXPLORATION"
+        question: "What problem are you solving and what's your vision?"
+        description: "Describe the problem and your approach:"
+        emoji: "📝"
+        format_type: "text_with_exploration"
+        sequential_exploration:
+          - "What type of application is this?"
+          - "How do users currently handle this?"
+          - "What would make your solution better?"
+          - "What's the core workflow?"
+
+      - id: "target_users"
+        category: "👥 TARGET USERS & NEEDS"
+        question: "Who will use this and what do they need?"
+        description: "Let's understand your users:"
+        emoji: "👤"
+        format_type: "user_exploration"
+        sequential_exploration:
+          - "What frustrates them most currently?"
+          - "What would delight them?"
+          - "How often will they use this?"
+          - "What's their technical comfort level?"
+
+      - id: "core_features"
+        category: "⚡ FEATURE DEEP DIVE"
+        question: "What features are essential and HOW should they work?"
+        description: "Let's explore each feature in detail:"
+        emoji: "🚀"
+        format_type: "feature_exploration"
+        module_by_module:
+          prompt: "For each feature you mention, I'll explore:"
+          questions:
+            - "How should users interact with this?"
+            - "What data needs to be captured?"
+            - "What options/settings are needed?"
+            - "What would make this delightful?"
+            - "Any edge cases to consider?"
+
+      - id: "integrations_exploration"
+        category: "🔌 INTEGRATION OPPORTUNITIES"
+        question: "What external services or APIs could enhance your features?"
+        description: "Let's explore integration possibilities:"
+        emoji: "🔧"
+        format_type: "integration_discovery"
+        exploration_approach:
+          - "Reference integrations-registry.yaml"
+          - "Based on features, suggest relevant services"
+          - "Only include what user confirms"
+        example_prompts:
+          food_app: "Would AI photo recognition help with food logging?"
+          mental_health: "Would mood analysis from journal entries be valuable?"
+          ecommerce: "Need payment processing? Shipping integration?"
+
+      - id: "success_definition"
+        category: "✅ SUCCESS CRITERIA"
+        question: "What defines success for this project?"
+        description: "How will you measure success:"
+        emoji: "🎯"
+        format_type: "success_exploration"
+        exploration_points:
+          - "What metrics matter most?"
+          - "What user behaviors indicate success?"
+          - "What business goals must be met?"
+          - "What would make users love this?"
+
+  # ===================================================================
+  # STANDARD TRACK - Comprehensive Feature Discovery
+  # ===================================================================
+  standard:
+    philosophy: "10 questions for deep feature exploration and functionality discovery"
+    questions_count: 10
+    interaction_type: "deep_feature_exploration"
+    principle: "Understand exactly HOW everything should work"
+    uses_sequential_thinking: true
+
+    categories:
+      core_feature_exploration:
+        name: "🎯 CORE FEATURE EXPLORATION (3 QUESTIONS)"
+        questions:
+          - id: "application_vision"
+            question: "What's your vision for this application?"
+            description: "Let's explore your concept in depth"
+            format_type: "vision_exploration"
+            sequential_thinking:
+              - "What problem does this solve?"
+              - "What type of application is this?"
+              - "Who are the users?"
+              - "What's the core value proposition?"
+
+          - id: "feature_functionality"
+            question: "For each core feature, HOW should it work?"
+            description: "Deep dive into functionality"
+            format_type: "feature_by_feature"
+            exploration_per_feature:
+              - "User interaction method"
+              - "Data input/output"
+              - "Processing logic"
+              - "Success/error handling"
+              - "Settings and options"
+
+          - id: "module_identification"
+            question: "What logical modules emerge from your features?"
+            format_type: "module_discovery"
+            exploration:
+              - "Group related features"
+              - "Identify core modules"
+              - "Define module responsibilities"
+              - "Map feature-to-module relationships"
+
+      workflow_exploration:
+        name: "🔄 WORKFLOW & USER FLOWS (2 QUESTIONS)"
+        questions:
+          - id: "user_workflows"
+            question: "Walk through the main user workflows"
+            format_type: "workflow_mapping"
+            for_each_workflow:
+              - "Starting point"
+              - "Steps taken"
+              - "Data involved"
+              - "Decision points"
+              - "Success outcome"
+
+          - id: "edge_cases"
+            question: "What edge cases and special scenarios exist?"
+            format_type: "scenario_exploration"
+            explore:
+              - "Error conditions"
+              - "Empty states"
+              - "Boundary cases"
+              - "Concurrent usage"
+              - "Special user types"
+
+      feature_details:
+        name: "📊 FEATURE DETAILS (3 QUESTIONS)"
+        questions:
+          - id: "data_per_feature"
+            question: "What data does each feature work with?"
+            format_type: "data_exploration"
+            per_feature:
+              - "Input data required"
+              - "Data transformations"
+              - "Output/results"
+              - "Storage needs"
+              - "Relationships"
+
+          - id: "feature_settings"
+            question: "What configuration options do users need?"
+            format_type: "settings_exploration"
+            explore:
+              - "User preferences"
+              - "Feature toggles"
+              - "Customization options"
+              - "Defaults and presets"
+
+          - id: "integration_opportunities"
+            question: "Which integrations would enhance your features?"
+            format_type: "integration_exploration"
+            reference: "integrations-registry.yaml"
+            approach:
+              - "Suggest based on features"
+              - "Explain benefits"
+              - "User confirms each"
+              - "Document purpose"
+
+      validation:
+        name: "✅ SUCCESS CRITERIA (2 QUESTIONS)"
+        questions:
+          - id: "definition_of_working"
+            question: "This MVP is successful when users can... (complete the sentence)"
+            format_type: "success_criteria"
+            template: "Users can {action} and the system {response} without any errors"
+
+          - id: "non_negotiable_quality"
+            question: "What quality aspects are non-negotiable?"
+            format_type: "quality_checklist"
+            options:
+              - "Zero 404 errors (default - always required)"
+              - "All forms save data correctly"
+              - "Mobile responsive"
+              - "Fast page loads (< 3 seconds)"
+              - "Accessibility compliant"
+              - "Works offline"
+
+  # ===================================================================
+  # ENTERPRISE TRACK - Deep Feature Discovery
+  # ===================================================================
+  enterprise:
+    philosophy: "15 questions for deep feature and functionality exploration"
+    questions_count: 15
+    interaction_type: "exhaustive_feature_discovery"
+    principle: "Discover every detail of HOW the system should work"
+    uses_sequential_thinking: true
+
+    categories:
+      feature_discovery:
+        name: "🎯 COMPLETE FEATURE DISCOVERY (5 QUESTIONS)"
+        description: "Exhaustive exploration of all features and functionality"
+        questions:
+          - id: "complete_vision"
+            question: "What's the complete vision for this application?"
+            description: "Describe everything you want this to do"
+            format_type: "vision_comprehensive"
+            exploration:
+              - "Core problem being solved"
+              - "Complete feature wishlist"
+              - "What makes this unique"
+              - "User experience goals"
+
+          - id: "feature_functionality_complete"
+            question: "For EVERY feature, describe HOW it should work?"
+            description: "Deep dive into each feature's functionality"
+            format_type: "feature_exhaustive"
+            per_feature:
+              - "User interaction flow"
+              - "What happens step-by-step"
+              - "Options and settings"
+              - "Success scenarios"
+              - "Error handling"
+
+          - id: "user_journeys_complete"
+            question: "Walk through ALL user journeys from start to finish?"
+            description: "Every path users can take"
+            format_type: "journey_mapping"
+            exploration:
+              - "Entry points"
+              - "Complete workflows"
+              - "Decision branches"
+              - "Exit points"
+
+          - id: "business_rules"
+            question: "What business logic and rules govern the features?"
+            description: "The logic that drives functionality"
+            format_type: "rules_exploration"
+            explore:
+              - "Conditional logic"
+              - "Validation rules"
+              - "Automated decisions"
+              - "Calculation methods"
+
+          - id: "edge_cases_complete"
+            question: "What are ALL the edge cases and special scenarios?"
+            description: "Every special situation to handle"
+            format_type: "scenario_complete"
+            categories:
+              - "Error scenarios"
+              - "Empty/null states"
+              - "Boundary conditions"
+              - "Unusual user paths"
+              - "Concurrent actions"
+
+      module_architecture:
+        name: "🏗️ MODULE ARCHITECTURE (5 QUESTIONS)"
+        description: "Deep understanding of module structure and functionality"
+        questions:
+          - id: "module_identification_complete"
+            question: "What are ALL the modules and their responsibilities?"
+            description: "Complete module breakdown"
+            format_type: "module_complete"
+            per_module:
+              - "Core responsibility"
+              - "Features it provides"
+              - "User interactions"
+              - "Module boundaries"
+
+          - id: "module_interactions"
+            question: "How do modules work together functionally?"
+            description: "Module cooperation and data flow"
+            format_type: "interaction_mapping"
+            explore:
+              - "Data shared between modules"
+              - "Module dependencies"
+              - "Workflow handoffs"
+              - "Integration points"
+
+          - id: "module_features_detailed"
+            question: "What specific features does EACH module provide?"
+            description: "Module-by-module feature breakdown"
+            format_type: "feature_per_module"
+            detail_level: "exhaustive"
+
+          - id: "module_configurations"
+            question: "What configuration options exist per module?"
+            description: "Settings and customization per module"
+            format_type: "config_mapping"
+            explore:
+              - "User preferences"
+              - "Feature toggles"
+              - "Behavioral options"
+              - "Default settings"
+
+          - id: "module_workflows"
+            question: "What are the complete workflows within each module?"
+            description: "Step-by-step module operations"
+            format_type: "workflow_per_module"
+            detail_level: "complete"
+
+      user_experience:
+        name: "👤 USER EXPERIENCE DETAILS (5 QUESTIONS)"
+        description: "Complete understanding of user needs and interactions"
+        questions:
+          - id: "user_personas_complete"
+            question: "Who are ALL your user types and what do they need?"
+            description: "Every user persona in detail"
+            format_type: "persona_exhaustive"
+            per_persona:
+              - "Their goals"
+              - "Their workflows"
+              - "Features they use"
+              - "Pain points to solve"
+              - "What would delight them"
+
+          - id: "user_interactions"
+            question: "How do different users interact with features?"
+            description: "User-specific functionality"
+            format_type: "interaction_by_user"
+            explore:
+              - "Feature variations by user type"
+              - "Permission differences"
+              - "Workflow variations"
+              - "UI adaptations"
+
+          - id: "integration_ecosystem"
+            question: "What integrations would enhance user experience?"
+            description: "External services that add value"
+            format_type: "integration_complete"
+            reference: "integrations-registry.yaml"
+            explore:
+              - "AI services for intelligence"
+              - "APIs for functionality"
+              - "Automation opportunities"
+              - "Third-party services users expect"
+
+          - id: "user_delight"
+            question: "What would make users LOVE this application?"
+            description: "Beyond functional - the delightful touches"
+            format_type: "delight_exploration"
+            explore:
+              - "Surprising features"
+              - "Time-saving automations"
+              - "Personalization options"
+              - "Exceptional experiences"
+
+          - id: "success_complete"
+            question: "Define complete success criteria for the application?"
+            description: "What makes this truly successful"
+            format_type: "success_comprehensive"
+            explore:
+              - "User can accomplish X"
+              - "Features work together to Y"
+              - "Experience feels Z"
+              - "Value delivered is..."
+
+            format_type: "role_based_features"
+          - id: "user_preferences"
+            question: "What customization options do users need?"
+            format_type: "preference_exploration"
+          - id: "special_scenarios"
+            question: "What special use cases or scenarios exist?"
+            format_type: "scenario_mapping"
+          - id: "success_patterns"
+            question: "What defines successful user interactions?"
+            format_type: "success_metrics"
+
+# ===================================================================
+# Visual Format Templates - Used by all tracks
+# ===================================================================
+visual_formats:
+
+  # Question box template
+  question_box: |
+    ┌─────────────────────────────────────────────────────────────┐
+    │  {emoji}  {category}                                        │
+    └─────────────────────────────────────────────────────────────┘
+
+    **{question}** {question_emoji}
+
+    {description}
+
+    {content_emoji} **{content_label}:**
+    {suggestions}
+
+    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  # Enterprise section template
+  enterprise_section: |
+    ┌═════════════════════════════════════════════════════════════┐
+    ║  {emoji}  {category} - {question_count} QUESTIONS           ║
+    ╚═════════════════════════════════════════════════════════════╝
+
+    {description}
+
+    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  # Suggestion list item
+  suggestion_item: "   🔸 \"{suggestion}\""
+
+  # Visual separator
+  separator: "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+
+# ===================================================================
+# Output File Templates - UNIFIED STRUCTURE
+# ===================================================================
+# Following the unified JSON output standard - one discovery.json for all tracks
+output_templates:
+
+  # Universal JSON file - same name, progressive content based on track
+  universal_json:
+    name: "discovery.json"
+    description: "Unified structured data - content scales with track complexity"
+    structure_reference: ".claude/golden_standards/unified-json-output-standards.md"
+
+  instant:
+    files:
+      - name: "discovery.json"
+        description: "Core fields only - AI-extracted with assumptions"
+      - name: "discovery-summary.md"
+        description: "Brief human-readable summary (1-2 pages)"
+
+  rapid:
+    files:
+      - name: "discovery.json"
+        description: "Core + basic extensions (5 question answers)"
+      - name: "discovery-summary.md"
+        description: "Concise project overview (2-3 pages)"
+      - name: "interfaces-registry.md"
+        description: "If UI components detected"
+
+  standard:
+    files:
+      - name: "discovery.json"
+        description: "Core + technical details (15-20 question answers)"
+      - name: "discovery-summary.md"
+        description: "Comprehensive overview (4-5 pages)"
+      - name: "discovery-requirements.md"
+        description: "Functional/non-functional requirements"
+      - name: "interfaces-registry.md"
+        description: "Detailed page/component inventory"
+      - name: "discovery-features.md"
+        description: "Detailed feature exploration and workflows"
+
+  enterprise:
+    files:
+      - name: "discovery.json"
+        description: "Full structure with all fields (50+ question answers)"
+      - name: "discovery-executive-summary.md"
+        description: "C-level stakeholder overview"
+      - name: "discovery-requirements-detailed.md"
+        description: "Comprehensive requirements with traceability"
+      - name: "discovery-architecture-blueprint.md"
+        description: "System architecture design"
+      - name: "interfaces-registry.md"
+        description: "Complete interface catalog"
+      - name: "discovery-security-posture.md"
+        description: "Security requirements and compliance"
+      - name: "discovery-risk-assessment.md"
+        description: "Risk analysis and mitigation strategies"
+      - name: "discovery-stakeholder-analysis.md"
+        description: "Complete stakeholder mapping"
+
+# ===================================================================
+# Usage Instructions
+# ===================================================================
+usage:
+  reference_from_command: |
+    # In /ccu:discover command file
+    Questions are defined in: .claude/templates/discovery/discovery-questions.yaml
+    Use Read tool to load questions for specified track
+
+  reference_from_agent: |
+    # In business-analyst agent file
+    Questions are defined in: .claude/templates/discovery/discovery-questions.yaml
+    Agent loads questions based on track parameter from command
+
+  anti_duplication_compliance: |
+    This file is the SINGLE SOURCE OF TRUTH for all discovery questions.
+    Any duplication of this content in other files VIOLATES CCU standards.
+    Always reference this file, never copy its contents.

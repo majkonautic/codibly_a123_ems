@@ -1,0 +1,1183 @@
+# Plan Questions - Phase 6: Technical Execution Planning
+# AI-SYNTHESIZED PLANNING - Confirming HOW to build with intelligent suggestions
+# This file focuses on technical approach, testing strategy, and implementation details
+
+meta:
+  version: "4.0"
+  framework: "Claude Code Ultimate 2.0"
+  phase: 6
+  domain: "Technical Execution Planning"
+  output: "implementation-plan.json"
+  principle: "AI synthesizes all phases to suggest optimal execution plans"
+  focus: "HOW to build with AI-powered recommendations"
+  mcp_integration:
+    - sequential_thinking: "Adaptive plan generation"
+    - mem0: "Pattern recognition and learning"
+    - context7: "Codebase-aware planning"
+
+# ===================================================================
+# AI SYNTHESIS ENGINE
+# ===================================================================
+synthesis_engine:
+  description: "AI synthesizes all previous phases before presenting questions"
+
+  visual_progress:
+    initial: |
+      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+      Loading Context:  ████████████████████ 100% ✅
+      AI Analysis:      ████████████░░░░░░░░ 60% 🔄
+      Pattern Matching: ████████░░░░░░░░░░░░ 40% 🔄
+      Plan Generation:  ░░░░░░░░░░░░░░░░░░░░ 0% ⏳
+      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  inputs_from_phases:
+    discovery:
+      - business_requirements
+      - constraints
+      - success_metrics
+
+    specification:
+      - feature_list
+      - functional_requirements
+      - acceptance_criteria
+
+    design:
+      - component_inventory
+      - ui_patterns
+      - shadcn_components
+
+    security:
+      - authentication_method
+      - authorization_pattern
+      - compliance_requirements
+      - threat_model
+
+    architecture:
+      - tech_stack
+      - architecture_pattern
+      - database_choice
+      - deployment_target
+      - integrations
+
+  ai_generates:
+    - optimal_build_sequence
+    - module_dependencies
+    - test_requirements
+    - docker_configuration
+    - environment_setup
+    - ci_cd_pipeline
+    - deployment_strategy
+    - risk_mitigation
+
+  pattern_recognition:
+    mem0_storage:
+      key: "plan_${target}_${track}_${architecture}_${timestamp}"
+      stores:
+        - successful_task_sequences
+        - effective_phase_organization
+        - optimal_dependencies
+        - test_coverage_patterns
+        - deployment_successes
+
+    retrieval:
+      - match_architecture_type
+      - match_tech_stack
+      - match_complexity_level
+      - apply_learned_optimizations
+
+# ===================================================================
+# TRACK-BASED QUESTIONS
+# ===================================================================
+complexity_levels:
+
+  # ===================================================================
+  # INSTANT - Zero Questions, AI Generates Everything
+  # ===================================================================
+  instant:
+    philosophy: "AI creates complete technical plan - zero questions"
+    questions_count: 0
+
+    visual_display: |
+      ┌─────────────────────────────────────────────────────────────────────┐
+      │  📊 INSTANT PLAN GENERATION              [100% ████████████]        │
+      └─────────────────────────────────────────────────────────────────────┘
+
+    auto_generation: |
+      🤖 AI TECHNICAL PLAN GENERATION
+      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+      Analyzing technical context...
+      ✅ Architecture: {architecture_pattern}
+      ✅ Stack: {tech_stack}
+      ✅ Components: {component_count}
+      ✅ Security: {security_level}
+      ✅ Integrations: {detected_integrations}
+
+      GENERATING TECHNICAL PLAN...
+
+      Phase 1: Complete Build
+      • Project setup & dependencies
+      • Core implementation
+      • Basic functionality tests
+      • 🔒 MANDATORY TEST GATE
+        - Playwright smoke tests (MUST PASS)
+        - Docker validation (MUST RUN)
+        - No 404s check (ZERO TOLERANCE)
+
+      Test Requirements:
+      ✓ App responds on localhost:3000
+      ✓ Health endpoint returns 200
+      ✓ No 404 errors on any route
+      ✓ Docker containers healthy
+
+      ⚠️ CANNOT PROCEED WITHOUT PASSING TESTS
+
+  # ===================================================================
+  # RAPID - 4 Technical Confirmations
+  # ===================================================================
+  rapid:
+    philosophy: "AI suggests, user confirms key technical decisions"
+    questions_count: 4
+
+    visual_progress: |
+      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+      Questions:    [0/4]  ░░░░░░░░░░░░░░░░░░░░ 0% ⏳
+      AI Analysis:  Done   ████████████████████ 100% ✅
+      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+    questions:
+      - id: "development_phases"
+        category: "🏗️ DEVELOPMENT PHASES"
+        question: "How should we structure the development phases for maximum efficiency?"
+        format_type: "phase_selection"
+        ai_presents:
+          principle: "Working software at every step - test gates prevent building on broken foundations"
+          detected_modules: "{modules_from_architecture}"
+          estimated_complexity: "{ai_complexity_assessment}"
+
+        options_with_details:
+          - label: "Module-by-module with test gates"
+            value: "module_by_module"
+            description: "SAFEST - Each module tested before next"
+            structure:
+              - "Module 1: {first_module} → TEST GATE (must pass)"
+              - "Module 2: {second_module} → TEST GATE (must pass)"
+              - "Module 3: {third_module} → TEST GATE (must pass)"
+              - "Each module 100% working before proceeding"
+            benefits:
+              - "Failures caught early and isolated"
+              - "Test after each module"
+              - "Know exactly what broke"
+              - "No cascading failures"
+            risks: "None - recommended approach"
+            ai_recommendation_score: 95
+
+          - label: "Two-phase approach"
+            value: "two_phase"
+            description: "RISKIER - Core then enhancement"
+            structure:
+              - "Phase 1: Core modules → TEST GATE"
+              - "Phase 2: Enhancements → TEST GATE"
+            benefits:
+              - "Faster initial development"
+              - "Fewer test interruptions"
+            risks:
+              - "⚠️ Delayed validation"
+              - "⚠️ Cascading failures possible"
+              - "⚠️ Harder to isolate issues"
+            ai_recommendation_score: 60
+
+          - label: "Feature-vertical"
+            value: "feature_vertical"
+            description: "Full stack features end-to-end"
+            structure:
+              - "Complete user journeys one at a time"
+              - "Each feature fully tested E2E"
+            benefits:
+              - "Early validation of workflows"
+              - "Good for complex integrations"
+            risks:
+              - "Slower initial progress"
+              - "Dependencies between features"
+            ai_recommendation_score: 75
+
+        ai_recommendation:
+          primary: "module_by_module"
+          rationale: "Module-by-module ensures working production at each step with minimal risk"
+          warning_if_not_chosen: "Choosing other options increases risk of building on broken foundations"
+
+      - id: "application_architecture"
+        category: "🏢 APPLICATION ARCHITECTURE"
+        question: "Confirm application architecture with test gates?"
+        format_type: "technical_confirmation"
+        ai_presents:
+          application_type:
+            detected: "{from_architecture_phase}"
+            ai_recommendation: "Based on your {component_count} components and {user_scale}, we recommend {suggested_type}"
+            confidence: "{ai_confidence_percentage}"
+            options:
+              - "Monolith (single deployable)"
+              - "Modular Monolith (logical separation)"
+              - "Microservices (independent services)"
+              - "Serverless (function-based)"
+
+          module_structure:
+            show_detected_modules: true
+            dockerization_approach: "per_module_or_unified"
+
+          docker_architecture:
+            ai_generated_compose:
+              description: "AI detected your stack and suggests:"
+              services:
+                - "app ({detected_framework} on port {app_port})"
+                - "{detected_database} (port {db_port})"
+                - "redis (port 6379) - for sessions/cache"
+                - "adminer (port 8080) - DB management"
+                - "mailhog (port 8025) - email testing"
+              volumes:
+                - "Persistent data volumes configured"
+                - "Hot reload enabled for development"
+
+        options:
+          - label: "✅ Confirm architecture"
+            value: "confirm"
+          - label: "🏢 More modular"
+            value: "modular"
+          - label: "📦 Simplify"
+            value: "simplify"
+
+      - id: "data_integrations"
+        category: "💾 DATA & INTEGRATIONS"
+        question: "Confirm databases and integration testing?"
+        format_type: "technical_confirmation"
+        ai_presents:
+          databases:
+            ai_detected:
+              primary: "{detected_from_architecture}"
+              rationale: "Chosen for {detected_reasons}"
+            suggested_setup:
+              local: "Docker container with seeded data"
+              cloud: "{suggested_cloud_provider}"
+            cache: "Redis (sessions, cache) - {cache_recommendation}"
+            additional: "{detected_additional_storage}"
+
+          external_integrations:
+            ai_detected_services:
+              found: "{list_of_detected_integrations}"
+              missing: "{suggested_additional_integrations}"
+            authentication:
+              detected: "{oauth_providers_from_security_phase}"
+              suggested: "Additional providers based on your user base"
+            email:
+              detected: "{email_service_if_any}"
+              suggested: "SendGrid/Resend for transactional emails"
+            sms:
+              needed: "{based_on_2fa_requirements}"
+              suggested: "Twilio/Vonage if 2FA enabled"
+
+            payments:
+              - "Stripe (Checkout, Billing, Webhooks)"
+              - "Webhook endpoint: /api/webhooks/stripe"
+
+            analytics:
+              - "PostHog/Mixpanel (product)"
+              - "Sentry (errors)"
+              - "Vercel Analytics (web vitals)"
+
+            apis:
+              detected: "{list_from_architecture_phase}"
+              ai_suggests: "{additional_recommended_apis}"
+              webhook_endpoints:
+                - "/api/webhooks/{service}"
+                - "Automated endpoint generation"
+
+        options:
+          - label: "✅ Confirm integrations"
+            value: "confirm"
+          - label: "➕ Add more"
+            value: "add"
+          - label: "➖ Simplify"
+            value: "simplify"
+
+      - id: "testing_strategy"
+        category: "🧪 PLAYWRIGHT MCP TEST STRATEGY"
+        question: "What level of Playwright MCP testing should we enforce at EACH module gate?"
+        format_type: "test_level_selection"
+        ai_presents:
+          mcp_status: "{playwright_mcp_availability}"
+          mandatory_nature: "Tests are MANDATORY after each module - no exceptions"
+          test_runner: "{mcp_or_local_runner}"
+
+        options_with_details:
+          - label: "Smoke tests only"
+            value: "smoke_only"
+            description: "Basic availability and no 404s"
+            details:
+              - "Quick validation per module"
+              - "Just ensures module loads without errors"
+            mcp_command: "mcp://playwright/run --suite=smoke --module={name}"
+            fallback_command: "npx playwright test tests/smoke/{module}/*.spec.ts"
+            coverage: "Basic availability"
+            risks: "⚠️ RISK: May miss functionality issues"
+            ai_recommendation_score: 60
+
+          - label: "Smoke + Core functionality"
+            value: "smoke_and_core"
+            description: "Module must be FULLY working"
+            details:
+              - "All CRUD operations verified"
+              - "API endpoints return correct data"
+              - "UI components render properly"
+              - "Data persistence confirmed"
+              - "No 404 errors anywhere"
+            mcp_command: "mcp://playwright/run --suite=smoke,features --module={name}"
+            fallback_command: "npx playwright test tests/{smoke,features}/{module}/*.spec.ts"
+            coverage: "Full functionality"
+            risks: "None - ensures working production"
+            ai_recommendation_score: 95
+
+          - label: "Comprehensive"
+            value: "comprehensive"
+            description: "Full unit + integration + E2E"
+            details:
+              - "Maximum confidence but slower"
+              - "Includes edge cases and error scenarios"
+              - "Performance benchmarks"
+              - "Security validation"
+            mcp_command: "mcp://playwright/run --suite=all --module={name}"
+            fallback_command: "npx playwright test tests/**/{module}/*.spec.ts"
+            coverage: "Complete coverage"
+            risks: "Slower development cycles"
+            ai_recommendation_score: 75
+
+        ai_recommendation:
+          primary: "smoke_and_core"
+          rationale: "Smoke + Core functionality ensures modules actually work, not just load"
+          emphasis: "MANDATORY after EACH module - failures STOP development"
+
+        enforcement_rules:
+          - "Tests run after EACH module completion"
+          - "Failures trigger immediate fix-retry loop"
+          - "Maximum 3 retry attempts before escalation"
+          - "Zero tolerance for 404 errors"
+          - "All CRUD operations must work"
+          - "Data persistence must be verified"
+
+        test_phases:
+            phase_1_foundation:
+              when: "After core setup (MANDATORY GATE)"
+              enforcement: "CANNOT PROCEED WITHOUT PASSING"
+              ai_generated_tests:
+                - "App on {detected_port} - verify response"
+                - "Health endpoint - {health_path}"
+                - "Database - {db_type} connection"
+                - "No 404 errors check - ALL ROUTES"
+                - "Basic auth flow - if configured"
+              mcp_command: "mcp://playwright/run --suite=smoke --fast"
+              fallback: "npx playwright test tests/smoke/*.spec.ts"
+              failure_handling:
+                - "STOP execution immediately"
+                - "Generate fix suggestions"
+                - "Retry after fixes (max 3 attempts)"
+
+            phase_2_features:
+              when: "After EACH module (PER-MODULE VALIDATION)"
+              enforcement: "Module must work 100% before next"
+              tests:
+                - "CRUD operations complete"
+                - "All routes accessible (no 404s)"
+                - "Data persists correctly"
+                - "UI renders without errors"
+                - "API endpoints respond"
+              mcp_command: "mcp://playwright/run --suite=features --module={name}"
+              parallel: false
+              working_validation: "Each module tested individually"
+
+            phase_3_integration:
+              when: "After all modules"
+              tests:
+                - "End-to-end user journeys"
+                - "Payment flows (test mode)"
+                - "Email flows (via Mailhog)"
+              mcp_command: "mcp://playwright/run --suite=e2e --browsers=all"
+              screenshot_on_failure: true
+
+          test_structure:
+            location: "tests/e2e/"
+            organization:
+              - "smoke/ (basic availability)"
+              - "auth/ (authentication)"
+              - "features/ (per module)"
+              - "integration/ (full flows)"
+
+          coverage_targets:
+            critical_paths: "100% MANDATORY"
+            no_404_errors: "ZERO TOLERANCE"
+            crud_operations: "100% WORKING"
+            happy_paths: "80%"
+            edge_cases: "60%"
+
+          test_gate_enforcement:
+            skip_allowed: false
+            mandatory_pass: true
+            fix_retry_loop: true
+
+        options:
+          - label: "✅ Confirm test strategy"
+            value: "confirm"
+          - label: "📈 Increase coverage"
+            value: "increase"
+          - label: "⚡ Critical only"
+            value: "minimal"
+
+  # ===================================================================
+  # STANDARD - 3 Build Confirmations (No Time References)
+  # ===================================================================
+  standard:
+    philosophy: "MODULE-BY-MODULE validation ensuring 100% working software"
+    questions_count: 3
+    principle: "Nothing proceeds until current module works completely"
+
+    categories:
+      build_confirmation:
+        name: "🏗️ BUILD CONFIRMATION (3 questions)"
+        questions:
+          - id: "module_sequence"
+            question: "Confirm the BUILD SEQUENCE for working software"
+            format_type: "sequence_confirmation"
+            ai_presents:
+              phase_1_foundation:
+                name: "Foundation (MANDATORY 100% WORKING)"
+                modules:
+                  - "Database setup and migrations"
+                  - "Authentication system"
+                  - "Basic routing"
+                test_gate:
+                  enforcement: "STOP if ANY test fails"
+                  tests:
+                    - "App starts on localhost"
+                    - "Auth works completely"
+                    - "Database persists data"
+                    - "NO 404 ERRORS"
+                  fix_loop: "Test → Fail → Fix → Retest (max 3)"
+
+              phase_2_core:
+                name: "Core Features (PER-MODULE VALIDATION)"
+                modules:
+                  - "{primary_feature_from_discovery}"
+                  - "{secondary_feature_from_discovery}"
+                  - "Dashboard/home view"
+                per_module_validation:
+                  - "Build module completely"
+                  - "Test module in isolation"
+                  - "Verify CRUD works 100%"
+                  - "Check all routes (no 404s)"
+                  - "Fix ALL issues before next module"
+                test_gate: "EACH MODULE must pass before next"
+
+              phase_3_enhancement:
+                name: "Enhancements (After core works)"
+                modules:
+                  - "Additional features"
+                  - "Integrations"
+                  - "Polish and optimization"
+                test_gate: "Full e2e tests pass"
+
+            options:
+              - "✅ Confirm this sequence"
+              - "🔄 Adjust priorities"
+              - "➖ Simplify to core only"
+
+          - id: "test_gates"
+            question: "Confirm TEST GATES between phases"
+            format_type: "test_gate_confirmation"
+            ai_presents:
+              gate_1_after_foundation:
+                mandatory: true
+                tests:
+                  - "App responds on localhost"
+                  - "Database migrations successful"
+                  - "Auth flow works (register/login/logout)"
+                  - "Session persistence verified"
+                  - "Zero console errors"
+                blocker: "HARD STOP - Fix all before proceeding"
+                playwright_tests:
+                  - "smoke/app-running.spec.ts"
+                  - "smoke/auth-working.spec.ts"
+                  - "smoke/no-404s.spec.ts"
+
+              gate_2_after_core:
+                mandatory: true
+                per_module_tests:
+                  - "Module CRUD operations complete"
+                  - "Module routes all working"
+                  - "Module data persistence verified"
+                  - "Module UI renders correctly"
+                aggregate_tests:
+                  - "All navigation works (ZERO 404s)"
+                  - "All forms save data correctly"
+                  - "All lists display data"
+                  - "Integration between modules"
+                playwright_tests:
+                  - "features/*.spec.ts (per module)"
+                  - "integration/module-flow.spec.ts"
+                blocker: "HARD STOP - Every module 100% working"
+
+              gate_3_final:
+                tests:
+                  - "Full e2e test suite passes"
+                  - "Performance acceptable"
+                  - "Security checks pass"
+                success: "Application ready for use"
+
+            options:
+              - "✅ Confirm test strategy"
+              - "📈 Add more tests"
+              - "⚡ Minimum viable tests"
+
+          - id: "success_criteria"
+            question: "Confirm SUCCESS CRITERIA for working software"
+            format_type: "success_confirmation"
+            ai_presents:
+              working_definition:
+                mandatory_criteria:
+                  - "ZERO 404 errors (non-negotiable)"
+                  - "ALL CRUD operations functional"
+                  - "ALL buttons clickable"
+                  - "ALL forms save data"
+                  - "ALL data persists correctly"
+                  - "NO console errors"
+                validation_method:
+                  - "Automated Playwright tests"
+                  - "Manual verification checklist"
+                  - "404 detection script"
+                - "All forms save data"
+                - "Data persists correctly"
+                - "User can complete primary journey"
+
+              not_required_for_mvp:
+                - "Perfect performance"
+                - "All edge cases handled"
+                - "Complete feature set"
+                - "Production scaling"
+
+            options:
+              - "✅ This defines success"
+              - "➕ Add criteria"
+              - "➖ Simplify criteria"
+
+              - label: "🎨 Frontend-first (UI → Mocks → API)"
+                value: "frontend_first"
+                impact: "Early user feedback possible"
+
+              - label: "📦 Vertical slices (complete features)"
+                value: "vertical"
+                impact: "Fully functional increments"
+
+              - label: "🔀 Parallel (Frontend + Backend)"
+                value: "parallel"
+                impact: "Requires clear contracts"
+
+      testing_deployment:
+        name: "🚀 TESTING & DEPLOYMENT (3 questions)"
+        questions:
+          - id: "environment_strategy"
+            question: "Confirm environment setup?"
+            format_type: "environment_confirmation"
+            ai_presents:
+              local:
+                setup: "Docker Compose"
+                services: "App, DB, Redis, Mailhog"
+                data: "Seeded test data"
+
+              staging:
+                platform: "Vercel Preview"
+                database: "Neon/Supabase"
+                deploys: "On PR/branch"
+
+              production:
+                platform: "Vercel Production"
+                database: "Neon/Supabase (prod)"
+                deploys: "From main branch"
+
+          - id: "ci_cd_pipeline"
+            question: "Confirm CI/CD pipeline?"
+            format_type: "pipeline_confirmation"
+            ai_presents:
+              platform: "GitHub Actions"
+              pr_checks:
+                - "Type checking"
+                - "Linting"
+                - "Playwright tests"
+                - "Build verification"
+
+              deployment:
+                develop: "Auto-deploy to staging"
+                main: "Auto-deploy to production"
+
+          - id: "performance_targets"
+            question: "Confirm performance requirements?"
+            format_type: "performance_confirmation"
+            ai_presents:
+              frontend:
+                initial_bundle: "< 200KB"
+                lighthouse_score: "> 90"
+                fcp: "< 1.5s"
+
+              backend:
+                api_response: "< 200ms p95"
+                database_queries: "< 50ms"
+
+              testing:
+                load_testing: "1000 concurrent users"
+                stress_testing: "Find breaking point"
+
+  # ===================================================================
+  # ENTERPRISE - 5 Consolidated Technical Governance
+  # ===================================================================
+  enterprise:
+    philosophy: "GOVERNANCE GATES with mandatory quality checkpoints"
+    questions_count: 5
+    principle: "Enterprise quality through continuous validation"
+
+    ai_capabilities:
+      - sequential_thinking_active: true
+      - mem0_pattern_matching: true
+      - context7_codebase_analysis: true
+      - multi_agent_collaboration: true
+
+    categories:
+      architecture_governance:
+        name: "🏢 ARCHITECTURE GOVERNANCE (2 questions)"
+        questions:
+          - id: "technical_architecture"
+            question: "Confirm architecture with TEST GOVERNANCE?"
+            format_type: "architecture_governance_confirmation"
+            ai_presents:
+              service_architecture:
+                api_gateway: "Kong/Nginx"
+                services: "{detected_services}"
+                communication: "REST/gRPC/Events"
+                service_mesh: "Istio/Linkerd"
+
+              infrastructure_as_code:
+                iac_tool: "Terraform/Pulumi/CDK"
+                resources: "{cloud_resources}"
+                environments: "Dev/Staging/Prod"
+                state_management: "Remote state"
+
+              data_architecture:
+                databases: "OLTP/OLAP/Cache/Search"
+                data_flow: "Ingestion/Processing/Warehouse"
+                streaming: "Kafka/RabbitMQ"
+            consolidates:
+              - "Service breakdown and mesh"
+              - "IaC strategy"
+              - "Data platform architecture"
+
+          - id: "security_compliance_implementation"
+            question: "Confirm security and compliance implementation?"
+            format_type: "security_compliance_confirmation"
+            ai_presents:
+              security:
+                authentication: "OAuth2/SAML/OIDC"
+                authorization: "RBAC/ABAC"
+                security_scanning: "SAST/DAST/SCA"
+
+              compliance:
+                frameworks: "GDPR/HIPAA/PCI/SOC2"
+                audit_trails: "Complete logging"
+                data_protection: "Encryption/DLP"
+            consolidates:
+              - "Identity and access management"
+              - "Security controls"
+              - "Compliance requirements"
+              - "Audit and monitoring"
+
+      operations:
+        name: "📊 OPERATIONS WITH TEST GATES (2 questions)"
+        questions:
+          - id: "observability_scaling"
+            question: "Confirm observability with quality gates?"
+            format_type: "operations_test_confirmation"
+            ai_presents:
+              observability:
+                logging: "ELK/Datadog/CloudWatch"
+                metrics: "Prometheus/Grafana"
+                tracing: "Jaeger/Zipkin"
+                alerting: "PagerDuty/Opsgenie"
+
+              scaling:
+                horizontal: "Auto-scaling groups"
+                vertical: "Resource limits"
+                global: "Multi-region"
+                edge: "CDN/Edge functions"
+            consolidates:
+              - "Complete observability stack"
+              - "Scaling strategies"
+              - "Performance monitoring"
+
+          - id: "resilience_recovery"
+            question: "Confirm resilience and disaster recovery?"
+            format_type: "resilience_confirmation"
+            ai_presents:
+              disaster_recovery:
+                rto_rpo: "Recovery objectives"
+                backups: "Strategy and retention"
+                failover: "Active-passive/Active-active"
+
+              resilience:
+                circuit_breakers: "Hystrix/Resilience4j"
+                rate_limiting: "API Gateway/Application"
+                chaos_engineering: "Chaos Monkey/Litmus"
+            consolidates:
+              - "DR planning"
+              - "Backup strategies"
+              - "Resilience patterns"
+              - "Chaos testing"
+
+      quality_governance:
+        name: "✅ MANDATORY QUALITY GOVERNANCE (1 question)"
+        questions:
+          - id: "quality_release_documentation"
+            question: "Confirm MANDATORY quality gates and testing?"
+            format_type: "quality_enforcement_confirmation"
+            ai_presents:
+              testing:
+                pyramid: "Unit(70%)/Integration(20%)/E2E(10%)"
+                performance: "Load/Stress/Chaos"
+                security: "Penetration/Vulnerability"
+
+              release:
+                strategy: "Blue-green/Canary/Rolling"
+                feature_flags: "LaunchDarkly/Unleash"
+                rollback: "Automated triggers"
+
+              documentation:
+                api: "OpenAPI/Swagger"
+                code: "JSDoc/TypeDoc"
+                architecture: "C4 diagrams"
+                runbooks: "Operational guides"
+            consolidates:
+              - "Complete test pyramid"
+              - "Release management"
+              - "Feature flagging"
+              - "Documentation standards"
+
+# ===================================================================
+# AI-POWERED CASCADE OPERATIONS
+# ===================================================================
+cascade_operations:
+  description: "Automatic child element planning"
+
+  platform_to_modules:
+    trigger: "--target=platform --cascade=true"
+    process: |
+      1. Generate platform-level plan
+      2. AI analyzes module dependencies
+      3. Auto-generate plan for each module
+      4. Map inter-module dependencies
+      5. Optimize parallel execution paths
+
+  module_to_features:
+    trigger: "--target=module --cascade=true"
+    process: |
+      1. Generate module-level plan
+      2. AI identifies feature boundaries
+      3. Auto-generate plan for each feature
+      4. Ensure feature integration points
+      5. Coordinate shared resources
+
+  benefits:
+    - consistency: "Uniform planning structure"
+    - efficiency: "80% reduction in planning time"
+    - optimization: "AI finds best execution paths"
+    - completeness: "No missing dependencies"
+
+# ===================================================================
+# MCP PLAYWRIGHT TEST ORCHESTRATION
+# ===================================================================
+mcp_playwright_integration:
+  detection: "Uses mcp-playwright-detector helper"
+
+  availability_check: |
+    Load helper: helpers/mcp-playwright-detector
+    If MCP_PLAYWRIGHT_AVAILABLE:
+      Use MCP commands for all test execution
+      Enable parallel execution and cloud grid
+      Generate optimized test suites
+    Elif LOCAL_PLAYWRIGHT_AVAILABLE:
+      Use npx commands with local Playwright
+      Limited parallel execution
+      Local-only test runs
+    Else:
+      Warn user about missing test infrastructure
+      Provide installation instructions
+      Allow --skip-tests flag only for POC
+
+  mcp_commands:
+    run_tests: "mcp://playwright/run --suite={suite} --module={module}"
+    get_results: "mcp://playwright/results --format=json --include-screenshots"
+    generate_report: "mcp://playwright/report --type=detailed --output=report.html"
+    check_status: "mcp://playwright/status"
+
+  test_organization:
+    by_suite:
+      smoke: "Basic availability and health checks"
+      features: "Module-specific functionality"
+      integration: "Cross-module workflows"
+      e2e: "Complete user journeys"
+      performance: "Load and stress testing"
+      security: "Security vulnerability checks"
+
+    by_phase:
+      foundation: ["smoke", "infrastructure"]
+      core: ["features", "api"]
+      integration: ["e2e", "workflows"]
+      polish: ["performance", "accessibility"]
+
+# ===================================================================
+# INTELLIGENT TEST GENERATION BASED ON ARCHITECTURE
+# ===================================================================
+intelligent_test_generation:
+  ai_analysis: "Detects components and generates appropriate test scenarios"
+
+  component_detection:
+    authentication:
+      detected_by: ["OAuth", "JWT", "Auth0", "Clerk", "NextAuth"]
+      generates_tests:
+        - "auth/login-flow.spec.ts"
+        - "auth/logout-flow.spec.ts"
+        - "auth/token-refresh.spec.ts"
+        - "auth/protected-routes.spec.ts"
+        - "auth/role-based-access.spec.ts"
+      mcp_suite: "auth"
+
+    payments:
+      detected_by: ["Stripe", "PayPal", "Square", "checkout"]
+      generates_tests:
+        - "payments/checkout-flow.spec.ts"
+        - "payments/subscription-management.spec.ts"
+        - "payments/webhook-processing.spec.ts"
+        - "payments/refund-flow.spec.ts"
+        - "payments/invoice-generation.spec.ts"
+      mcp_suite: "payments"
+
+    api:
+      detected_by: ["REST", "GraphQL", "tRPC", "endpoints"]
+      generates_tests:
+        - "api/endpoint-availability.spec.ts"
+        - "api/data-validation.spec.ts"
+        - "api/error-responses.spec.ts"
+        - "api/rate-limiting.spec.ts"
+        - "api/cors-headers.spec.ts"
+      mcp_suite: "api"
+
+    realtime:
+      detected_by: ["WebSocket", "Socket.io", "Pusher", "SSE"]
+      generates_tests:
+        - "realtime/connection-establishment.spec.ts"
+        - "realtime/message-delivery.spec.ts"
+        - "realtime/reconnection-logic.spec.ts"
+        - "realtime/presence-tracking.spec.ts"
+      mcp_suite: "realtime"
+
+    database:
+      detected_by: ["Prisma", "TypeORM", "Sequelize", "MongoDB"]
+      generates_tests:
+        - "database/connection-pool.spec.ts"
+        - "database/migration-status.spec.ts"
+        - "database/seed-data.spec.ts"
+        - "database/transaction-handling.spec.ts"
+      mcp_suite: "database"
+
+# ===================================================================
+# TEST EXECUTION STRATEGIES BY TRACK
+# ===================================================================
+test_execution_strategies:
+  instant:
+    test_count: "2-3 tests"
+    strategy: "Smoke tests only - verify basic functionality"
+    mcp_execution: |
+      mcp://playwright/run --suite=smoke --fast --browsers=chromium
+    test_gates:
+      - after_implementation: "smoke tests (required)"
+
+  rapid:
+    test_count: "10-15 tests"
+    strategy: "Smoke + Core feature tests"
+    mcp_execution: |
+      Phase 1: mcp://playwright/run --suite=smoke,features --workers=2
+      Phase 2: mcp://playwright/run --suite=integration --workers=2
+    test_gates:
+      - after_core: "smoke + feature tests (required)"
+      - after_polish: "integration tests (optional)"
+
+  standard:
+    test_count: "50-100 tests"
+    strategy: "Full test pyramid with continuous execution"
+    mcp_execution: |
+      Continuous: mcp://playwright/run --watch --parallel=4
+      Per Module: mcp://playwright/run --suite=features --module={name}
+      E2E Suite: mcp://playwright/run --suite=e2e --browsers=all
+    test_gates:
+      - after_foundation: "infrastructure tests"
+      - after_each_module: "module feature tests"
+      - after_integration: "e2e test suite"
+      - before_deployment: "performance benchmarks"
+
+  enterprise:
+    test_count: "500+ tests"
+    strategy: "MANDATORY comprehensive testing with cloud grid"
+    mcp_execution: |
+      Cloud Grid: mcp://playwright/run --grid=cloud --shards=10
+      Per Service: mcp://playwright/run --suite=service --name={service}
+      Contract Tests: mcp://playwright/run --suite=contracts --all-services
+      Security Suite: mcp://playwright/run --suite=security --owasp
+      Chaos Testing: mcp://playwright/run --suite=chaos --scenarios=all
+      NO 404 Check: mcp://playwright/run --suite=404-detection --zero-tolerance
+    governance_gates:
+      enforcement: "CANNOT PROCEED WITHOUT PASSING"
+      gates:
+        - phase_gate: "After each phase completion"
+        - service_gate: "Each service must work 100%"
+        - integration_gate: "Service boundaries verified"
+        - security_gate: "Security scans must pass"
+        - performance_gate: "Meet all SLAs"
+        - compliance_gate: "Audit requirements met"
+      failure_protocol:
+        - "STOP all work immediately"
+        - "Root cause analysis required"
+        - "Fix and full retest"
+        - "Executive approval to proceed"
+
+# ===================================================================
+# PLAYWRIGHT TEST GENERATION
+# ===================================================================
+playwright_test_planning:
+  ai_enhancement: "Tests generated based on detected components and user flows"
+
+  test_file_generation:
+    location: "06-development-plan/playwright-tests/"
+    structure:
+      - "smoke/" # Basic availability tests
+      - "features/" # Module-specific tests
+      - "integration/" # Cross-module tests
+      - "e2e/" # User journey tests
+      - "performance/" # Load and stress tests
+      - "security/" # Security tests
+
+  phase_1_smoke_tests:
+    description: "Basic availability tests after core setup"
+    phase: "When app first runs on localhost:3000"
+    tests:
+      - name: "app-running.spec.ts"
+        purpose: "Verify app is accessible"
+        code: |
+          test('app is running on localhost', async ({ page }) => {
+            await page.goto('http://localhost:3000');
+            await expect(page).toHaveTitle(/App Name/);
+            await expect(page.locator('body')).toBeVisible();
+          });
+
+      - name: "health-check.spec.ts"
+        purpose: "Verify API is responding"
+        code: |
+          test('API health check', async ({ request }) => {
+            const response = await request.get('http://localhost:3000/api/health');
+            expect(response.ok()).toBeTruthy();
+            const data = await response.json();
+            expect(data.status).toBe('healthy');
+          });
+
+      - name: "database-connection.spec.ts"
+        purpose: "Verify database connectivity"
+        code: |
+          test('database connection', async ({ request }) => {
+            const response = await request.get('http://localhost:3000/api/health/db');
+            expect(response.ok()).toBeTruthy();
+          });
+
+  phase_2_feature_tests:
+    description: "Test each module as it's completed"
+    phase: "After each module implementation"
+    mcp_execution: "mcp://playwright/run --suite=features --module={current}"
+    per_module:
+      auth:
+        - "Login with email/password"
+        - "OAuth provider login"
+        - "Logout functionality"
+        - "Protected route access"
+        - "Token refresh"
+
+      dashboard:
+        - "Data loading and display"
+        - "User interactions"
+        - "CRUD operations"
+        - "Real-time updates (if applicable)"
+
+      api:
+        - "Endpoint responses"
+        - "Error handling"
+        - "Rate limiting"
+        - "Data validation"
+
+  phase_3_integration_tests:
+    description: "End-to-end user journeys"
+    phase: "After all modules complete"
+    mcp_execution: "mcp://playwright/run --suite=e2e --browsers=all --parallel"
+    tests:
+      - "Complete user registration flow"
+      - "User journey from login to action"
+      - "Payment flow with Stripe test mode"
+      - "Email notification via Mailhog"
+      - "Data persistence across sessions"
+      - "Multi-user interactions"
+
+# ===================================================================
+# OUTPUT STRUCTURE FOR /ccu:develop
+# ===================================================================
+output_for_develop:
+  description: "Complete technical specification for execution"
+
+  includes:
+    technology_decisions:
+      - frontend_framework
+      - ui_library
+      - backend_framework
+      - database
+      - orm
+      - testing_framework
+      - deployment_platform
+
+    architecture:
+      - application_type
+      - module_structure
+      - api_design
+      - docker_configuration
+
+    build_phases:
+      - phase_name
+      - tasks_list
+      - test_requirements
+      - test_gates
+      - mcp_commands
+      - acceptance_criteria
+
+    testing_plan:
+      - test_types
+      - coverage_targets
+      - playwright_tests
+      - mcp_orchestration
+      - test_gates
+      - test_phases
+      - parallel_execution
+
+    environments:
+      - local_setup
+      - staging_config
+      - production_config
+
+    integrations:
+      - external_apis
+      - payment_providers
+      - authentication_services
+      - analytics_tools
+
+    docker_setup:
+      - compose_services
+      - container_configuration
+      - volume_mounts
+      - network_setup
+
+    ci_cd:
+      - pipeline_stages
+      - deployment_triggers
+      - quality_gates
+      - rollback_procedures
+
+# ===================================================================
+# PATTERN RECOGNITION & LEARNING
+# ===================================================================
+pattern_learning:
+  mem0_integration:
+    storage_trigger: "Project completion or milestone"
+    stored_patterns:
+      - task_sequences_that_worked
+      - optimal_phase_organization
+      - accurate_time_estimates
+      - successful_test_strategies
+      - deployment_configurations
+
+  pattern_application:
+    on_new_project:
+      - retrieve_similar_projects
+      - apply_successful_patterns
+      - adjust_for_differences
+      - suggest_optimizations
+      - warn_about_pitfalls
+
+# ===================================================================
+# INTELLIGENT PHASE PLANNING
+# ===================================================================
+phase_planning:
+  ai_optimization:
+    - critical_path_analysis
+    - parallel_work_identification
+    - resource_balancing
+    - risk_mitigation_planning
+  instant:
+    phases: 1
+    structure:
+      - name: "Complete Build"
+        tasks: "All in one sprint"
+        testing: "Smoke tests only"
+
+  rapid:
+    phases: 2
+    structure:
+      - name: "Foundation & Core"
+        tasks: "Setup, Database, Auth, Core API"
+        testing: "Smoke tests + Auth tests"
+
+      - name: "Features & Polish"
+        tasks: "UI, Integration, Optimization"
+        testing: "Feature tests + Integration"
+
+  standard:
+    phases: 3-4
+    structure:
+      - name: "Infrastructure"
+        tasks: "Setup, Docker, Database, Base configs"
+        testing: "Infrastructure tests"
+
+      - name: "Core Development"
+        tasks: "Auth, API, Core features"
+        testing: "Unit + Integration tests"
+
+      - name: "UI & Integration"
+        tasks: "Frontend, API integration"
+        testing: "E2E tests"
+
+      - name: "Optimization"
+        tasks: "Performance, Security, Polish"
+        testing: "Full test suite"
+
+  enterprise:
+    phases: 6-8
+    structure:
+      - "Foundation & Infrastructure"
+      - "Core Services"
+      - "Business Logic"
+      - "Integration Layer"
+      - "UI/UX Implementation"
+      - "Testing & Quality"
+      - "Performance & Security"
+      - "Deployment & Monitoring"
+
+    ai_phase_optimization:
+      - merge_phases_if_possible
+      - identify_quick_wins
+      - flag_high_risk_items
+      - suggest_pilot_approach
+      - recommend_mvp_scope

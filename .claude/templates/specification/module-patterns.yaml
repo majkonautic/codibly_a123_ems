@@ -1,0 +1,363 @@
+# Module Patterns and Business Rules
+# SINGLE SOURCE OF TRUTH for module detection and business rules
+# Used by /ccu:specify for both pattern recognition and contextual questions
+
+meta:
+  version: "2.0"
+  framework: "Claude Code Ultimate 2.0"
+  purpose: "Module-type patterns with integrated business rules"
+
+# Module Type Detection
+module_type_detection:
+  auth:
+    keywords: ["auth", "authentication", "login", "user", "account", "identity", "session"]
+    common_names: ["auth", "authentication", "user-auth", "identity", "accounts"]
+
+  payment:
+    keywords: ["payment", "billing", "subscription", "invoice", "checkout", "stripe", "paypal"]
+    common_names: ["payment", "billing", "checkout", "subscription", "payments"]
+
+  file:
+    keywords: ["file", "upload", "document", "media", "storage", "attachment", "import"]
+    common_names: ["file-upload", "documents", "media", "storage", "uploads"]
+
+  data:
+    keywords: ["data", "database", "analytics", "report", "dashboard", "metrics", "insights"]
+    common_names: ["dashboard", "analytics", "reporting", "insights", "metrics"]
+
+  messaging:
+    keywords: ["message", "chat", "email", "notification", "alert", "communication"]
+    common_names: ["messaging", "notifications", "chat", "email", "alerts"]
+
+  admin:
+    keywords: ["admin", "management", "settings", "configuration", "control", "moderate"]
+    common_names: ["admin", "admin-panel", "management", "settings", "configuration"]
+
+# Module Patterns with Business Rules
+module_patterns:
+  auth:
+    description: "Authentication and session management"
+    keywords:
+      - authentication
+      - login
+      - signup
+      - register
+      - logout
+      - password
+      - credentials
+      - oauth
+      - sso
+    default_features:
+      - login
+      - register
+      - password-reset
+      - logout
+      - mfa
+    shadcn_components:
+      - form
+      - input
+      - button
+      - card
+      - alert
+      - checkbox
+      - label
+
+    # Business Rules by Track
+    instant_defaults:
+      password_min_length: 8
+      password_complexity: "standard"
+      session_timeout_minutes: 30
+      max_login_attempts: 5
+      lockout_duration_minutes: 15
+      email_verification: false
+
+    rapid_questions:
+      - id: "password_policy"
+        question: "Password requirements (min length/complexity)?"
+        default: "8/standard"
+        format: "{min}/{complexity}"
+        examples: ["8/standard", "12/strong", "10/custom"]
+
+      - id: "session_management"
+        question: "Session timeout (minutes)?"
+        default: "30"
+        format: "{timeout}"
+        examples: ["30", "60", "120", "480"]
+
+  user-management:
+    keywords:
+      - user
+      - profile
+      - account
+      - settings
+      - preferences
+      - avatar
+      - users management
+      - member
+      - team
+    default_features:
+      - profile
+      - settings
+      - preferences
+      - avatar
+      - roles
+    shadcn_components:
+      - form
+      - input
+      - avatar
+      - tabs
+      - switch
+      - select
+      - button
+
+  billing:
+    description: "Payment processing and billing"
+    keywords:
+      - payment
+      - billing
+      - subscription
+      - pricing
+      - invoice
+      - credit card
+      - stripe
+      - checkout
+      - plan
+      - tier
+    default_features:
+      - subscription
+      - payment-methods
+      - invoices
+      - usage
+      - plans
+    shadcn_components:
+      - card
+      - table
+      - badge
+      - button
+      - dialog
+      - form
+      - input
+
+    instant_defaults:
+      min_transaction_amount: 1.00
+      max_transaction_amount: 10000.00
+      currency: "USD"
+      refund_window_days: 30
+      require_billing_address: true
+
+    rapid_questions:
+      - id: "transaction_limits"
+        question: "Transaction limits (min/max in USD)?"
+        default: "1/10000"
+        format: "{min}/{max}"
+        examples: ["1/10000", "5/50000", "0.50/1000"]
+
+      - id: "refund_policy"
+        question: "Refund window (days)?"
+        default: "30"
+        format: "{days}"
+        examples: ["30", "14", "90"]
+
+  dashboard:
+    keywords:
+      - dashboard
+      - analytics
+      - metrics
+      - statistics
+      - overview
+      - reports
+      - charts
+      - graphs
+      - kpi
+    default_features:
+      - overview
+      - widgets
+      - recent-activity
+      - quick-actions
+    shadcn_components:
+      - card
+      - chart
+      - skeleton
+      - badge
+      - progress
+      - table
+
+  products:
+    keywords:
+      - product
+      - catalog
+      - inventory
+      - item
+      - sku
+      - merchandise
+      - goods
+      - stock
+    default_features:
+      - list
+      - details
+      - search
+      - categories
+      - reviews
+    shadcn_components:
+      - card
+      - badge
+      - carousel
+      - dialog
+      - form
+      - select
+      - pagination
+
+  commerce:
+    keywords:
+      - cart
+      - shopping
+      - order
+      - checkout
+      - purchase
+      - buy
+      - store
+      - ecommerce
+      - shipping
+    default_features:
+      - cart
+      - checkout
+      - orders
+      - shipping
+      - returns
+    shadcn_components:
+      - card
+      - button
+      - form
+      - stepper
+      - radio-group
+      - select
+      - badge
+
+  messaging:
+    keywords:
+      - message
+      - chat
+      - notification
+      - email
+      - inbox
+      - communication
+      - alert
+      - announce
+    default_features:
+      - inbox
+      - compose
+      - notifications
+      - settings
+    shadcn_components:
+      - card
+      - badge
+      - avatar
+      - scroll-area
+      - textarea
+      - button
+      - popover
+
+  admin:
+    keywords:
+      - admin
+      - administration
+      - management
+      - permission
+      - role
+      - audit
+      - system
+      - configuration
+      - moderate
+    default_features:
+      - users
+      - permissions
+      - audit-log
+      - system-settings
+    shadcn_components:
+      - data-table
+      - dialog
+      - form
+      - switch
+      - select
+      - tabs
+      - alert
+
+  content:
+    keywords:
+      - content
+      - cms
+      - blog
+      - article
+      - post
+      - page
+      - editor
+      - publish
+      - draft
+    default_features:
+      - editor
+      - posts
+      - categories
+      - media
+      - publish
+    shadcn_components:
+      - form
+      - textarea
+      - button
+      - select
+      - dialog
+      - tabs
+      - card
+
+  search:
+    keywords:
+      - search
+      - find
+      - discover
+      - filter
+      - query
+      - browse
+      - explore
+    default_features:
+      - search-bar
+      - filters
+      - results
+      - suggestions
+    shadcn_components:
+      - command
+      - input
+      - card
+      - badge
+      - skeleton
+      - pagination
+
+# Priority order for detection (when multiple patterns match)
+detection_priority:
+  1: auth           # Always detect auth first if present
+  2: user-management
+  3: dashboard      # Core modules
+  4: billing
+  5: products       # Business logic
+  6: commerce
+  7: messaging      # Features
+  8: search
+  9: content
+  10: admin         # Admin usually last
+
+# Minimum confidence thresholds
+confidence_thresholds:
+  high: 3    # 3+ keyword matches = definitely include
+  medium: 2  # 2 keyword matches = likely include
+  low: 1     # 1 keyword match = consider including
+
+# Module dependencies (automatic)
+module_dependencies:
+  user-management:
+    requires: [auth]
+  billing:
+    requires: [auth, user-management]
+  commerce:
+    requires: [auth, products]
+  admin:
+    requires: [auth, user-management]
+  content:
+    requires: [auth]

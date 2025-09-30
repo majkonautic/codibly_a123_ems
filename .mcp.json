@@ -1,0 +1,63 @@
+{
+    "mcpServers": {
+        "sequential-thinking": {
+            "command": "npx",
+            "args": [
+                "-y",
+                "@modelcontextprotocol/server-sequential-thinking"
+            ]
+        },
+        "firecrawl": {
+          "type": "http",
+          "url": "https://firecrawl.mcp.majewscy.tech/",
+          "headers": {
+            "x-api-key": "sadfasldkjf4owiru5ewkfsdljsldfkjlKDLFKJS342rfd",
+            "x-firecrawl-api-key": "fc-8fc7ca27425b44fd860ad1acf5117f20"
+          }
+        },
+        "mem0": {
+            "type": "http",
+            "url": "https://mem0.mcp.majewscy.tech/mcp",
+            "headers": {
+                "x-api-key": "YOUR_MCP_GATEWAY_KEY",
+                "x-mem0-api-key": "YOUR_MEM0_API_KEY",
+                "x-openai-api-key": "YOUR_OPENAI_API_KEY"
+            }
+        },
+        "aws": {
+          "type": "http",
+          "url": "https://aws.mcp.majewscy.tech/",
+          "headers": {
+            "x-api-key": "YOUR_AWS_MCP_API_KEY",
+            "x-aws-access-key-id": "YOUR_AWS_ACCESS_KEY_ID",
+            "x-aws-secret-access-key": "YOUR_AWS_SECRET_ACCESS_KEY",
+            "x-aws-default-region": "us-east-1"
+          }
+        },
+         "context7": {
+            "type": "http",
+            "url": "https://context7.mcp.majewscy.tech",
+            "headers": {
+                "x-api-key": "YOUR_CONTEXT7_API_KEY"
+            }
+        },
+        "claude-context": {
+          "type": "stdio",
+          "command": "npx",
+          "args": [
+            "@zilliz/claude-context-mcp@latest"
+          ],
+          "env": {
+            "OPENAI_API_KEY": "YOUR_OPENAI_API_KEY",
+            "MILVUS_TOKEN": "YOUR_MILVUS_TOKEN"
+          }
+        },
+        "playwright": {
+            "command": "npx",
+            "args": [
+                "-y",
+                "@playwright/mcp@latest"
+            ]
+        }
+    }
+}

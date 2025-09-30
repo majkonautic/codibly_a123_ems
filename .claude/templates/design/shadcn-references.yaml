@@ -1,0 +1,393 @@
+# shadcn/ui Component References
+# This file contains all shadcn/ui component URLs and descriptions for the CCU design command
+
+themes:
+  main_url: "https://ui.shadcn.com/themes"
+  options:
+    - name: "Default (Zinc)"
+      url: "https://ui.shadcn.com/themes"
+      description: "Clean, neutral color scheme"
+    - name: "New York (Stone)"
+      url: "https://ui.shadcn.com/themes#new-york"
+      description: "Sophisticated stone palette"
+    - name: "Orange (Warm)"
+      url: "https://ui.shadcn.com/themes#orange"
+      description: "Warm, energetic theme"
+    - name: "Green (Nature)"
+      url: "https://ui.shadcn.com/themes#green"
+      description: "Natural, calming colors"
+    - name: "Blue (Ocean)"
+      url: "https://ui.shadcn.com/themes#blue"
+      description: "Professional blue theme"
+    - name: "Violet (Creative)"
+      url: "https://ui.shadcn.com/themes#violet"
+      description: "Creative purple tones"
+    - name: "Custom colors"
+      url: "https://ui.shadcn.com/colors"
+      description: "Design your own color scheme"
+
+login_styles:
+  main_url: "https://ui.shadcn.com/blocks/login"
+  options:
+    - name: "Split screen"
+      id: "login-04"
+      url: "https://ui.shadcn.com/blocks/login#login-04"
+      description: "50/50 split with branding area"
+      ascii: |
+        ┌──────────┬──────────┐
+        │          │  LOGIN   │
+        │  Brand   │  ┌────┐  │
+        │  Image   │  │Form│  │
+        │          │  └────┘  │
+        └──────────┴──────────┘
+    - name: "Simple form"
+      id: "login-01"
+      url: "https://ui.shadcn.com/blocks/login#login-01"
+      description: "Centered minimal login"
+      ascii: |
+        ┌──────────────────┐
+        │                  │
+        │     ┌────┐       │
+        │     │Form│       │
+        │     └────┘       │
+        └──────────────────┘
+    - name: "Muted background"
+      id: "login-03"
+      url: "https://ui.shadcn.com/blocks/login#login-03"
+      description: "Form with subtle background"
+      ascii: |
+        ┌──────────────────┐
+        │░░░░░░░░░░░░░░░░░░│
+        │░░░░┌────┐░░░░░░░░│
+        │░░░░│Form│░░░░░░░░│
+        │░░░░└────┘░░░░░░░░│
+        └──────────────────┘
+    - name: "Two-column with image"
+      id: "login-02"
+      url: "https://ui.shadcn.com/blocks/login#login-02"
+      description: "Login with cover image"
+      ascii: |
+        ┌──────────┬──────────┐
+        │  Cover   │  Login   │
+        │  Image   │  Form    │
+        └──────────┴──────────┘
+    - name: "Email-only"
+      id: "login-05"
+      url: "https://ui.shadcn.com/blocks/login#login-05"
+      description: "Simple email-only login"
+      ascii: |
+        ┌──────────────────┐
+        │    Email Login   │
+        │    [________]    │
+        │    [Continue]    │
+        └──────────────────┘
+
+sidebar_styles:
+  main_url: "https://ui.shadcn.com/blocks/sidebar"
+  options:
+    - name: "Simple grouped sections"
+      id: "sidebar-01"
+      url: "https://ui.shadcn.com/blocks/sidebar#sidebar-01"
+      description: "Navigation grouped by section"
+      ascii: |
+        ┌──────────┐
+        │ MAIN     │
+        │ ▸ Home   │
+        │ ▸ Profile│
+        │          │
+        │ SETTINGS │
+        │ ▸ General│
+        └──────────┘
+    - name: "Collapsible sections"
+      id: "sidebar-02"
+      url: "https://ui.shadcn.com/blocks/sidebar#sidebar-02"
+      description: "Expandable/collapsible groups"
+      ascii: |
+        ┌──────────┐
+        │ ▼ MAIN   │
+        │   Home   │
+        │   Profile│
+        │ ▶ TOOLS  │
+        │ ▶ ADMIN  │
+        └──────────┘
+    - name: "With submenus"
+      id: "sidebar-03"
+      url: "https://ui.shadcn.com/blocks/sidebar#sidebar-03"
+      description: "Nested navigation items"
+      ascii: |
+        ┌──────────┐
+        │ ▸ Dashboard
+        │ ▼ Projects│
+        │   └ Active│
+        │   └ Done  │
+        │ ▸ Settings│
+        └──────────┘
+    - name: "Floating with submenus"
+      id: "sidebar-04"
+      url: "https://ui.shadcn.com/blocks/sidebar#sidebar-04"
+      description: "Modern floating design"
+    - name: "Collapsible submenus"
+      id: "sidebar-05"
+      url: "https://ui.shadcn.com/blocks/sidebar#sidebar-05"
+      description: "Smooth submenu animations"
+    - name: "Dropdown submenus"
+      id: "sidebar-06"
+      url: "https://ui.shadcn.com/blocks/sidebar#sidebar-06"
+      description: "Submenus as dropdowns"
+    - name: "Icon-only collapsed"
+      id: "sidebar-07"
+      url: "https://ui.shadcn.com/blocks/sidebar#sidebar-07"
+      description: "Collapses to icons"
+      ascii: |
+        Full          Collapsed
+        ┌──────────┐  ┌──┐
+        │ 🏠 Home  │  │🏠│
+        │ 👤 Profile│  │👤│
+        │ ⚙️ Settings│  │⚙️│
+        └──────────┘  └──┘
+    - name: "Secondary navigation"
+      id: "sidebar-08"
+      url: "https://ui.shadcn.com/blocks/sidebar#sidebar-08"
+      description: "Two-level navigation"
+    - name: "Nested collapsible"
+      id: "sidebar-09"
+      url: "https://ui.shadcn.com/blocks/sidebar#sidebar-09"
+      description: "Multiple nesting levels"
+    - name: "In popover"
+      id: "sidebar-10"
+      url: "https://ui.shadcn.com/blocks/sidebar#sidebar-10"
+      description: "Mobile-first popover"
+    - name: "File tree"
+      id: "sidebar-11"
+      url: "https://ui.shadcn.com/blocks/sidebar#sidebar-11"
+      description: "File explorer style"
+    - name: "With calendar"
+      id: "sidebar-12"
+      url: "https://ui.shadcn.com/blocks/sidebar#sidebar-12"
+      description: "Integrated calendar widget"
+    - name: "In dialog"
+      id: "sidebar-13"
+      url: "https://ui.shadcn.com/blocks/sidebar#sidebar-13"
+      description: "Modal sidebar"
+
+grid_layouts:
+  options:
+    - name: "Auto-fit Grid"
+      description: "Responsive auto-adjusting columns"
+      css: "grid-template-columns: repeat(auto-fit, minmax(250px, 1fr))"
+      tailwind: "grid-auto-fit"
+      ascii: |
+        ┌─────┬─────┬─────┬─────┐
+        │ Card│ Card│ Card│ Card│
+        ├─────┼─────┼─────┴─────┤
+        │ Card│ Card│   Card    │
+        └─────┴─────┴───────────┘
+      use_case: "Dashboards, card grids"
+    - name: "Fixed Responsive Grid"
+      description: "2-3-4 column responsive"
+      tailwind: "grid-cols-1 md:grid-cols-2 lg:grid-cols-4"
+      ascii: |
+        Mobile      Tablet        Desktop
+        ┌─────┐    ┌───┬───┐    ┌──┬──┬──┬──┐
+        │     │    │   │   │    │  │  │  │  │
+        ├─────┤    ├───┼───┤    ├──┼──┼──┼──┤
+        │     │    │   │   │    │  │  │  │  │
+        └─────┘    └───┴───┘    └──┴──┴──┴──┘
+      use_case: "Product grids, galleries"
+    - name: "Asymmetric Grid"
+      description: "Featured item with smaller cards"
+      css: "grid-template-areas + span"
+      ascii: |
+        ┌───────────┬─────┬─────┐
+        │           │     │     │
+        │  Featured │ Card│ Card│
+        │           ├─────┼─────┤
+        │           │ Card│ Card│
+        └───────────┴─────┴─────┘
+      use_case: "Blog layouts, featured content"
+    - name: "Masonry Style"
+      description: "Variable height Pinterest-style"
+      css: "columns + break-inside-avoid"
+      ascii: |
+        ┌─────┐ ┌─────────┐ ┌───┐
+        │     │ │         │ │   │
+        │ Card│ │  Card   │ │   │
+        ├─────┤ │         │ │Card
+        │     │ ├─────────┤ │   │
+        │ Card│ │  Card   │ ├───┤
+        └─────┘ └─────────┘ └───┘
+      use_case: "Image galleries, feeds"
+    - name: "Bento Grid"
+      description: "Mixed sizes modern dashboard"
+      reference: "https://ui.shadcn.com/blocks/dashboard"
+      ascii: |
+        ┌───────────┬───────┐
+        │   Large   │ Small │
+        │           ├───────┤
+        ├─────┬─────┤ Small │
+        │ Med │ Med ├───────┤
+        └─────┴─────┴───────┘
+      use_case: "Modern dashboards, analytics"
+
+data_display:
+  options:
+    - name: "Data Table"
+      url: "https://ui.shadcn.com/docs/components/data-table"
+      description: "Sortable, filterable tables"
+      ascii: |
+        ┌─────────────────────────────┐
+        │ Name    │ Status │ Amount   │
+        ├─────────┼────────┼──────────┤
+        │ Item 1  │ Active │ $100.00  │
+        │ Item 2  │ Pending│ $250.00  │
+        └─────────┴────────┴──────────┘
+      use_case: "Transactions, records, admin panels"
+    - name: "Card Grid"
+      url: "https://ui.shadcn.com/docs/components/card"
+      description: "Visual cards for metrics"
+      ascii: |
+        ┌──────┐ ┌──────┐ ┌──────┐
+        │ Card │ │ Card │ │ Card │
+        │ $100 │ │ $250 │ │ $75  │
+        │ ▲12% │ │ ▼5%  │ │ ▲8%  │
+        └──────┘ └──────┘ └──────┘
+      use_case: "KPIs, metrics, summaries"
+    - name: "List View"
+      url: "https://ui.shadcn.com/blocks#lists"
+      description: "Detailed list items"
+      ascii: |
+        ┌─────────────────────────┐
+        │ • Item with description │
+        │   Secondary text here   │
+        ├─────────────────────────┤
+        │ • Another item          │
+        │   More details          │
+        └─────────────────────────┘
+      use_case: "Tasks, notifications, feeds"
+    - name: "Charts Dashboard"
+      url: "https://ui.shadcn.com/blocks/dashboard#dashboard-01"
+      description: "Visual analytics"
+      ascii: |
+        ┌─────────┬───────────┐
+        │ 📈 Line │ 🥧 Pie    │
+        │ Graph   │ Chart     │
+        ├─────────┴───────────┤
+        │ 📊 Bar Chart        │
+        └─────────────────────┘
+      use_case: "Analytics, reporting, insights"
+
+components:
+  main_url: "https://ui.shadcn.com/docs/components"
+  categories:
+    forms:
+      - name: "Form"
+        url: "https://ui.shadcn.com/docs/components/form"
+        description: "Form validation and handling"
+      - name: "Input"
+        url: "https://ui.shadcn.com/docs/components/input"
+        description: "Text input fields"
+      - name: "Button"
+        url: "https://ui.shadcn.com/docs/components/button"
+        description: "Interactive buttons"
+      - name: "Select"
+        url: "https://ui.shadcn.com/docs/components/select"
+        description: "Dropdown selections"
+      - name: "Checkbox"
+        url: "https://ui.shadcn.com/docs/components/checkbox"
+        description: "Checkbox inputs"
+      - name: "Radio Group"
+        url: "https://ui.shadcn.com/docs/components/radio-group"
+        description: "Radio button groups"
+      - name: "Switch"
+        url: "https://ui.shadcn.com/docs/components/switch"
+        description: "Toggle switches"
+      - name: "Textarea"
+        url: "https://ui.shadcn.com/docs/components/textarea"
+        description: "Multi-line text input"
+      - name: "Date Picker"
+        url: "https://ui.shadcn.com/docs/components/date-picker"
+        description: "Calendar date selection"
+
+    data:
+      - name: "Table"
+        url: "https://ui.shadcn.com/docs/components/table"
+        description: "Data tables"
+      - name: "Data Table"
+        url: "https://ui.shadcn.com/docs/components/data-table"
+        description: "Advanced data tables"
+      - name: "Card"
+        url: "https://ui.shadcn.com/docs/components/card"
+        description: "Container cards"
+      - name: "Chart"
+        url: "https://ui.shadcn.com/docs/components/chart"
+        description: "Data visualization"
+      - name: "Badge"
+        url: "https://ui.shadcn.com/docs/components/badge"
+        description: "Status badges"
+      - name: "Progress"
+        url: "https://ui.shadcn.com/docs/components/progress"
+        description: "Progress indicators"
+
+    navigation:
+      - name: "Navigation Menu"
+        url: "https://ui.shadcn.com/docs/components/navigation-menu"
+        description: "Main navigation"
+      - name: "Tabs"
+        url: "https://ui.shadcn.com/docs/components/tabs"
+        description: "Tabbed interfaces"
+      - name: "Breadcrumb"
+        url: "https://ui.shadcn.com/docs/components/breadcrumb"
+        description: "Breadcrumb navigation"
+      - name: "Pagination"
+        url: "https://ui.shadcn.com/docs/components/pagination"
+        description: "Page navigation"
+
+    feedback:
+      - name: "Alert"
+        url: "https://ui.shadcn.com/docs/components/alert"
+        description: "Alert messages"
+      - name: "Alert Dialog"
+        url: "https://ui.shadcn.com/docs/components/alert-dialog"
+        description: "Confirmation dialogs"
+      - name: "Toast"
+        url: "https://ui.shadcn.com/docs/components/toast"
+        description: "Toast notifications"
+      - name: "Dialog"
+        url: "https://ui.shadcn.com/docs/components/dialog"
+        description: "Modal dialogs"
+      - name: "Sheet"
+        url: "https://ui.shadcn.com/docs/components/sheet"
+        description: "Slide-out panels"
+      - name: "Popover"
+        url: "https://ui.shadcn.com/docs/components/popover"
+        description: "Popover overlays"
+      - name: "Tooltip"
+        url: "https://ui.shadcn.com/docs/components/tooltip"
+        description: "Hover tooltips"
+
+    layout:
+      - name: "Accordion"
+        url: "https://ui.shadcn.com/docs/components/accordion"
+        description: "Collapsible sections"
+      - name: "Separator"
+        url: "https://ui.shadcn.com/docs/components/separator"
+        description: "Visual separators"
+      - name: "Skeleton"
+        url: "https://ui.shadcn.com/docs/components/skeleton"
+        description: "Loading placeholders"
+      - name: "Scroll Area"
+        url: "https://ui.shadcn.com/docs/components/scroll-area"
+        description: "Custom scrollbars"
+      - name: "Aspect Ratio"
+        url: "https://ui.shadcn.com/docs/components/aspect-ratio"
+        description: "Maintain aspect ratios"
+
+colors:
+  main_url: "https://ui.shadcn.com/colors"
+  description: "Comprehensive color system generator"
+
+blocks:
+  dashboards: "https://ui.shadcn.com/blocks#dashboard"
+  authentication: "https://ui.shadcn.com/blocks#authentication"
+  marketing: "https://ui.shadcn.com/blocks#marketing"
+  ecommerce: "https://ui.shadcn.com/blocks#ecommerce"

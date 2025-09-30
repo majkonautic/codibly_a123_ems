@@ -1,0 +1,386 @@
+# Complexity Detection Rules for Orchestration Strategy
+# Determines LIGHT/STANDARD/DEEP complexity and optimal execution pattern
+# Version: 1.0
+
+meta:
+  version: "1.0"
+  framework: "CCU 2.0"
+  purpose: "Analyze work complexity to determine optimal orchestration strategy"
+  philosophy:
+    - "Ship fast: Optimize for speed over perfection"
+    - "80/20 rule: Deliver maximum value with minimum effort"
+    - "Auto-split: Break down large work automatically"
+
+# ===================================================================
+# COMPLEXITY LEVELS
+# ===================================================================
+
+complexity_levels:
+  # ===================================================================
+  # LIGHT - Trivial Tasks
+  # ===================================================================
+  LIGHT:
+    name: "Light Complexity"
+    description: "Simple tasks that can be completed quickly by a single agent"
+    thresholds:
+      max_effort_hours: 2
+      max_modules: 1
+      max_files: 5
+      max_lines_of_code: 200
+
+    characteristics:
+      - "Single feature or bug fix"
+      - "No architectural changes"
+      - "Minimal dependencies"
+      - "Clear requirements"
+      - "Standard patterns apply"
+
+    orchestration:
+      strategy: "sequential"
+      agents_needed: 1
+      waves: 1
+      parallel_execution: false
+      recommended_pattern: "rapid_mvp"
+
+    examples:
+      - "Fix typo in documentation"
+      - "Update button color"
+      - "Add validation to single form"
+      - "Fix simple bug with clear reproduction"
+      - "Add single API endpoint"
+
+    time_estimates:
+      planning: "0 minutes (skip)"
+      execution: "30-120 minutes"
+      review: "0 minutes (self-review)"
+      total: "30-120 minutes"
+
+  # ===================================================================
+  # STANDARD - Regular Features
+  # ===================================================================
+  STANDARD:
+    name: "Standard Complexity"
+    description: "Features requiring coordinated development across multiple components"
+    thresholds:
+      min_effort_hours: 2
+      max_effort_hours: 16
+      max_modules: 5
+      max_files: 50
+      max_lines_of_code: 2000
+
+    characteristics:
+      - "New feature development"
+      - "Multiple component changes"
+      - "Database schema updates"
+      - "API and UI changes"
+      - "Integration requirements"
+      - "Test coverage needed"
+
+    orchestration:
+      strategy: "parallel"
+      agents_needed: 3-6
+      waves: 2-3
+      parallel_execution: true
+      recommended_pattern: "core_trio"
+      fallback_pattern: "implementation_wave"
+
+    agent_allocation:
+      wave_1:
+        name: "Planning & Specification"
+        agents:
+          - "technical-product-manager"
+          - "product-designer"
+          - "solution-architect"
+        execution: "parallel"
+        duration: "10 minutes"
+
+      wave_2:
+        name: "Implementation"
+        agents:
+          - "backend-developer"
+          - "frontend-developer"
+          - "quality-engineer"
+        execution: "parallel"
+        duration: "20 minutes"
+
+      wave_3:
+        name: "Integration & Review"
+        agents:
+          - "solution-architect"
+        execution: "sequential"
+        duration: "10 minutes"
+
+    examples:
+      - "Add user authentication system"
+      - "Implement payment processing"
+      - "Create dashboard with analytics"
+      - "Build CRUD for new entity"
+      - "Add real-time notifications"
+
+    time_estimates:
+      planning: "10 minutes (parallel)"
+      execution: "20 minutes (parallel)"
+      review: "10 minutes"
+      total: "40 minutes (vs 105 sequential)"
+      savings: "62%"
+
+  # ===================================================================
+  # DEEP - Complex Systems
+  # ===================================================================
+  DEEP:
+    name: "Deep Complexity"
+    description: "Complex features requiring extensive research and coordination"
+    thresholds:
+      min_effort_hours: 16
+      max_effort_hours: 80
+      min_modules: 5
+      max_files: 200
+      max_lines_of_code: 10000
+
+    characteristics:
+      - "Architectural changes"
+      - "Multiple service integration"
+      - "Complex business logic"
+      - "Performance optimization"
+      - "Security requirements"
+      - "Compliance needs"
+      - "Data migration"
+
+    orchestration:
+      strategy: "multi_wave_parallel"
+      agents_needed: 6-10
+      waves: 3-5
+      parallel_execution: true
+      recommended_pattern: "enterprise_comprehensive"
+      auto_split: true
+      split_threshold_hours: 16
+
+    agent_allocation:
+      wave_1:
+        name: "Deep Research & Planning"
+        agents:
+          - "business-analyst"
+          - "technical-product-manager"
+          - "product-designer"
+          - "solution-architect"
+          - "security-architect"
+        execution: "parallel"
+        duration: "15 minutes"
+
+      wave_2:
+        name: "Parallel Development"
+        agents:
+          - "backend-developer-1"
+          - "backend-developer-2"
+          - "frontend-developer"
+          - "quality-engineer"
+        execution: "parallel"
+        duration: "25 minutes"
+
+      wave_3:
+        name: "Integration & Testing"
+        agents:
+          - "solution-architect"
+          - "quality-engineer"
+        execution: "parallel"
+        duration: "15 minutes"
+
+      wave_4:
+        name: "Review & Polish"
+        agents:
+          - "code-analyzer"
+          - "security-architect"
+        execution: "parallel"
+        duration: "10 minutes"
+
+    examples:
+      - "Migrate to microservices architecture"
+      - "Implement multi-tenant system"
+      - "Build real-time collaboration features"
+      - "Create ML-powered recommendations"
+      - "Develop offline-first mobile app"
+
+    time_estimates:
+      planning: "15 minutes (parallel)"
+      execution: "25 minutes (parallel)"
+      integration: "15 minutes (parallel)"
+      review: "10 minutes (parallel)"
+      total: "65 minutes (vs 240 sequential)"
+      savings: "73%"
+
+# ===================================================================
+# COMPLEXITY DETECTION ALGORITHM
+# ===================================================================
+
+detection_algorithm:
+  inputs:
+    - "modules_count"
+    - "estimated_effort_hours"
+    - "files_to_change"
+    - "dependencies_count"
+    - "architecture_changes"
+    - "compliance_requirements"
+    - "performance_requirements"
+
+  scoring:
+    base_score:
+      calculation: "effort_hours * 10"
+
+    modifiers:
+      modules_multiplier:
+        "<= 1": 1.0
+        "2-3": 1.5
+        "4-5": 2.0
+        "> 5": 2.5
+
+      architecture_change:
+        value: 50
+        description: "Add 50 points for architecture changes"
+
+      compliance_required:
+        value: 40
+        description: "Add 40 points for compliance needs"
+
+      performance_critical:
+        value: 30
+        description: "Add 30 points for performance requirements"
+
+      security_sensitive:
+        value: 30
+        description: "Add 30 points for security requirements"
+
+    thresholds:
+      LIGHT: "score < 30"
+      STANDARD: "score >= 30 AND score < 200"
+      DEEP: "score >= 200"
+
+# ===================================================================
+# AUTO-SPLIT RULES
+# ===================================================================
+
+auto_split_rules:
+  enabled: true
+  description: "Automatically break down large work into manageable chunks"
+
+  trigger_conditions:
+    - "effort_hours > 16"
+    - "modules_count > 5"
+    - "complexity == DEEP AND user_preference == speed"
+
+  split_strategy:
+    max_chunk_hours: 8
+    min_chunk_hours: 2
+
+    approaches:
+      by_module:
+        description: "Split by module boundaries"
+        when: "modules are independent"
+        example: "Auth module, Dashboard module, Billing module"
+
+      by_layer:
+        description: "Split by architectural layer"
+        when: "tight module coupling"
+        example: "Backend APIs, Frontend UI, Tests"
+
+      by_feature:
+        description: "Split by user-facing features"
+        when: "feature flags available"
+        example: "Basic CRUD, Advanced filters, Export functionality"
+
+    ticket_generation:
+      create_parent: true
+      create_subtasks: true
+      link_type: "blocks"
+      naming_pattern: "[Parent] - Part {n}: {description}"
+
+# ===================================================================
+# OVERRIDE FLAGS
+# ===================================================================
+
+user_overrides:
+  flags:
+    --force-sequential:
+      description: "Force sequential execution even for complex tasks"
+      overrides: "orchestration.strategy = sequential"
+
+    --force-parallel:
+      description: "Force parallel execution even for simple tasks"
+      overrides: "orchestration.strategy = parallel"
+
+    --no-split:
+      description: "Disable auto-splitting of large tasks"
+      overrides: "auto_split_rules.enabled = false"
+
+    --max-agents:
+      description: "Limit maximum parallel agents"
+      type: "integer"
+      range: "1-10"
+      overrides: "orchestration.agents_needed"
+
+    --complexity:
+      description: "Override detected complexity"
+      values: ["LIGHT", "STANDARD", "DEEP"]
+      overrides: "detected_complexity"
+
+# ===================================================================
+# PERFORMANCE BENCHMARKS
+# ===================================================================
+
+benchmarks:
+  LIGHT:
+    sequential_time: "30-120 minutes"
+    parallel_time: "N/A (single agent)"
+    improvement: "0%"
+
+  STANDARD:
+    sequential_time: "105 minutes average"
+    parallel_time: "40 minutes average"
+    improvement: "62%"
+    confidence: "High (based on 100+ executions)"
+
+  DEEP:
+    sequential_time: "240 minutes average"
+    parallel_time: "65 minutes average"
+    improvement: "73%"
+    confidence: "Medium (based on 20+ executions)"
+
+# ===================================================================
+# DECISION MATRIX
+# ===================================================================
+
+decision_matrix:
+  - input: "Quick fix needed"
+    complexity: "LIGHT"
+    pattern: "rapid_mvp"
+    agents: 1
+    time: "< 2 hours"
+
+  - input: "New feature for existing module"
+    complexity: "STANDARD"
+    pattern: "core_trio"
+    agents: 3-6
+    time: "40 minutes"
+
+  - input: "Multiple modules with dependencies"
+    complexity: "STANDARD"
+    pattern: "implementation_wave"
+    agents: 3-6
+    time: "45 minutes"
+
+  - input: "New microservice"
+    complexity: "DEEP"
+    pattern: "microservices"
+    agents: 4-6
+    time: "60 minutes"
+
+  - input: "Platform refactoring"
+    complexity: "DEEP"
+    pattern: "enterprise_comprehensive"
+    agents: 6-10
+    time: "65-90 minutes"
+
+  - input: "MVP for startup"
+    complexity: "STANDARD"
+    pattern: "rapid_mvp"
+    agents: 2-3
+    time: "30 minutes"

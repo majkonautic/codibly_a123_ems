@@ -1,0 +1,545 @@
+{
+  "meta": {
+    "version": "3.0",
+    "framework": "CCU 2.0",
+    "phase": "discovery",
+    "timestamp": "2025-09-30T12:00:00Z",
+    "track": "standard",
+    "target": "platform",
+    "exploration_method": "requirements_update",
+    "scope": {
+      "platform": "a123-battery-ems",
+      "company": "A123 Systems",
+      "focus": "Battery Energy Storage Systems",
+      "source_path": "/Users/bartoszmajewski/Documents/REPO/Codibly/Spencer/A123/a123_ems"
+    },
+    "update_history": [
+      {
+        "timestamp": "2025-09-30T12:00:00Z",
+        "changes": [
+          "Focused exclusively on battery EMS (removed solar/wind/substation)",
+          "Aligned with A123 Systems product models and specifications",
+          "Implemented A123 brand design system",
+          "Added battery-specific metrics and alerts"
+        ],
+        "previous_confidence": 85,
+        "new_confidence": 92
+      }
+    ]
+  },
+
+  "discovery": {
+    "initial_concept": "Generic Energy Management System with SCADA for multiple asset types",
+    "expanded_concept": "A123 Systems Battery Energy Storage System (BESS) platform with real-time monitoring, advanced battery analytics, and fleet management capabilities for A123's commercial battery products",
+    "application_type": "web_application",
+    "industry": "battery_energy_storage",
+    "company_specific": "A123 Systems",
+
+    "identified_modules": {
+      "authentication": {
+        "purpose": "User authentication and authorization for A123 system operators",
+        "core_features": ["login", "jwt-sessions", "role-based-access", "multi-factor-auth"],
+        "functionality_details": {
+          "how_it_works": "Enhanced NextAuth.js with MFA support for critical operations",
+          "user_workflows": ["Login with credentials", "MFA verification", "Role-based dashboard access"],
+          "data_handled": ["user credentials", "roles", "session tokens", "audit logs"],
+          "settings_options": ["session timeout", "MFA requirements", "password complexity"],
+          "edge_cases": ["expired tokens", "failed MFA", "emergency access"]
+        },
+        "dependencies": []
+      },
+
+      "battery_assets": {
+        "purpose": "Manage A123 battery container assets and their hierarchical structure",
+        "core_features": [
+          "container-registration",
+          "product-model-management",
+          "site-hierarchy",
+          "real-time-telemetry"
+        ],
+        "functionality_details": {
+          "how_it_works": "Hierarchical asset management: Site → Container → Battery System → BMS/PCS",
+          "user_workflows": [
+            "Register new container with A123 product model",
+            "Configure site hierarchy",
+            "Monitor container health",
+            "Track warranty and lifecycle"
+          ],
+          "data_handled": [
+            "A123 product models (40ft/20ft-A/20ft-B/A-Power 800/AEnergy 850/5000)",
+            "Container serial numbers",
+            "Battery chemistry (Nanophosphate LFP)",
+            "Voltage class (1500V/800V)",
+            "Capacity and power ratings"
+          ],
+          "settings_options": ["product configurations", "site grouping", "commissioning data"],
+          "edge_cases": ["container offline", "BMS communication loss", "firmware mismatches"]
+        },
+        "dependencies": ["authentication"]
+      },
+
+      "battery_performance": {
+        "purpose": "Track and analyze battery-specific performance metrics",
+        "core_features": [
+          "soc-monitoring",
+          "soh-tracking",
+          "cycle-counting",
+          "efficiency-analysis",
+          "degradation-tracking"
+        ],
+        "functionality_details": {
+          "how_it_works": "Real-time collection and analysis of battery telemetry with degradation modeling",
+          "user_workflows": [
+            "Monitor real-time SOC/SOH",
+            "Analyze cycle patterns",
+            "Track degradation trends",
+            "Compare container performance"
+          ],
+          "data_handled": [
+            "State of Charge (SOC) %",
+            "State of Health (SOH) %",
+            "Cycle count and depth",
+            "Round-trip efficiency",
+            "Cell voltage (min/max/avg)",
+            "Temperature profiles"
+          ],
+          "settings_options": ["sampling rates", "aggregation periods", "baseline comparisons"],
+          "edge_cases": ["SOC calibration drift", "abnormal degradation", "efficiency anomalies"]
+        },
+        "dependencies": ["battery_assets", "authentication"]
+      },
+
+      "battery_alerts": {
+        "purpose": "4-tier battery-specific alert system aligned with A123 safety protocols",
+        "core_features": [
+          "critical-safety-alerts",
+          "performance-warnings",
+          "maintenance-notifications",
+          "predictive-alerts"
+        ],
+        "functionality_details": {
+          "how_it_works": "Multi-tier alert system with A123-specific thresholds and escalation",
+          "user_workflows": [
+            "Receive critical alerts (fire/gas/thermal)",
+            "Acknowledge and assign alerts",
+            "Track resolution time",
+            "Analyze alert patterns"
+          ],
+          "data_handled": [
+            "Fire detection signals",
+            "Gas leak detection (H2, CO)",
+            "Thermal runaway indicators",
+            "Cell voltage violations",
+            "BMS fault codes",
+            "Performance degradation metrics"
+          ],
+          "settings_options": ["alert thresholds", "escalation rules", "notification channels"],
+          "edge_cases": ["alert storms", "cascade failures", "false positives"]
+        },
+        "dependencies": ["battery_assets", "battery_performance", "authentication"]
+      },
+
+      "thermal_management": {
+        "purpose": "Monitor and control liquid-cooling thermal management systems",
+        "core_features": [
+          "temperature-monitoring",
+          "coolant-flow-tracking",
+          "pump-control",
+          "thermal-alerts"
+        ],
+        "functionality_details": {
+          "how_it_works": "Real-time thermal monitoring with predictive cooling optimization",
+          "user_workflows": [
+            "Monitor cell temperatures",
+            "Track coolant flow and temperature",
+            "Detect thermal anomalies",
+            "Optimize cooling efficiency"
+          ],
+          "data_handled": [
+            "Cell temperature (min/max/avg)",
+            "Coolant temperature (inlet/outlet)",
+            "Pump status and flow rate",
+            "Heat exchanger efficiency",
+            "Ambient temperature"
+          ],
+          "settings_options": ["temperature thresholds", "cooling strategies", "pump schedules"],
+          "edge_cases": ["coolant leaks", "pump failures", "extreme temperatures"]
+        },
+        "dependencies": ["battery_assets", "battery_alerts"]
+      },
+
+      "fleet_map": {
+        "purpose": "Geographic visualization of A123 battery container fleet",
+        "core_features": [
+          "container-markers",
+          "capacity-sizing",
+          "status-coloring",
+          "site-clustering"
+        ],
+        "functionality_details": {
+          "how_it_works": "Interactive map with A123-branded container markers and real-time status",
+          "user_workflows": [
+            "View fleet distribution",
+            "Click containers for details",
+            "Filter by status/model",
+            "Analyze regional performance"
+          ],
+          "data_handled": [
+            "GPS coordinates",
+            "Container status",
+            "Capacity visualization",
+            "Power flow animation",
+            "Alert overlays"
+          ],
+          "settings_options": ["map layers", "clustering levels", "marker styles"],
+          "edge_cases": ["overlapping sites", "GPS errors", "offline regions"]
+        },
+        "dependencies": ["battery_assets", "authentication"]
+      },
+
+      "battery_reports": {
+        "purpose": "Generate battery-specific operational and health reports",
+        "core_features": [
+          "daily-operations",
+          "health-assessment",
+          "financial-performance",
+          "compliance-reports"
+        ],
+        "functionality_details": {
+          "how_it_works": "Automated report generation with A123-specific KPIs and templates",
+          "user_workflows": [
+            "Generate daily operation reports",
+            "Create monthly health assessments",
+            "Analyze financial performance",
+            "Export compliance documentation"
+          ],
+          "data_handled": [
+            "Energy throughput metrics",
+            "Degradation analysis",
+            "Cycle statistics",
+            "Financial calculations",
+            "NFPA 855 compliance data"
+          ],
+          "settings_options": ["report schedules", "distribution lists", "template customization"],
+          "edge_cases": ["large data exports", "missing periods", "calculation errors"]
+        },
+        "dependencies": ["battery_assets", "battery_performance", "authentication"]
+      },
+
+      "fleet_dashboard": {
+        "purpose": "Central monitoring dashboard for A123 battery fleet operations",
+        "core_features": [
+          "fleet-overview",
+          "real-time-metrics",
+          "performance-ranking",
+          "alert-summary"
+        ],
+        "functionality_details": {
+          "how_it_works": "Real-time aggregation with A123 orange-themed visualization",
+          "user_workflows": [
+            "Monitor fleet status",
+            "Track total capacity/power",
+            "View performance rankings",
+            "Access quick actions"
+          ],
+          "data_handled": [
+            "Fleet totals (capacity/power)",
+            "Average SOC/SOH",
+            "Active alerts by severity",
+            "Top/bottom performers"
+          ],
+          "settings_options": ["widget layout", "refresh rates", "metric preferences"],
+          "edge_cases": ["data delays", "calculation mismatches", "connection loss"]
+        },
+        "dependencies": ["battery_assets", "battery_performance", "battery_alerts", "authentication"]
+      },
+
+      "predictive_analytics": {
+        "purpose": "AI-powered predictive maintenance and degradation forecasting",
+        "core_features": [
+          "degradation-modeling",
+          "failure-prediction",
+          "maintenance-scheduling",
+          "anomaly-detection"
+        ],
+        "functionality_details": {
+          "how_it_works": "Machine learning models trained on A123 battery behavior patterns",
+          "user_workflows": [
+            "View degradation forecasts",
+            "Review maintenance recommendations",
+            "Analyze anomaly alerts",
+            "Plan replacements"
+          ],
+          "data_handled": [
+            "Historical performance data",
+            "Degradation patterns",
+            "Failure indicators",
+            "Maintenance records"
+          ],
+          "settings_options": ["model parameters", "prediction horizons", "confidence thresholds"],
+          "edge_cases": ["insufficient data", "model drift", "false predictions"]
+        },
+        "dependencies": ["battery_performance", "battery_assets"]
+      },
+
+      "system_settings": {
+        "purpose": "System configuration and user management for A123 platform",
+        "core_features": [
+          "user-management",
+          "role-configuration",
+          "system-preferences",
+          "audit-logging"
+        ],
+        "functionality_details": {
+          "how_it_works": "Administrative interface with comprehensive audit trails",
+          "user_workflows": [
+            "Manage user accounts",
+            "Configure roles and permissions",
+            "Set system parameters",
+            "Review audit logs"
+          ],
+          "data_handled": [
+            "User accounts",
+            "Role definitions",
+            "System configurations",
+            "Audit trail data"
+          ],
+          "settings_options": ["security policies", "integration configs", "notification rules"],
+          "edge_cases": ["permission conflicts", "configuration errors", "audit overflow"]
+        },
+        "dependencies": ["authentication"]
+      }
+    },
+
+    "core_features": [
+      {
+        "name": "Real-time Battery Monitoring",
+        "module": "fleet_dashboard",
+        "functionality": "Live monitoring of A123 battery containers with sub-second telemetry updates",
+        "user_flow": "Login → Fleet Dashboard → View real-time SOC/SOH → Drill into container details",
+        "data_requirements": ["BMS telemetry", "thermal data", "power metrics"],
+        "success_metrics": ["<500ms latency", "99.95% uptime", "100+ concurrent users"]
+      },
+      {
+        "name": "Battery Health Analytics",
+        "module": "battery_performance",
+        "functionality": "Advanced battery degradation analysis with predictive modeling",
+        "user_flow": "Select container → View SOH trends → Analyze degradation → Forecast replacement",
+        "data_requirements": ["cycle history", "temperature profiles", "capacity measurements"],
+        "success_metrics": ["±2% SOH accuracy", "90% prediction accuracy", "real-time calculations"]
+      },
+      {
+        "name": "4-Tier Alert Management",
+        "module": "battery_alerts",
+        "functionality": "Critical safety alerts with A123-specific thresholds and escalation",
+        "user_flow": "Alert triggered → Notification sent → Acknowledge → Assign → Resolve",
+        "data_requirements": ["sensor data", "threshold configs", "escalation rules"],
+        "success_metrics": ["<2s alert latency", "zero missed criticals", "complete audit trail"]
+      },
+      {
+        "name": "Fleet Visualization",
+        "module": "fleet_map",
+        "functionality": "Interactive map with A123-branded container markers and status",
+        "user_flow": "Open map → View fleet → Click container → View details → Navigate to analytics",
+        "data_requirements": ["GPS locations", "container status", "capacity data"],
+        "success_metrics": ["<2s map load", "smooth interactions", "accurate positioning"]
+      }
+    ],
+
+    "identified_integrations": [
+      {
+        "service": "A123 BMS Protocol",
+        "purpose": "Direct integration with A123 Battery Management Systems",
+        "features_enhanced": ["real-time telemetry", "fault detection", "cell balancing control"]
+      },
+      {
+        "service": "SCADA/EMS Integration",
+        "purpose": "Integration with site-level SCADA and grid EMS",
+        "features_enhanced": ["dispatch response", "grid services", "power control"]
+      },
+      {
+        "service": "Weather Services",
+        "purpose": "Temperature and environmental impact on battery performance",
+        "features_enhanced": ["thermal predictions", "cooling optimization", "degradation modeling"]
+      },
+      {
+        "service": "Energy Market APIs",
+        "purpose": "Revenue optimization through market participation",
+        "features_enhanced": ["arbitrage opportunities", "demand response", "capacity markets"]
+      }
+    ],
+
+    "user_personas": [
+      {
+        "type": "Fleet Operations Manager",
+        "needs": ["fleet overview", "performance metrics", "alert management"],
+        "workflows": ["morning checks", "performance reviews", "incident response"]
+      },
+      {
+        "type": "Site Technician",
+        "needs": ["container diagnostics", "maintenance alerts", "thermal monitoring"],
+        "workflows": ["on-site inspections", "troubleshooting", "maintenance execution"]
+      },
+      {
+        "type": "Performance Engineer",
+        "needs": ["degradation analysis", "efficiency optimization", "predictive insights"],
+        "workflows": ["trend analysis", "report generation", "optimization planning"]
+      },
+      {
+        "type": "Commercial Manager",
+        "needs": ["financial performance", "revenue analytics", "warranty tracking"],
+        "workflows": ["revenue reporting", "ROI analysis", "contract management"]
+      }
+    ],
+
+    "business_model": "B2B platform for A123 Systems battery fleet operators and C&I customers",
+
+    "success_criteria": [
+      "99.95% platform availability for critical monitoring",
+      "Sub-500ms data latency for real-time updates",
+      "Critical safety alerts delivered within 2 seconds",
+      "±2% SOH measurement accuracy",
+      "90% predictive maintenance accuracy",
+      "Complete NFPA 855 compliance tracking"
+    ],
+
+    "technical_requirements": [
+      "High availability architecture for 24/7 operations",
+      "Scalable to handle 1,000+ containers",
+      "Support for 100+ concurrent users",
+      "10-year data retention for battery lifecycle",
+      "Sub-second real-time data processing",
+      "Secure multi-tenant architecture"
+    ],
+
+    "design_system": {
+      "brand_colors": {
+        "primary": "#FF8C00",
+        "primary_hover": "#FFA500",
+        "primary_dark": "#E67E00",
+        "background": "#1A1D23",
+        "card_bg": "#252932",
+        "border": "#3A3F4B"
+      },
+      "status_colors": {
+        "charging": "#4A90E2",
+        "discharging": "#FF8C00",
+        "online": "#10B981",
+        "warning": "#F59E0B",
+        "critical": "#EF4444",
+        "offline": "#4B5563"
+      },
+      "typography": {
+        "font_family": "Inter, Segoe UI, sans-serif",
+        "heading_sizes": ["32px", "24px", "20px", "16px"],
+        "data_display": "48px bold for large metrics"
+      }
+    }
+  },
+
+  "analysis": {
+    "feasibility_assessment": "High feasibility - existing codebase provides solid foundation for battery-focused transformation",
+    "completeness_score": 92,
+    "transformation_effort": "4-5 weeks for complete A123 transformation",
+    "gaps_identified": [
+      "A123 BMS protocol integration needed",
+      "Battery degradation models to implement",
+      "Thermal management module to develop",
+      "Financial performance analytics required"
+    ],
+    "similar_patterns": [
+      "Battery storage platforms",
+      "SCADA systems",
+      "Fleet management systems"
+    ],
+    "recommendations": [
+      "Prioritize safety-critical alert system implementation",
+      "Implement A123 brand design system early",
+      "Develop battery-specific data models first",
+      "Create thermal management dashboard",
+      "Build predictive analytics incrementally"
+    ]
+  },
+
+  "transformation_strategy": {
+    "phase_1": {
+      "name": "Core Battery Focus",
+      "duration": "Week 1-2",
+      "tasks": [
+        "Remove solar/wind/substation code",
+        "Implement A123 battery data models",
+        "Create container hierarchy structure",
+        "Update database schema for battery metrics"
+      ]
+    },
+    "phase_2": {
+      "name": "Visual & UX Redesign",
+      "duration": "Week 2-3",
+      "tasks": [
+        "Apply A123 orange brand colors",
+        "Create battery-specific components",
+        "Design container map markers",
+        "Update charts with new color palette"
+      ]
+    },
+    "phase_3": {
+      "name": "Feature Enhancement",
+      "duration": "Week 3-4",
+      "tasks": [
+        "Implement 4-tier alert system",
+        "Add thermal management module",
+        "Create battery health analytics",
+        "Build fleet comparison views"
+      ]
+    },
+    "phase_4": {
+      "name": "Advanced Features",
+      "duration": "Week 4-5",
+      "tasks": [
+        "Add predictive analytics",
+        "Implement degradation modeling",
+        "Create financial reports",
+        "Add compliance tracking"
+      ]
+    }
+  },
+
+  "mcp_context": {
+    "mem0_session_id": null,
+    "patterns_found": 3,
+    "context7_libraries": [],
+    "sequential_thoughts": 12,
+    "claude_context_indexed": true,
+    "similar_projects": ["battery_storage_platforms", "fleet_management"]
+  },
+
+  "outputs": {
+    "files_generated": [
+      "discovery-a123-battery.json",
+      "discovery-a123-summary.md",
+      "modules-a123-overview.md",
+      "transformation-plan.md"
+    ],
+    "next_phase": {
+      "command": "/ccu:specify",
+      "parameters": "--target=platform --track=standard --from=discovery",
+      "confidence_threshold_met": true
+    }
+  },
+
+  "confidence": {
+    "overall": 92,
+    "by_module": {
+      "authentication": 90,
+      "battery_assets": 95,
+      "battery_performance": 93,
+      "battery_alerts": 94,
+      "thermal_management": 88,
+      "fleet_map": 90,
+      "battery_reports": 89,
+      "fleet_dashboard": 92,
+      "predictive_analytics": 85,
+      "system_settings": 87
+    }
+  }
+}

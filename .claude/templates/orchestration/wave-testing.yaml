@@ -1,0 +1,337 @@
+# CCU Framework - Wave Testing Configuration
+# Defines mandatory test gates for each wave of execution
+# EVERY WAVE MUST PASS ITS TESTS BEFORE PROCEEDING
+
+# Global test configuration
+global_config:
+  mandatory_testing: true
+  skip_allowed: false
+  auto_fix_attempts: 3
+  playwright_mcp_required: true
+  fail_fast: true
+
+  # Default timeouts
+  timeouts:
+    environment_setup: 300  # 5 minutes
+    service_startup: 180    # 3 minutes
+    test_execution: 600     # 10 minutes
+    fix_retry: 120          # 2 minutes per retry
+
+# Wave-specific test gates
+wave_test_gates:
+
+  # Wave 1: Foundation Setup Tests
+  wave_1_foundation:
+    name: "Foundation Validation Gate"
+    required_pass_rate: 100  # Must pass ALL tests
+    critical: true           # Cannot proceed if failed
+
+    environment_setup:
+      - action: create_env_files
+        required: true
+        fallback: use_defaults
+      - action: install_root_dependencies
+        command: "npm install"
+        timeout: 180
+      - action: install_backend_dependencies
+        command: "cd backend && npm install"
+        timeout: 180
+      - action: install_frontend_dependencies
+        command: "cd frontend && npm install"
+        timeout: 180
+      - action: generate_prisma_client
+        command: "cd backend && npx prisma generate"
+        required: true
+      - action: initialize_database
+        command: "cd backend && npx prisma db push"
+        required: true
+
+    service_startup:
+      - service: postgres
+        type: docker
+        command: "docker-compose up -d postgres"
+        health_check: "pg_isready -h localhost -p 5432"
+        required: true
+      - service: redis
+        type: docker
+        command: "docker-compose up -d redis"
+        health_check: "redis-cli ping"
+        required: true
+      - service: backend
+        type: node
+        command: "cd backend && npm run start:dev"
+        health_check: "curl -f http://localhost:3000/api/health"
+        port: 3000
+        required: false  # May not work until Wave 2
+      - service: frontend
+        type: node
+        command: "cd frontend && npm run dev"
+        health_check: "curl -f http://localhost:3000"
+        port: 3000
+        required: false  # May not work until Wave 2
+
+    playwright_tests:
+      - test: project_structure
+        description: "Verify all expected files and folders exist"
+        critical: true
+        checks:
+          - backend/package.json exists
+          - backend/tsconfig.json exists
+          - backend/src/main.ts exists
+          - backend/prisma/schema.prisma exists
+          - frontend/package.json exists
+          - frontend/next.config.js exists
+          - docker-compose.yml exists
+
+      - test: dependency_validation
+        description: "Verify all required dependencies are installed"
+        critical: true
+        checks:
+          - "@nestjs/core" in backend dependencies
+          - "prisma" in backend dependencies
+          - "next" in frontend dependencies
+          - "react" in frontend dependencies
+
+      - test: docker_services
+        description: "Verify Docker services are running"
+        critical: true
+        url_tests:
+          - service: PostgreSQL
+            port: 5432
+            expected: connected
+          - service: Redis
+            port: 6379
+            expected: connected
+
+    failure_fixes:
+      missing_env_file:
+        - copy_from: .env.example
+        - create_default: true
+      missing_dependencies:
+        - run: npm install
+        - clear_cache: npm cache clean --force
+      database_connection_failed:
+        - restart_postgres: docker-compose restart postgres
+        - recreate_db: docker-compose down && docker-compose up -d postgres
+      port_already_in_use:
+        - kill_process: "lsof -ti:3000 | xargs kill -9"
+        - wait: 5
+
+  # Wave 2: Core Infrastructure Tests
+  wave_2_infrastructure:
+    name: "Core Infrastructure Gate"
+    required_pass_rate: 95
+    critical: true
+
+    environment_setup:
+      - action: verify_env_variables
+        required_vars:
+          - DATABASE_URL
+          - REDIS_URL
+          - JWT_SECRET
+          - API_PREFIX
+
+    service_startup:
+      - service: backend_api
+        health_check: "curl -f http://localhost:3000/api/v1/health"
+        required: true
+      - service: frontend_app
+        health_check: "curl -f http://localhost:3000"
+        required: true
+
+    playwright_tests:
+      - test: authentication_endpoints
+        description: "Test auth endpoints are responding"
+        url_tests:
+          - endpoint: /api/v1/auth/login
+            method: POST
+            expected_status: [400, 401]  # No credentials yet
+          - endpoint: /api/v1/auth/register
+            method: POST
+            expected_status: [400]
+
+      - test: api_documentation
+        description: "Verify Swagger docs are available"
+        navigate_to: "http://localhost:3000/api/docs"
+        expect_content: "Swagger"
+
+      - test: frontend_pages
+        description: "Verify frontend pages load"
+        pages_to_test:
+          - url: "http://localhost:3000"
+            expect_title: "OCPP"
+          - url: "http://localhost:3000/login"
+            expect_content: "Login"
+          - url: "http://localhost:3000/dashboard"
+            expect_redirect: "/login"  # Not authenticated
+
+    failure_fixes:
+      auth_module_missing:
+        - check_imports: backend/src/app.module.ts
+        - restart_backend: true
+      swagger_not_found:
+        - check_decorator: "@ApiTags"
+        - rebuild: "cd backend && npm run build"
+
+  # Wave 3: Module Development Tests
+  wave_3_modules:
+    name: "Module Integration Gate"
+    required_pass_rate: 90
+    critical: true
+
+    environment_setup:
+      - action: verify_modules_exist
+        modules:
+          - data-ingestion
+          - ai-analytics
+          - monitoring
+          - alert-management
+          - integration
+
+    playwright_tests:
+      - test: module_endpoints
+        description: "Test each module has working endpoints"
+        foreach_module:
+          - endpoint: "/api/v1/{module}/status"
+            expected_status: 200
+          - endpoint: "/api/v1/{module}/health"
+            expected_status: 200
+
+      - test: websocket_connection
+        description: "Test WebSocket server"
+        websocket_tests:
+          - url: "ws://localhost:3001/ocpp"
+            connect: true
+            send_message: '{"action": "ping"}'
+            expect_response: '{"status": "pong"}'
+
+      - test: database_operations
+        description: "Test CRUD operations"
+        crud_tests:
+          - entity: ChargePoint
+            operations: [create, read, update, delete]
+          - entity: ChargingSession
+            operations: [create, read]
+
+      - test: module_ui_components
+        description: "Test UI components for each module"
+        component_tests:
+          - module: data-ingestion
+            component: DataUploader
+            expect: file input
+          - module: monitoring
+            component: Dashboard
+            expect: charts
+          - module: alerts
+            component: AlertList
+            expect: table
+
+    failure_fixes:
+      module_not_loaded:
+        - check_imports: "backend/src/app.module.ts"
+        - verify_exports: "backend/src/modules/{module}/index.ts"
+      websocket_failed:
+        - check_gateway: "@WebSocketGateway"
+        - verify_port: 3001
+
+  # Wave 4: Integration Tests
+  wave_4_integration:
+    name: "Full Integration Gate"
+    required_pass_rate: 95
+    critical: true
+
+    playwright_tests:
+      - test: end_to_end_flow
+        description: "Complete user journey"
+        e2e_scenarios:
+          - name: "User Registration and Login"
+            steps:
+              - navigate: "/register"
+              - fill_form: {email: "test@example.com", password: "Test123!"}
+              - click: "Register"
+              - expect_redirect: "/dashboard"
+
+          - name: "Upload and Analyze OCPP Logs"
+            steps:
+              - navigate: "/dashboard"
+              - click: "Upload Logs"
+              - upload_file: "test-ocpp.json"
+              - wait_for: "Processing complete"
+              - expect_content: "Analysis Results"
+
+          - name: "View Real-time Monitoring"
+            steps:
+              - navigate: "/monitoring"
+              - expect_content: "Active Charge Points"
+              - wait_for_websocket: true
+              - expect_updates: true
+
+      - test: performance_benchmarks
+        description: "Test system performance"
+        benchmarks:
+          - api_response_time: "< 200ms"
+          - page_load_time: "< 3s"
+          - websocket_latency: "< 100ms"
+
+      - test: security_validation
+        description: "Basic security tests"
+        security_tests:
+          - sql_injection: false
+          - xss_protection: true
+          - csrf_protection: true
+          - rate_limiting: true
+
+# Test execution order
+execution_order:
+  instant:
+    - wave_1_foundation
+
+  rapid:
+    - wave_1_foundation
+    - wave_2_infrastructure
+
+  standard:
+    - wave_1_foundation
+    - wave_2_infrastructure
+    - wave_3_modules
+    - wave_4_integration
+
+  enterprise:
+    - wave_1_foundation
+    - wave_2_infrastructure
+    - wave_3_modules
+    - wave_4_integration
+    - wave_5_compliance  # Additional enterprise tests
+
+# Reporting configuration
+reporting:
+  format: json
+  save_to: "ccu_workspace/07-delivery/test-results/"
+  include:
+    - summary
+    - detailed_failures
+    - performance_metrics
+    - coverage_report
+
+  on_failure:
+    - save_logs: true
+    - capture_screenshots: true
+    - generate_debug_report: true
+    - notify_team: false  # Set to true in production
+
+# Playwright MCP configuration
+playwright_mcp:
+  enabled: true
+  browser: chromium
+  headless: true
+  timeout: 30000
+  retry_failed: 2
+
+  viewport:
+    width: 1280
+    height: 720
+
+  screenshot:
+    on_failure: true
+    full_page: false
+    path: "test-screenshots/"

@@ -1,0 +1,338 @@
+# Specification Questions - Phase 2: Functional Requirements
+# SINGLE SOURCE OF TRUTH for requirements and business rules
+# This file focuses ONLY on WHAT to build, not HOW
+
+meta:
+  version: "2.0"
+  framework: "Claude Code Ultimate 2.0"
+  phase: 2
+  domain: "Functional Requirements & Business Rules"
+  output: "specification.json"
+  principle: "Define WHAT the system does, not HOW it's built"
+
+# ===================================================================
+# COMPLEXITY LEVELS - Specification Questions
+# ===================================================================
+complexity_levels:
+
+  # ===================================================================
+  # INSTANT - Zero Questions, Auto-Generation
+  # ===================================================================
+  instant:
+    philosophy: "Auto-generate specs from discovery data"
+    questions_count: 0
+
+    auto_decisions:
+      features: "auto-detected"
+      user_stories: "ai-generated"
+      data_model: "inferred"
+      business_rules: "standard"
+
+    output: |
+      {
+        "features": ["auto-extracted from discovery"],
+        "user_stories": ["ai-generated"],
+        "data_entities": ["inferred"],
+        "business_rules": ["standard patterns"]
+      }
+
+  # ===================================================================
+  # RAPID - 4 Requirement Questions (Non-Redundant)
+  # ===================================================================
+  rapid:
+    philosophy: "Transform discovered features into requirements"
+    questions_count: 4
+    principle: "Build on discovery data, don't re-ask"
+    requires_discovery: true
+
+    questions:
+      - id: "user_stories"
+        category: "📋 USER STORIES"
+        question: "Transform discovered features into user stories"
+        description: "Based on features from discovery, create user stories"
+        format_type: "story_builder"
+        uses_discovery_data: true
+        template: "As a [user type], I want [feature], so that [value]"
+        examples:
+          - "As a family admin, I want to invite members, so that we can share budget tracking"
+          - "As a user, I want to categorize expenses, so that I can see spending patterns"
+
+      - id: "acceptance_criteria"
+        category: "✅ ACCEPTANCE CRITERIA"
+        question: "Define testable criteria for core features"
+        description: "How do we know each feature works?"
+        format_type: "criteria_builder"
+        uses_discovery_data: true
+        template: "Given [context], When [action], Then [outcome]"
+        examples:
+          - "Given I'm logged in, When I upload a bank statement, Then transactions appear in < 5 seconds"
+          - "Given a transaction exists, When AI categorizes it, Then confidence score is shown"
+
+      - id: "business_rules"
+        category: "⚙️ BUSINESS RULES"
+        question: "What are the CRITICAL business rules?"
+        description: "Only rules that must be enforced for system integrity"
+        format_type: "rule_builder"
+        limit: 5
+        examples:
+          - "Users can only edit their own data"
+          - "Budget cannot exceed allocated amount"
+          - "Transactions must have both category AND user assignment"
+          - "Deleted data must be recoverable for 30 days"
+
+      - id: "success_metrics"
+        category: "📊 SUCCESS METRICS"
+        question: "How do we measure feature success?"
+        description: "Measurable outcomes for each core feature"
+        format_type: "metrics_builder"
+        uses_discovery_data: true
+        template: "[Feature] is successful when [metric] reaches [target]"
+        examples:
+          - "Categorization is successful when accuracy reaches 95%"
+          - "Dashboard is successful when load time is under 2 seconds"
+          - "Signup is successful when completion rate exceeds 80%"
+
+  # ===================================================================
+  # STANDARD - 6 Requirement Specifications (Non-Redundant)
+  # ===================================================================
+  standard:
+    philosophy: "Transform discovered features into testable requirements"
+    questions_count: 6
+    principle: "Define success criteria and business logic"
+    requires_discovery: true
+
+    categories:
+      user_requirements:
+        name: "📋 USER REQUIREMENTS (2 questions)"
+        questions:
+          - id: "user_stories_acceptance"
+            question: "Create user stories with acceptance criteria"
+            description: "Transform each discovered feature into testable stories"
+            format_type: "story_with_criteria"
+            uses_discovery_data: true
+            template:
+              story: "As a [user], I want [feature], so that [value]"
+              criteria: "Given [context], When [action], Then [outcome]"
+            example:
+              story: "As a user, I want to upload bank statements, so that I can track expenses"
+              criteria: "Given I have a PDF statement, When I upload it, Then transactions are extracted and categorized"
+
+          - id: "functional_requirements"
+            question: "What must the system DO for each feature?"
+            description: "Define functional requirements (not technical implementation)"
+            format_type: "requirements_list"
+            uses_discovery_data: true
+            examples:
+              - "System must validate email uniqueness before account creation"
+              - "System must calculate totals in real-time as user makes changes"
+              - "System must send notification within 5 seconds of trigger event"
+              - "System must prevent deletion of transactions with dependencies"
+
+      business_logic:
+        name: "⚙️ BUSINESS LOGIC (3 questions)"
+        questions:
+          - id: "persona_permissions"
+            question: "Define permissions and access controls for each persona"
+            description: "What can each user type do in the system?"
+            format_type: "permission_matrix"
+            uses_discovery_data: true
+            template: "[Persona]: can [actions], cannot [restrictions]"
+            examples:
+              - "Admin: can manage all users, edit all data, view audit logs, cannot delete audit history"
+              - "Manager: can approve budgets, view team data, create reports, cannot modify system settings"
+              - "User: can manage own data, view shared resources, cannot access admin features"
+              - "Guest: can view public content only, cannot modify any data"
+
+          - id: "business_rules_validation"
+            question: "Critical business rules and validation logic?"
+            description: "Rules that ensure data integrity and business compliance"
+            format_type: "rules_with_consequences"
+            limit: 10
+            template: "Rule: [condition] → Consequence: [what happens]"
+            examples:
+              - "Rule: Budget exceeds limit → Consequence: Block transaction and notify admin"
+              - "Rule: User inactive for 90 days → Consequence: Disable account and send reactivation email"
+              - "Rule: Duplicate transaction detected → Consequence: Flag for review, don't auto-import"
+
+          - id: "workflow_definitions"
+            question: "Define critical workflows and state transitions"
+            description: "Key business processes that must work correctly"
+            format_type: "workflow_states"
+            uses_discovery_data: true
+            template: "[State 1] → [Action] → [State 2] → [Outcome]"
+            examples:
+              - "Pending → Approve → Active → User can access all features"
+              - "Draft → Submit → Under Review → Published or Rejected"
+              - "Trial → Subscribe → Premium → Full feature access granted"
+
+      success_definition:
+        name: "✅ SUCCESS METRICS (1 question)"
+        questions:
+          - id: "measurable_success"
+            question: "How do we measure success for each feature?"
+            description: "Specific, measurable success criteria"
+            format_type: "metrics_targets"
+            uses_discovery_data: true
+            categories:
+              performance: "Response times, load times, processing speed"
+              accuracy: "Error rates, precision, data quality"
+              usage: "Adoption rate, daily active users, feature usage"
+              business: "Conversion rate, cost savings, efficiency gains"
+            template: "[Feature]: [Metric] must be [operator] [target]"
+            examples:
+              - "Login: Success rate must be > 99.9%"
+              - "AI Categorization: Accuracy must be > 90% after training"
+              - "Dashboard: Load time must be < 2 seconds"
+              - "Data Import: Processing rate must be > 1000 records/second"
+
+  # ===================================================================
+  # ENTERPRISE - 9 Non-Redundant Requirement Questions
+  # ===================================================================
+  enterprise:
+    philosophy: "Enterprise-grade requirements without redundancy"
+    questions_count: 9
+    principle: "Comprehensive requirements building on discovery"
+    requires_discovery: true
+
+    categories:
+      requirements_management:
+        name: "📋 REQUIREMENTS MANAGEMENT (2 questions)"
+        questions:
+          - id: "requirements_governance"
+            question: "Requirements governance and traceability framework?"
+            format_type: "requirements_framework"
+            consolidates:
+              - "Stakeholder matrix and sources"
+              - "Traceability matrix"
+              - "Validation and approval workflow"
+
+          - id: "change_baseline_management"
+            question: "Change management and baseline control?"
+            format_type: "change_control_system"
+            consolidates:
+              - "Change request process"
+              - "Baseline versioning"
+              - "Impact analysis procedures"
+
+      detailed_specifications:
+        name: "📖 DETAILED SPECIFICATIONS (4 questions)"
+        questions:
+          - id: "persona_rbac_matrix"
+            question: "Enterprise role-based access control and persona hierarchy?"
+            format_type: "rbac_framework"
+            uses_discovery_data: true
+            consolidates:
+              - "Role hierarchy and inheritance"
+              - "Permission granularity per feature"
+              - "Delegation and approval chains"
+              - "Security boundaries per persona"
+            template: "[Persona] → [Role] → [Permissions] → [Restrictions]"
+            examples:
+              - "Super Admin → System Owner → All permissions → Cannot be deleted"
+              - "Department Admin → Manager → Department scope → Cannot access other departments"
+              - "Team Lead → Supervisor → Team management → Limited to assigned teams"
+
+          - id: "functional_modeling"
+            question: "Functional decomposition and use case modeling?"
+            format_type: "functional_architecture"
+            consolidates:
+              - "Function hierarchy"
+              - "Detailed use cases"
+              - "Actor-system interactions"
+
+          - id: "state_behavior_modeling"
+            question: "State machines and behavioral specifications?"
+            format_type: "behavioral_model"
+            consolidates:
+              - "State transition diagrams"
+              - "Event-driven behaviors"
+              - "Process workflows"
+
+          - id: "business_logic_rules"
+            question: "Business rules engine and decision logic?"
+            format_type: "business_logic_framework"
+            consolidates:
+              - "Complex business rules"
+              - "Decision tables and matrices"
+              - "Calculation formulas"
+
+      compliance_requirements:
+        name: "📜 COMPLIANCE & GOVERNANCE (2 questions)"
+        questions:
+          - id: "regulatory_compliance"
+            question: "Regulatory and compliance requirements?"
+            description: "Legal and regulatory constraints on functionality"
+            format_type: "compliance_matrix"
+            areas:
+              - "Data privacy (GDPR, CCPA)"
+              - "Industry standards (HIPAA, PCI-DSS)"
+              - "Accessibility (WCAG, ADA)"
+              - "Security requirements"
+
+          - id: "audit_traceability"
+            question: "Audit and traceability requirements?"
+            description: "What must be tracked and reported"
+            format_type: "audit_requirements"
+            includes:
+              - "User action logging"
+              - "Data change history"
+              - "Compliance reporting"
+              - "Retention policies"
+
+      integration_behavior:
+        name: "🔌 INTEGRATION BEHAVIOR (2 questions)"
+        questions:
+          - id: "integration_requirements"
+            question: "What should integrations accomplish?"
+            description: "Functional requirements for external services (not technical details)"
+            format_type: "behavior_definition"
+            uses_discovery_data: true
+            template: "[Service] should [action] to achieve [outcome]"
+            examples:
+              - "OpenAI should categorize transactions with 90% accuracy"
+              - "Stripe should process payments and handle subscription changes"
+              - "SendGrid should deliver emails within 60 seconds"
+              - "S3 should store files with 99.99% durability"
+
+          - id: "integration_fallbacks"
+            question: "Fallback behavior when integrations fail?"
+            description: "Business continuity when external services unavailable"
+            format_type: "fallback_strategy"
+            template: "When [service] fails, system should [fallback behavior]"
+            examples:
+              - "When AI categorization fails, queue for manual review"
+              - "When payment processor is down, store transaction for retry"
+              - "When email service fails, log to database and retry later"
+
+# ===================================================================
+# OUTPUT STRUCTURE - What gets saved to specification.json
+# ===================================================================
+output_structure:
+  instant:
+    - auto_generated_user_stories
+    - basic_acceptance_criteria
+    - inferred_business_rules
+    - success_metrics_from_discovery
+
+  rapid:
+    - user_stories
+    - acceptance_criteria
+    - business_rules
+    - success_metrics
+
+  standard:
+    - user_stories_with_acceptance_criteria
+    - functional_requirements
+    - business_rules_and_validation
+    - workflow_definitions
+    - measurable_success_criteria
+
+  enterprise:
+    - comprehensive_user_stories
+    - detailed_functional_requirements
+    - business_logic_framework
+    - workflow_state_machines
+    - compliance_requirements
+    - audit_traceability
+    - integration_behavior_specs
+    - success_metrics_dashboard

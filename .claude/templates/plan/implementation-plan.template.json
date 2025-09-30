@@ -1,0 +1,301 @@
+{
+  "project": {
+    "name": "{{PROJECT_NAME}}",
+    "target": "platform|module|feature",
+    "complexity": "instant|rapid|standard|enterprise",
+    "version": "1.0.0",
+    "startDate": "{{ISO_DATE}}",
+    "estimatedEndDate": "{{ISO_DATE}}",
+    "totalDuration": "{{DURATION}}"
+  },
+
+  "team": {
+    "lead": "solution-architect",
+    "members": [
+      {
+        "role": "frontend-developer",
+        "allocation": "{{PERCENTAGE}}%",
+        "responsibilities": ["UI implementation", "Component development"]
+      },
+      {
+        "role": "backend-developer",
+        "allocation": "{{PERCENTAGE}}%",
+        "responsibilities": ["API development", "Database implementation"]
+      },
+      {
+        "role": "quality-engineer",
+        "allocation": "{{PERCENTAGE}}%",
+        "responsibilities": ["Test automation", "Quality assurance"]
+      }
+    ]
+  },
+
+  "phases": [
+    {
+      "id": "phase-1",
+      "name": "Foundation",
+      "description": "Setup and infrastructure",
+      "duration": "{{DURATION}}",
+      "startDate": "{{ISO_DATE}}",
+      "endDate": "{{ISO_DATE}}",
+      "status": "not-started|in-progress|completed",
+      "dependencies": [],
+
+      "milestones": [
+        {
+          "name": "Environment Setup Complete",
+          "date": "{{ISO_DATE}}",
+          "criteria": ["Dev environment ready", "CI/CD configured"]
+        }
+      ],
+
+      "tasks": [
+        {
+          "id": "task-1.1",
+          "name": "Project Setup",
+          "description": "Initialize repository and install dependencies",
+          "type": "setup|development|testing|deployment",
+          "assignee": "backend-developer",
+          "duration": "{{DURATION}}",
+          "status": "not-started|in-progress|completed|blocked",
+          "priority": "critical|high|medium|low",
+
+          "dependencies": {
+            "predecessor": [],
+            "successor": ["task-1.2", "task-1.3"],
+            "blocking": false
+          },
+
+          "subtasks": [
+            {
+              "name": "Create repository",
+              "status": "completed",
+              "duration": "15m"
+            },
+            {
+              "name": "Install dependencies",
+              "status": "in-progress",
+              "duration": "30m"
+            }
+          ],
+
+          "outputs": [
+            "Repository initialized",
+            "Dependencies installed",
+            "Basic project structure"
+          ],
+
+          "risks": [
+            {
+              "description": "Dependency conflicts",
+              "likelihood": "low",
+              "impact": "medium",
+              "mitigation": "Use lock files"
+            }
+          ],
+
+          "acceptance_criteria": [
+            "Project builds successfully",
+            "All dependencies resolved",
+            "Linting passes"
+          ]
+        }
+      ],
+
+      "deliverables": [
+        {
+          "name": "Development Environment",
+          "type": "infrastructure",
+          "description": "Fully configured development environment",
+          "acceptance_criteria": [
+            "All developers can run locally",
+            "Hot reload working",
+            "Database connected"
+          ]
+        }
+      ],
+
+      "quality_gates": {
+        "criteria": [
+          "All tasks completed",
+          "Code review passed",
+          "Tests passing",
+          "Documentation updated"
+        ],
+        "approver": "solution-architect",
+        "status": "not-evaluated|passed|failed"
+      }
+    }
+  ],
+
+  "work_breakdown_structure": {
+    "total_tasks": {{NUMBER}},
+    "by_type": {
+      "development": {{NUMBER}},
+      "testing": {{NUMBER}},
+      "documentation": {{NUMBER}},
+      "deployment": {{NUMBER}}
+    },
+    "by_priority": {
+      "critical": {{NUMBER}},
+      "high": {{NUMBER}},
+      "medium": {{NUMBER}},
+      "low": {{NUMBER}}
+    }
+  },
+
+  "critical_path": [
+    "task-1.1",
+    "task-2.3",
+    "task-3.1",
+    "task-4.2"
+  ],
+
+  "dependencies_matrix": {
+    "task-1.1": ["task-1.2", "task-1.3"],
+    "task-1.2": ["task-2.1"],
+    "task-2.1": ["task-2.2", "task-2.3"]
+  },
+
+  "resource_allocation": {
+    "by_phase": {
+      "phase-1": {
+        "frontend-developer": "20%",
+        "backend-developer": "80%",
+        "quality-engineer": "10%"
+      }
+    },
+    "peak_load": {
+      "phase": "phase-3",
+      "resources": "300%",
+      "mitigation": "Temporary contractors"
+    }
+  },
+
+  "testing_strategy": {
+    "approach": "tdd|bdd|traditional",
+    "levels": {
+      "unit": {
+        "target_coverage": "80%",
+        "framework": "jest|vitest",
+        "responsible": "developers"
+      },
+      "integration": {
+        "target_coverage": "60%",
+        "framework": "jest|supertest",
+        "responsible": "developers"
+      },
+      "e2e": {
+        "scenarios": {{NUMBER}},
+        "framework": "playwright",
+        "responsible": "quality-engineer"
+      },
+      "performance": {
+        "enabled": true,
+        "targets": {
+          "response_time": "< 200ms",
+          "throughput": "> 1000 rps"
+        }
+      }
+    },
+    "automation": {
+      "percentage": "70%",
+      "ci_integration": true,
+      "parallel_execution": true
+    }
+  },
+
+  "risk_register": [
+    {
+      "id": "risk-1",
+      "description": "Third-party API availability",
+      "category": "technical|resource|schedule|scope",
+      "probability": "low|medium|high",
+      "impact": "low|medium|high|critical",
+      "score": {{NUMBER}},
+      "owner": "backend-developer",
+      "mitigation": "Implement fallback mechanisms",
+      "contingency": "Use mock services",
+      "status": "open|mitigating|closed"
+    }
+  ],
+
+  "communication_plan": {
+    "meetings": [
+      {
+        "name": "Daily Standup",
+        "frequency": "daily",
+        "duration": "15m",
+        "participants": ["all"]
+      },
+      {
+        "name": "Sprint Review",
+        "frequency": "bi-weekly",
+        "duration": "1h",
+        "participants": ["all", "stakeholders"]
+      }
+    ],
+    "reporting": {
+      "status_updates": "weekly",
+      "format": "dashboard|email|slack",
+      "audience": ["product-owner", "stakeholders"]
+    },
+    "escalation": {
+      "levels": [
+        {
+          "level": 1,
+          "contact": "solution-architect",
+          "response_time": "2h"
+        },
+        {
+          "level": 2,
+          "contact": "project-manager",
+          "response_time": "4h"
+        }
+      ]
+    }
+  },
+
+  "success_metrics": {
+    "schedule": {
+      "on_time_delivery": "95%",
+      "milestone_achievement": "90%"
+    },
+    "quality": {
+      "defect_density": "< 5 per KLOC",
+      "test_coverage": "> 80%",
+      "code_review_coverage": "100%"
+    },
+    "performance": {
+      "page_load_time": "< 2s",
+      "api_response_time": "< 200ms",
+      "error_rate": "< 0.1%"
+    },
+    "business": {
+      "user_satisfaction": "> 4.5/5",
+      "feature_adoption": "> 70%",
+      "roi": "> 200%"
+    }
+  },
+
+  "governance": {
+    "checkpoints": [
+      {
+        "name": "Architecture Review",
+        "phase": "phase-1",
+        "reviewers": ["system-architect", "security-architect"],
+        "criteria": ["Design approved", "Security validated"]
+      }
+    ],
+    "change_control": {
+      "process": "formal|informal",
+      "approval_required": ["scope", "timeline", "budget"],
+      "board_members": ["product-owner", "solution-architect"]
+    },
+    "documentation": {
+      "requirements": ["technical-docs", "user-guide", "api-docs"],
+      "standards": ["markdown", "openapi", "jsdoc"],
+      "review": "mandatory"
+    }
+  }
+}

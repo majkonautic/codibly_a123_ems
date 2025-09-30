@@ -1,0 +1,355 @@
+# Orchestration Patterns for Parallel Agent Execution
+# Based on proven patterns from real-world swarm management
+# Version: 1.0
+
+meta:
+  version: "1.0"
+  framework: "CCU 2.0"
+  purpose: "Define reusable patterns for parallel agent orchestration"
+  principles:
+    - "Context isolation: Each agent gets fresh 200k token window"
+    - "Time boxing: Hard 10-minute limits per agent"
+    - "Checkpoint frequently: Every 5 minutes to filesystem"
+    - "Parallel by default: Never sequential if parallelizable"
+
+# ===================================================================
+# CORE ORCHESTRATION PATTERNS
+# ===================================================================
+
+patterns:
+  # ===================================================================
+  # CORE TRIO - The Foundation Pattern
+  # ===================================================================
+  core_trio:
+    name: "Core Planning Trio"
+    description: "Three specialist agents working in parallel for comprehensive planning"
+    complexity_levels: ["STANDARD", "DEEP"]
+    execution: "parallel"
+    waves:
+      - wave_id: "planning"
+        agents:
+          - name: "technical-product-manager"
+            role: "Define requirements and success criteria"
+            context: "isolated_200k"
+            timeout_minutes: 10
+            outputs:
+              - "requirements.md"
+              - "acceptance-criteria.md"
+              - "success-metrics.md"
+          - name: "product-designer"
+            role: "Design UX flows and interface patterns"
+            context: "isolated_200k"
+            timeout_minutes: 10
+            outputs:
+              - "ux-flows.md"
+              - "wireframes.md"
+              - "design-states.md"
+          - name: "solution-architect"
+            role: "Define technical approach and architecture"
+            context: "isolated_200k"
+            timeout_minutes: 10
+            outputs:
+              - "technical-approach.md"
+              - "architecture-decisions.md"
+              - "risk-assessment.md"
+        handoff_artifact: "consolidated-specification.md"
+        checkpoint_interval_minutes: 5
+    benefits:
+      - "2.5x faster than sequential execution"
+      - "Isolated contexts prevent confusion"
+      - "Comprehensive coverage from specialists"
+
+  # ===================================================================
+  # IMPLEMENTATION WAVE - Parallel Development
+  # ===================================================================
+  implementation_wave:
+    name: "Parallel Implementation Pattern"
+    description: "Backend, Frontend, and QA working simultaneously"
+    complexity_levels: ["STANDARD", "DEEP"]
+    execution: "parallel"
+    prerequisite: "planning_complete"
+    waves:
+      - wave_id: "development"
+        agents:
+          - name: "backend-developer"
+            role: "Build API endpoints and business logic"
+            context: "isolated_200k"
+            timeout_minutes: 10
+            reads: "consolidated-specification.md"
+            outputs:
+              - "api-implementation/"
+              - "services/"
+              - "models/"
+          - name: "frontend-developer"
+            role: "Build UI components and interactions"
+            context: "isolated_200k"
+            timeout_minutes: 10
+            reads: "consolidated-specification.md"
+            outputs:
+              - "components/"
+              - "pages/"
+              - "hooks/"
+          - name: "quality-engineer"
+            role: "Create comprehensive test suites"
+            context: "isolated_200k"
+            timeout_minutes: 10
+            reads: "consolidated-specification.md"
+            outputs:
+              - "unit-tests/"
+              - "integration-tests/"
+              - "e2e-tests/"
+        checkpoint_interval_minutes: 5
+        auto_restart_on_timeout: true
+    coordination:
+      type: "handoff_artifact"
+      format: "markdown"
+      includes:
+        - "API contracts"
+        - "Component interfaces"
+        - "Test requirements"
+
+  # ===================================================================
+  # REVIEW AND INTEGRATION - Sequential with Parallel Fixes
+  # ===================================================================
+  review_loop:
+    name: "Review and Integration Pattern"
+    description: "Code review followed by parallel fixes if needed"
+    complexity_levels: ["STANDARD", "DEEP", "ENTERPRISE"]
+    execution: "hybrid"
+    waves:
+      - wave_id: "review"
+        execution: "sequential"
+        agents:
+          - name: "code-analyzer"
+            role: "Review all generated code"
+            context: "isolated_200k"
+            timeout_minutes: 10
+            outputs:
+              - "review-report.md"
+              - "issues-found.json"
+      - wave_id: "fixes"
+        execution: "parallel"
+        condition: "issues_found"
+        agents:
+          - name: "backend-developer"
+            role: "Fix backend issues"
+            context: "isolated_200k"
+            timeout_minutes: 5
+            reads: "issues-found.json"
+          - name: "frontend-developer"
+            role: "Fix frontend issues"
+            context: "isolated_200k"
+            timeout_minutes: 5
+            reads: "issues-found.json"
+      - wave_id: "integration"
+        execution: "sequential"
+        agents:
+          - name: "solution-architect"
+            role: "Integrate and verify all components"
+            context: "isolated_200k"
+            timeout_minutes: 10
+            outputs:
+              - "integration-report.md"
+              - "deployment-ready.flag"
+
+  # ===================================================================
+  # MICROSERVICES PATTERN - Distributed Development
+  # ===================================================================
+  microservices:
+    name: "Microservices Parallel Development"
+    description: "Each service developed by dedicated agent in parallel"
+    complexity_levels: ["DEEP", "ENTERPRISE"]
+    execution: "parallel"
+    max_parallel_agents: 6
+    waves:
+      - wave_id: "service_development"
+        dynamic_agents: true
+        agent_template:
+          name: "backend-developer-{service_name}"
+          role: "Build {service_name} microservice"
+          context: "isolated_200k"
+          timeout_minutes: 10
+          outputs:
+            - "services/{service_name}/"
+        services:
+          - "auth-service"
+          - "user-service"
+          - "payment-service"
+          - "notification-service"
+        checkpoint_interval_minutes: 5
+    orchestration:
+      type: "service_mesh"
+      coordination: "api_contracts"
+
+  # ===================================================================
+  # RAPID MVP PATTERN - Speed-Optimized
+  # ===================================================================
+  rapid_mvp:
+    name: "Rapid MVP Pattern"
+    description: "Fastest path to working prototype"
+    complexity_levels: ["LIGHT", "STANDARD"]
+    execution: "parallel"
+    waves:
+      - wave_id: "mvp"
+        agents:
+          - name: "solution-architect"
+            role: "Build complete MVP with basic tests"
+            context: "isolated_200k"
+            timeout_minutes: 15
+            parallel_subtasks:
+              - "backend-api"
+              - "frontend-ui"
+              - "basic-tests"
+            outputs:
+              - "mvp-implementation/"
+              - "smoke-tests/"
+    optimization: "speed"
+    tradeoffs:
+      - "Basic test coverage only"
+      - "Minimal error handling"
+      - "Standard patterns only"
+
+  # ===================================================================
+  # ENTERPRISE PATTERN - Comprehensive Coverage
+  # ===================================================================
+  enterprise_comprehensive:
+    name: "Enterprise Comprehensive Pattern"
+    description: "Full coverage with compliance and documentation"
+    complexity_levels: ["ENTERPRISE"]
+    execution: "multi_wave"
+    waves:
+      - wave_id: "planning"
+        execution: "parallel"
+        agents: ["product-manager", "architect", "security-architect", "designer"]
+        duration_minutes: 15
+      - wave_id: "development"
+        execution: "parallel"
+        agents: ["backend-team", "frontend-team", "qa-team", "devops-team"]
+        duration_minutes: 20
+      - wave_id: "compliance"
+        execution: "parallel"
+        agents: ["security-review", "compliance-check", "documentation"]
+        duration_minutes: 10
+      - wave_id: "deployment"
+        execution: "sequential"
+        agents: ["devops-engineer", "sre-engineer"]
+        duration_minutes: 10
+    features:
+      - "Full test coverage (>90%)"
+      - "Security scanning"
+      - "Compliance validation"
+      - "Complete documentation"
+      - "Performance testing"
+
+# ===================================================================
+# PATTERN SELECTION RULES
+# ===================================================================
+
+pattern_selection:
+  rules:
+    - condition: "effort_hours <= 2"
+      pattern: "rapid_mvp"
+      reason: "Quick tasks need minimal orchestration"
+
+    - condition: "effort_hours > 2 AND effort_hours <= 16"
+      pattern: "core_trio"
+      reason: "Standard features benefit from specialist planning"
+
+    - condition: "architecture == 'microservices'"
+      pattern: "microservices"
+      reason: "Service-based architecture needs distributed development"
+
+    - condition: "requirements.compliance == true"
+      pattern: "enterprise_comprehensive"
+      reason: "Compliance needs comprehensive coverage"
+
+    - condition: "modules.count >= 3"
+      pattern: "implementation_wave"
+      reason: "Multiple modules benefit from parallel development"
+
+  default: "core_trio"
+
+# ===================================================================
+# HANDOFF ARTIFACT TEMPLATES
+# ===================================================================
+
+handoff_artifacts:
+  consolidated_specification:
+    format: "markdown"
+    sections:
+      - "## Requirements (from product-manager)"
+      - "## User Experience (from designer)"
+      - "## Technical Approach (from architect)"
+      - "## Acceptance Criteria"
+      - "## Success Metrics"
+      - "## Implementation Notes"
+
+  api_contracts:
+    format: "yaml"
+    includes:
+      - "endpoints"
+      - "request_schemas"
+      - "response_schemas"
+      - "error_codes"
+
+  test_requirements:
+    format: "markdown"
+    sections:
+      - "## Unit Test Requirements"
+      - "## Integration Test Scenarios"
+      - "## E2E Test Flows"
+      - "## Performance Benchmarks"
+
+# ===================================================================
+# MONITORING AND HEALTH CHECKS
+# ===================================================================
+
+pattern_monitoring:
+  metrics:
+    - "agent_runtime"
+    - "context_usage"
+    - "checkpoint_frequency"
+    - "restart_count"
+    - "artifact_generation"
+
+  alerts:
+    - trigger: "runtime > 8 minutes"
+      action: "warn_timeout_approaching"
+
+    - trigger: "context_usage > 150k"
+      action: "warn_context_limit"
+
+    - trigger: "no_output_for_2_minutes"
+      action: "auto_restart"
+
+    - trigger: "restart_count > 3"
+      action: "escalate_to_user"
+
+# ===================================================================
+# OPTIMIZATION STRATEGIES
+# ===================================================================
+
+optimizations:
+  parallel_efficiency:
+    description: "Maximize parallel execution"
+    techniques:
+      - "Identify independent tasks"
+      - "Create clear handoff artifacts"
+      - "Minimize sequential dependencies"
+      - "Use context isolation"
+
+  context_management:
+    description: "Optimize context usage"
+    techniques:
+      - "Start fresh for each wave"
+      - "Use condensed handoff artifacts"
+      - "Checkpoint before context limit"
+      - "Clear previous context on restart"
+
+  time_optimization:
+    description: "Minimize total execution time"
+    techniques:
+      - "Parallel by default"
+      - "Time box to 10 minutes"
+      - "Auto-restart on timeout"
+      - "Preload common patterns"

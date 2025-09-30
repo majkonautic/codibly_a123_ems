@@ -1,0 +1,475 @@
+# Wave Execution Templates for Parallel Agent Orchestration
+# Defines reusable wave configurations for different development phases
+# Version: 1.0
+
+meta:
+  version: "1.0"
+  framework: "CCU 2.0"
+  purpose: "Define wave execution patterns for parallel agent orchestration"
+  based_on: "Proven patterns from managing 20+ agent swarms"
+
+# ===================================================================
+# WAVE TEMPLATES
+# ===================================================================
+
+wave_templates:
+  # ===================================================================
+  # PLANNING WAVE - Core Trio Pattern
+  # ===================================================================
+  planning_wave:
+    id: "planning"
+    name: "Planning & Specification Wave"
+    description: "Parallel execution of product, design, and architecture planning"
+    duration_minutes: 10
+    execution: "parallel"
+    checkpoint_interval_minutes: 5
+
+    agents:
+      technical_product_manager:
+        role: "Requirements & Success Criteria"
+        context_tokens: 200000
+        timeout_minutes: 10
+        checkpoint_frequency: "every_5_min"
+        deliverables:
+          - name: "requirements.md"
+            format: "markdown"
+            sections:
+              - "User Stories"
+              - "Acceptance Criteria"
+              - "Business Rules"
+              - "Success Metrics"
+          - name: "functional-spec.md"
+            format: "markdown"
+            sections:
+              - "Functional Requirements"
+              - "Non-Functional Requirements"
+              - "Constraints"
+
+      product_designer:
+        role: "UX Design & User Flows"
+        context_tokens: 200000
+        timeout_minutes: 10
+        checkpoint_frequency: "every_5_min"
+        deliverables:
+          - name: "ux-design.md"
+            format: "markdown"
+            sections:
+              - "User Flows"
+              - "Wireframes Description"
+              - "Interaction Patterns"
+              - "Design States (loading, empty, error, success)"
+          - name: "accessibility.md"
+            format: "markdown"
+            sections:
+              - "WCAG Compliance"
+              - "Keyboard Navigation"
+              - "Screen Reader Support"
+
+      solution_architect:
+        role: "Technical Architecture & Approach"
+        context_tokens: 200000
+        timeout_minutes: 10
+        checkpoint_frequency: "every_5_min"
+        deliverables:
+          - name: "technical-approach.md"
+            format: "markdown"
+            sections:
+              - "Architecture Decisions"
+              - "Technology Choices"
+              - "API Design"
+              - "Data Models"
+          - name: "risk-assessment.md"
+            format: "markdown"
+            sections:
+              - "Technical Risks"
+              - "Mitigation Strategies"
+              - "Dependencies"
+
+    handoff_artifact:
+      name: "consolidated-specification.md"
+      format: "markdown"
+      auto_generate: true
+      synthesis_agent: "solution-architect"
+      includes:
+        - "All requirements from PM"
+        - "Design specifications from Designer"
+        - "Technical approach from Architect"
+        - "Combined acceptance criteria"
+
+    success_criteria:
+      - "All agents complete within timeout"
+      - "All deliverables generated"
+      - "Handoff artifact synthesized"
+      - "No conflicting requirements"
+
+  # ===================================================================
+  # IMPLEMENTATION WAVE - Parallel Development
+  # ===================================================================
+  implementation_wave:
+    id: "implementation"
+    name: "Parallel Implementation Wave"
+    description: "Backend, Frontend, and QA developing simultaneously"
+    duration_minutes: 20
+    execution: "parallel"
+    checkpoint_interval_minutes: 5
+    reads_artifact: "consolidated-specification.md"
+
+    agents:
+      backend_developer:
+        role: "API & Business Logic Implementation"
+        context_tokens: 200000
+        timeout_minutes: 20
+        checkpoint_frequency: "every_5_min"
+        auto_restart_on_stuck: true
+        stuck_detection_minutes: 2
+        deliverables:
+          - name: "api/"
+            type: "code"
+            includes:
+              - "endpoints/"
+              - "services/"
+              - "models/"
+              - "middleware/"
+          - name: "api-documentation.md"
+            format: "markdown"
+
+      frontend_developer:
+        role: "UI Components & Interactions"
+        context_tokens: 200000
+        timeout_minutes: 20
+        checkpoint_frequency: "every_5_min"
+        auto_restart_on_stuck: true
+        deliverables:
+          - name: "ui/"
+            type: "code"
+            includes:
+              - "components/"
+              - "pages/"
+              - "hooks/"
+              - "styles/"
+          - name: "component-documentation.md"
+            format: "markdown"
+
+      quality_engineer:
+        role: "Test Suite Development"
+        context_tokens: 200000
+        timeout_minutes: 20
+        checkpoint_frequency: "every_5_min"
+        deliverables:
+          - name: "tests/"
+            type: "code"
+            includes:
+              - "unit/"
+              - "integration/"
+              - "e2e/"
+          - name: "test-coverage-report.md"
+            format: "markdown"
+
+    coordination:
+      type: "api_contracts"
+      format: "openapi"
+      shared_artifacts:
+        - "api-contracts.yaml"
+        - "data-schemas.json"
+
+    monitoring:
+      track_progress: true
+      alert_on_stuck: true
+      auto_checkpoint: true
+      preserve_on_timeout: true
+
+  # ===================================================================
+  # REVIEW WAVE - Code Quality & Integration
+  # ===================================================================
+  review_wave:
+    id: "review"
+    name: "Review & Integration Wave"
+    description: "Sequential review followed by parallel fixes"
+    duration_minutes: 10
+    execution: "hybrid"
+
+    phases:
+      - phase: "review"
+        execution: "sequential"
+        agents:
+          code_analyzer:
+            role: "Comprehensive Code Review"
+            context_tokens: 200000
+            timeout_minutes: 5
+            deliverables:
+              - name: "code-review-report.md"
+                severity_levels:
+                  - "blockers"
+                  - "high_priority"
+                  - "medium_priority"
+                  - "suggestions"
+              - name: "issues.json"
+                format: "json"
+                schema: "issue_tracking"
+
+      - phase: "fixes"
+        execution: "parallel"
+        condition: "issues_found"
+        agents:
+          backend_developer:
+            role: "Fix Backend Issues"
+            context_tokens: 200000
+            timeout_minutes: 5
+            reads: "issues.json"
+
+          frontend_developer:
+            role: "Fix Frontend Issues"
+            context_tokens: 200000
+            timeout_minutes: 5
+            reads: "issues.json"
+
+      - phase: "integration"
+        execution: "sequential"
+        agents:
+          solution_architect:
+            role: "Final Integration & Verification"
+            context_tokens: 200000
+            timeout_minutes: 5
+            deliverables:
+              - name: "integration-report.md"
+              - name: "deployment-ready.flag"
+
+  # ===================================================================
+  # MICROSERVICES WAVE - Service-Specific Development
+  # ===================================================================
+  microservices_wave:
+    id: "microservices"
+    name: "Microservices Parallel Development"
+    description: "Each service developed by dedicated agent"
+    duration_minutes: 25
+    execution: "parallel"
+    max_parallel_agents: 6
+    dynamic_agent_allocation: true
+
+    agent_template:
+      name_pattern: "backend-developer-{service}"
+      role_pattern: "Develop {service} microservice"
+      context_tokens: 200000
+      timeout_minutes: 25
+      checkpoint_frequency: "every_5_min"
+      deliverable_pattern:
+        - name: "services/{service}/"
+          includes:
+            - "src/"
+            - "tests/"
+            - "Dockerfile"
+            - "api-spec.yaml"
+
+    services:
+      - name: "auth-service"
+        priority: "high"
+        dependencies: []
+      - name: "user-service"
+        priority: "high"
+        dependencies: ["auth-service"]
+      - name: "payment-service"
+        priority: "medium"
+        dependencies: ["user-service"]
+      - name: "notification-service"
+        priority: "low"
+        dependencies: ["user-service"]
+
+    orchestration:
+      type: "dependency_aware"
+      strategy: "prioritized_parallel"
+
+  # ===================================================================
+  # TESTING WAVE - Comprehensive Test Execution
+  # ===================================================================
+  testing_wave:
+    id: "testing"
+    name: "Comprehensive Testing Wave"
+    description: "Parallel test execution across all test types"
+    duration_minutes: 15
+    execution: "parallel"
+
+    agents:
+      unit_test_runner:
+        role: "Execute Unit Tests"
+        context_tokens: 100000
+        timeout_minutes: 10
+        deliverables:
+          - name: "unit-test-results.json"
+          - name: "coverage-report.html"
+
+      integration_test_runner:
+        role: "Execute Integration Tests"
+        context_tokens: 100000
+        timeout_minutes: 10
+        deliverables:
+          - name: "integration-test-results.json"
+
+      e2e_test_runner:
+        role: "Execute E2E Tests"
+        context_tokens: 100000
+        timeout_minutes: 15
+        uses_playwright: true
+        deliverables:
+          - name: "e2e-test-results.json"
+          - name: "screenshots/"
+          - name: "videos/"
+
+    test_gates:
+      unit_coverage_threshold: 80
+      integration_pass_rate: 100
+      e2e_critical_paths: ["login", "checkout", "dashboard"]
+      stop_on_failure: true
+
+  # ===================================================================
+  # RAPID MVP WAVE - Single Agent Fast Execution
+  # ===================================================================
+  rapid_mvp_wave:
+    id: "rapid_mvp"
+    name: "Rapid MVP Development"
+    description: "Single agent building complete MVP quickly"
+    duration_minutes: 15
+    execution: "sequential"
+    optimization: "speed"
+
+    agents:
+      solution_architect:
+        role: "Build Complete MVP"
+        context_tokens: 200000
+        timeout_minutes: 15
+        checkpoint_frequency: "every_3_min"
+        subtasks:
+          - "Create basic backend API"
+          - "Build minimal frontend"
+          - "Add essential tests"
+          - "Setup deployment config"
+        deliverables:
+          - name: "mvp/"
+            includes:
+              - "backend/"
+              - "frontend/"
+              - "tests/smoke/"
+              - "docker-compose.yml"
+
+    tradeoffs:
+      accepted:
+        - "Basic error handling only"
+        - "Minimal test coverage (smoke tests)"
+        - "Standard UI components only"
+        - "Single deployment environment"
+      not_accepted:
+        - "Security vulnerabilities"
+        - "Data loss risks"
+        - "Non-functional MVP"
+
+# ===================================================================
+# WAVE SEQUENCING RULES
+# ===================================================================
+
+wave_sequencing:
+  rules:
+    - name: "Planning First"
+      condition: "complexity >= STANDARD"
+      sequence: ["planning_wave", "implementation_wave", "review_wave"]
+
+    - name: "Direct Implementation"
+      condition: "complexity == LIGHT"
+      sequence: ["rapid_mvp_wave"]
+
+    - name: "Microservices Flow"
+      condition: "architecture == microservices"
+      sequence: ["planning_wave", "microservices_wave", "testing_wave"]
+
+    - name: "Enterprise Flow"
+      condition: "complexity == ENTERPRISE"
+      sequence: ["planning_wave", "implementation_wave", "testing_wave", "review_wave"]
+
+  dependencies:
+    implementation_wave:
+      requires: ["planning_wave"]
+      reads: "consolidated-specification.md"
+
+    review_wave:
+      requires: ["implementation_wave"]
+      reads: "implementation-artifacts"
+
+    testing_wave:
+      requires: ["implementation_wave"]
+      parallel_with: ["review_wave"]
+
+# ===================================================================
+# CHECKPOINT STRUCTURE
+# ===================================================================
+
+checkpoint_structure:
+  location: "ccu_workspace/07-execution-checkpoints/"
+
+  folder_structure:
+    pattern: "wave-{wave_id}-{timestamp}/"
+    subfolders:
+      - "agent-outputs/"
+      - "artifacts/"
+      - "logs/"
+      - "recovery-state/"
+
+  checkpoint_contents:
+    metadata:
+      - "wave_id"
+      - "agent_name"
+      - "timestamp"
+      - "context_usage"
+      - "runtime_seconds"
+      - "status"
+
+    state:
+      - "current_task"
+      - "completed_tasks"
+      - "pending_tasks"
+      - "generated_files"
+      - "errors_encountered"
+
+    recovery:
+      - "restart_point"
+      - "context_snapshot"
+      - "partial_outputs"
+
+  retention:
+    successful_waves: "7 days"
+    failed_waves: "30 days"
+    handoff_artifacts: "permanent"
+
+# ===================================================================
+# MONITORING DASHBOARD LAYOUT
+# ===================================================================
+
+dashboard_display:
+  header:
+    format: |
+      ╔═══════════════════════════════════════════════════════════════╗
+      ║  🎯 WAVE {wave_number}/{total_waves}: {wave_name}              ║
+      ╚═══════════════════════════════════════════════════════════════╝
+
+  agent_status:
+    format: |
+      [{agent_name}]    {progress_bar} {percentage}% {status_icon} {current_task}
+        └─ Context: {context_used}k/{context_limit}k
+        └─ Runtime: {runtime}/{timeout}
+        └─ Last checkpoint: {checkpoint_ago}
+
+  progress_bar:
+    empty: "░"
+    filled: "█"
+    width: 20
+
+  status_icons:
+    running: "🔄"
+    completed: "✅"
+    failed: "❌"
+    stuck: "⚠️"
+    restarting: "🔃"
+
+  footer:
+    format: |
+      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+      Wave Progress: {wave_progress}% | Elapsed: {elapsed} | ETA: {eta}
+      Checkpoints: {checkpoint_count} | Restarts: {restart_count}
+      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━

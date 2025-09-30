@@ -1,0 +1,51 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: runner
+    ports:
+      - "3002:3000"
+    environment:
+      - NODE_ENV=production
+    volumes:
+      - ./prisma:/app/prisma
+      - sqlite_data:/app/prisma
+    depends_on:
+      - db-init
+    restart: unless-stopped
+
+  app-dev:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: dev-deps
+    ports:
+      - "3002:3000"
+    environment:
+      - NODE_ENV=development
+    volumes:
+      - .:/app
+      - /app/node_modules
+      - sqlite_data:/app/prisma
+    command: npm run dev
+    profiles:
+      - dev
+
+  db-init:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: dev-deps
+    volumes:
+      - .:/app
+      - /app/node_modules
+      - sqlite_data:/app/prisma
+    command: >
+      sh -c "npx prisma generate &&
+             npx prisma db push"
+    profiles:
+      - init
+
+volumes:
+  sqlite_data:

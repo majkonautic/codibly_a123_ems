@@ -1,0 +1,471 @@
+# Modern Integrations Registry for Creative Discovery
+# CCU Framework 2.0 - Reference Catalog for Integration Suggestions
+# This file helps guide conversations about potential integrations during discovery
+
+meta:
+  version: "1.0"
+  framework: "Claude Code Ultimate 2.0"
+  purpose: "Reference catalog for discussing integration possibilities during discovery"
+  usage: "Use during conversation to explore what external services might enhance features"
+
+# ===================================================================
+# AI & MACHINE LEARNING SERVICES
+# ===================================================================
+ai_services:
+  name: "🤖 AI & Machine Learning"
+  description: "Services for adding intelligence to applications"
+
+  services:
+    openai:
+      name: "OpenAI API"
+      capabilities:
+        - "GPT-4 for natural language processing"
+        - "DALL-E 3 for image generation"
+        - "Whisper for speech-to-text"
+        - "Embeddings for semantic search"
+      use_cases:
+        food_tracking: "Analyze food photos, suggest recipes from ingredients"
+        mental_health: "Mood analysis from journal entries, meditation scripts"
+        ecommerce: "Product description generation, customer service chat"
+        education: "Personalized tutoring, assignment feedback"
+      complexity: "medium"
+      cost_model: "pay-per-token"
+
+    anthropic:
+      name: "Claude API"
+      capabilities:
+        - "Long-context analysis (200K tokens)"
+        - "Code generation and review"
+        - "Complex reasoning tasks"
+        - "Document summarization"
+      use_cases:
+        legal: "Contract analysis and summarization"
+        development: "Code review and documentation"
+        research: "Literature review and synthesis"
+      complexity: "medium"
+      cost_model: "pay-per-token"
+
+    google_ai:
+      name: "Google Gemini/Vertex AI"
+      capabilities:
+        - "Multimodal understanding (text + images + video)"
+        - "Google ecosystem integration"
+        - "Document AI for forms processing"
+        - "Translation and language detection"
+      use_cases:
+        content: "Video analysis and summarization"
+        documents: "Form extraction and processing"
+        international: "Multi-language support"
+      complexity: "medium-high"
+
+    huggingface:
+      name: "Hugging Face"
+      capabilities:
+        - "Open source model hosting"
+        - "Custom model fine-tuning"
+        - "Specialized models (medical, legal, etc.)"
+      use_cases:
+        specialized: "Domain-specific AI models"
+        privacy: "Self-hosted AI solutions"
+      complexity: "high"
+
+    whisper:
+      name: "Whisper API"
+      capabilities:
+        - "Speech-to-text transcription"
+        - "Multi-language support"
+        - "Speaker diarization"
+      use_cases:
+        accessibility: "Voice input for any app"
+        content: "Podcast/video transcription"
+        notes: "Voice note taking"
+      complexity: "low"
+
+# ===================================================================
+# AUTOMATION & DATA EXTRACTION
+# ===================================================================
+automation:
+  name: "⚡ Automation & Data"
+  description: "Services for automating workflows and extracting data"
+
+  services:
+    apify:
+      name: "Apify"
+      capabilities:
+        - "Web scraping at scale"
+        - "Social media monitoring"
+        - "Price tracking"
+        - "Data extraction APIs"
+      use_cases:
+        ecommerce: "Competitor price monitoring"
+        research: "Data collection from websites"
+        social: "Social media sentiment tracking"
+      complexity: "medium"
+
+    zapier:
+      name: "Zapier"
+      capabilities:
+        - "Connect 5000+ apps without code"
+        - "Webhook automation"
+        - "Scheduled tasks"
+      use_cases:
+        productivity: "Automate repetitive tasks"
+        notifications: "Multi-channel alerts"
+        data_sync: "Keep systems synchronized"
+      complexity: "low"
+
+    n8n:
+      name: "n8n"
+      capabilities:
+        - "Self-hosted workflow automation"
+        - "Visual workflow builder"
+        - "Custom code nodes"
+      use_cases:
+        enterprise: "Complex workflow automation"
+        privacy: "Self-hosted automation"
+      complexity: "medium"
+
+# ===================================================================
+# MEDIA & CONTENT GENERATION
+# ===================================================================
+media_generation:
+  name: "🎨 Media & Content"
+  description: "Services for generating and manipulating media"
+
+  services:
+    dalle:
+      name: "DALL-E API"
+      capabilities:
+        - "Text-to-image generation"
+        - "Image editing and variations"
+        - "Style customization"
+      use_cases:
+        content: "Blog post illustrations"
+        products: "Product mockup generation"
+        creative: "Custom artwork creation"
+      complexity: "low"
+
+    stable_diffusion:
+      name: "Stable Diffusion"
+      capabilities:
+        - "Open source image generation"
+        - "Custom model training"
+        - "Style transfer"
+      use_cases:
+        gaming: "Asset generation"
+        fashion: "Design variations"
+        marketing: "Ad creative generation"
+      complexity: "medium-high"
+
+    midjourney:
+      name: "Midjourney"
+      capabilities:
+        - "Artistic image generation"
+        - "High-quality outputs"
+        - "Style consistency"
+      use_cases:
+        branding: "Logo and brand assets"
+        publishing: "Book covers and illustrations"
+      complexity: "low"
+
+    elevenlabs:
+      name: "ElevenLabs"
+      capabilities:
+        - "Text-to-speech with emotion"
+        - "Voice cloning"
+        - "Multi-language support"
+      use_cases:
+        accessibility: "Content narration"
+        education: "Audio lessons"
+        content: "Podcast generation"
+      complexity: "low"
+
+# ===================================================================
+# COMMUNICATION & REAL-TIME
+# ===================================================================
+communication:
+  name: "💬 Communication & Real-time"
+  description: "Services for messaging and real-time features"
+
+  services:
+    twilio:
+      name: "Twilio"
+      capabilities:
+        - "SMS/MMS messaging"
+        - "Voice calls"
+        - "Video conferencing"
+        - "WhatsApp Business API"
+      use_cases:
+        notifications: "Multi-channel alerts"
+        support: "Customer communication"
+        verification: "2FA and OTP"
+      complexity: "medium"
+
+    sendgrid:
+      name: "SendGrid"
+      capabilities:
+        - "Transactional email"
+        - "Email templates"
+        - "Analytics and tracking"
+      use_cases:
+        notifications: "User notifications"
+        marketing: "Email campaigns"
+        reports: "Automated reporting"
+      complexity: "low"
+
+    pusher:
+      name: "Pusher/Ably"
+      capabilities:
+        - "Real-time websockets"
+        - "Presence channels"
+        - "Push notifications"
+      use_cases:
+        collaboration: "Live collaboration features"
+        chat: "In-app messaging"
+        updates: "Live data updates"
+      complexity: "medium"
+
+    stream:
+      name: "Stream"
+      capabilities:
+        - "Activity feeds"
+        - "Chat infrastructure"
+        - "Video/audio streaming"
+      use_cases:
+        social: "Social media feeds"
+        messaging: "Chat applications"
+        streaming: "Live streaming features"
+      complexity: "medium"
+
+# ===================================================================
+# PAYMENTS & COMMERCE
+# ===================================================================
+payments:
+  name: "💳 Payments & Commerce"
+  description: "Payment processing and commerce infrastructure"
+
+  services:
+    stripe:
+      name: "Stripe"
+      capabilities:
+        - "Payment processing"
+        - "Subscriptions"
+        - "Marketplace payments"
+        - "Invoicing"
+      use_cases:
+        saas: "Subscription billing"
+        marketplace: "Split payments"
+        ecommerce: "Checkout processing"
+      complexity: "medium"
+
+    paypal:
+      name: "PayPal"
+      capabilities:
+        - "Global payment processing"
+        - "PayPal wallet integration"
+        - "Venmo integration"
+      use_cases:
+        global: "International payments"
+        consumer: "Familiar checkout option"
+      complexity: "low-medium"
+
+    square:
+      name: "Square"
+      capabilities:
+        - "In-person payments"
+        - "Online payments"
+        - "POS system"
+      use_cases:
+        retail: "Physical store payments"
+        restaurants: "Order and payment system"
+      complexity: "medium"
+
+# ===================================================================
+# DATA & ANALYTICS
+# ===================================================================
+analytics:
+  name: "📊 Analytics & Monitoring"
+  description: "User analytics and application monitoring"
+
+  services:
+    mixpanel:
+      name: "Mixpanel"
+      capabilities:
+        - "User behavior tracking"
+        - "Funnel analysis"
+        - "A/B testing"
+        - "Retention analytics"
+      use_cases:
+        product: "Feature usage tracking"
+        growth: "User journey optimization"
+      complexity: "medium"
+
+    segment:
+      name: "Segment"
+      capabilities:
+        - "Customer data platform"
+        - "Event routing"
+        - "Data warehouse sync"
+      use_cases:
+        enterprise: "Unified customer data"
+        multi_tool: "Single tracking implementation"
+      complexity: "medium"
+
+    sentry:
+      name: "Sentry"
+      capabilities:
+        - "Error tracking"
+        - "Performance monitoring"
+        - "Release tracking"
+      use_cases:
+        quality: "Bug tracking and monitoring"
+        performance: "Performance optimization"
+      complexity: "low"
+
+# ===================================================================
+# SPECIALIZED APIS
+# ===================================================================
+specialized:
+  name: "🔧 Specialized Services"
+  description: "Domain-specific APIs and services"
+
+  services:
+    mapbox:
+      name: "Mapbox/Google Maps"
+      capabilities:
+        - "Interactive maps"
+        - "Geocoding"
+        - "Route planning"
+        - "Location search"
+      use_cases:
+        delivery: "Delivery tracking"
+        social: "Location-based features"
+        travel: "Trip planning"
+      complexity: "medium"
+
+    weather:
+      name: "Weather APIs"
+      capabilities:
+        - "Current weather"
+        - "Forecasts"
+        - "Historical data"
+      use_cases:
+        outdoor: "Activity planning"
+        agriculture: "Farming applications"
+        travel: "Trip weather info"
+      complexity: "low"
+
+    nutrition:
+      name: "Nutrition APIs"
+      capabilities:
+        - "Food database (USDA, Nutritionix)"
+        - "Barcode lookup"
+        - "Recipe analysis"
+      use_cases:
+        health: "Food tracking apps"
+        fitness: "Meal planning"
+        medical: "Dietary management"
+      complexity: "low-medium"
+
+    fitness:
+      name: "Fitness Device APIs"
+      capabilities:
+        - "Fitbit API"
+        - "Apple HealthKit"
+        - "Google Fit"
+        - "Strava"
+      use_cases:
+        health: "Activity tracking"
+        wellness: "Health monitoring"
+        coaching: "Fitness coaching apps"
+      complexity: "medium"
+
+# ===================================================================
+# APPLICATION PATTERN SUGGESTIONS
+# ===================================================================
+# These patterns help suggest relevant integrations based on app type
+application_patterns:
+
+  food_tracking:
+    suggested_explorations:
+      - "USDA Food Database for nutrition data?"
+      - "Barcode scanning with camera?"
+      - "AI photo recognition for meals?"
+      - "Voice logging with Whisper?"
+      - "Fitness tracker integration?"
+      - "Recipe import from URLs?"
+
+  mental_health:
+    suggested_explorations:
+      - "AI mood analysis from entries?"
+      - "Voice journaling transcription?"
+      - "Wearable biometric integration?"
+      - "Crisis hotline integration?"
+      - "Meditation content APIs?"
+      - "Therapist scheduling systems?"
+
+  ecommerce:
+    suggested_explorations:
+      - "Payment processing (Stripe/PayPal)?"
+      - "Shipping integration (ShipStation)?"
+      - "Tax calculation (TaxJar)?"
+      - "Reviews platform (Trustpilot)?"
+      - "Email marketing (Klaviyo)?"
+      - "Inventory management?"
+
+  education:
+    suggested_explorations:
+      - "Video conferencing (Zoom/Agora)?"
+      - "Content delivery (Vimeo/Cloudinary)?"
+      - "AI tutoring assistance?"
+      - "Plagiarism detection?"
+      - "Calendar scheduling?"
+      - "Payment for courses?"
+
+  productivity:
+    suggested_explorations:
+      - "Calendar integration (Google/Outlook)?"
+      - "File storage (Dropbox/S3)?"
+      - "Team communication (Slack)?"
+      - "Time tracking integration?"
+      - "AI task prioritization?"
+      - "Workflow automation?"
+
+  social_platform:
+    suggested_explorations:
+      - "Real-time messaging?"
+      - "Video/audio calling?"
+      - "Content moderation AI?"
+      - "Social login providers?"
+      - "Push notifications?"
+      - "Activity feeds?"
+
+  saas_b2b:
+    suggested_explorations:
+      - "SSO integration (Auth0/Okta)?"
+      - "CRM integration (Salesforce/HubSpot)?"
+      - "Analytics platform?"
+      - "Billing system (Stripe/Chargebee)?"
+      - "Support system (Zendesk/Intercom)?"
+      - "API rate limiting?"
+
+# ===================================================================
+# USAGE INSTRUCTIONS
+# ===================================================================
+usage_instructions:
+  purpose: |
+    This registry serves as a reference during discovery conversations.
+    It helps identify potential integrations that could enhance features.
+
+  how_to_use: |
+    1. During discovery, identify the application type
+    2. Reference relevant integration categories
+    3. Ask users about specific integrations that could enhance their features
+    4. Record only user-confirmed integrations in discovery.json
+
+  important_notes: |
+    - Don't automatically suggest all integrations
+    - Use this as a conversation guide, not a checklist
+    - Focus on integrations that solve real user problems
+    - In INSTANT mode, only include explicitly mentioned integrations
+    - In other modes, explore based on user interest

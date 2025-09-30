@@ -1,0 +1,83 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./a123-dev.db"
+}
+
+model User {
+  id           String   @id @default(cuid())
+  username     String   @unique
+  passwordHash String
+  role         String   @default("operator")
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@map("users")
+}
+
+model BatteryContainer {
+  id            String @id @default(cuid())
+  name          String
+  capacity      Float
+  location      String
+  lat           Float
+  lng           Float
+  status        String @default("offline")
+  soc           Float    // State of Charge %
+  soh           Float    // State of Health %
+  cycleCount    Int
+  productModel  String   // "40ft" | "20ft-A" | etc
+  serialNumber  String   @unique
+  voltageClass  String   // "1500V" | "800V"
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  performances Performance[]
+  alerts       Alert[]
+
+  @@map("battery_containers")
+}
+
+model Performance {
+  id           String   @id @default(cuid())
+  containerId  String
+  timestamp    DateTime @default(now())
+  generation   Float
+  availability Float
+  efficiency   Float
+
+  container BatteryContainer @relation(fields: [containerId], references: [id], onDelete: Cascade)
+
+  @@map("performance")
+}
+
+model Alert {
+  id          String   @id @default(cuid())
+  containerId String
+  type        String
+  severity    String   // "CRITICAL" | "HIGH" | "MEDIUM" | "LOW"
+  category    String   // "SAFETY" | "PERFORMANCE" | "MAINTENANCE" | "INFO"
+  message     String
+  isRead      Boolean  @default(false)
+  createdAt   DateTime @default(now())
+
+  container BatteryContainer @relation(fields: [containerId], references: [id], onDelete: Cascade)
+
+  @@map("alerts")
+}
+
+model Portfolio {
+  id                String   @id @default(cuid())
+  name              String
+  totalCapacity     Float
+  currentGeneration Float
+  updatedAt         DateTime @updatedAt
+
+  @@map("portfolio")
+}

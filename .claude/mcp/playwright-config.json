@@ -1,0 +1,87 @@
+{
+  "name": "playwright-test-orchestration",
+  "description": "MCP configuration for automatic Playwright test execution",
+  "version": "1.0.0",
+  "mcp_servers": {
+    "playwright": {
+      "command": "mcp-server-playwright",
+      "args": [],
+      "env": {},
+      "required": false,
+      "fallback": "local"
+    }
+  },
+  "test_configuration": {
+    "auto_run": true,
+    "fail_fast": true,
+    "retry_failed": 1,
+    "timeout": 300000,
+    "parallel": true,
+    "workers": 4
+  },
+  "test_triggers": {
+    "after_phase_complete": true,
+    "after_module_complete": true,
+    "after_feature_complete": true,
+    "before_deploy": true
+  },
+  "test_suites": {
+    "smoke": {
+      "pattern": "**/*.smoke.test.ts",
+      "priority": 1,
+      "required": true,
+      "description": "Basic functionality tests"
+    },
+    "integration": {
+      "pattern": "**/*.integration.test.ts",
+      "priority": 2,
+      "required": true,
+      "description": "Module integration tests"
+    },
+    "e2e": {
+      "pattern": "**/*.e2e.test.ts",
+      "priority": 3,
+      "required": false,
+      "description": "End-to-end user flow tests"
+    },
+    "build": {
+      "pattern": "**/build-verification.test.ts",
+      "priority": 0,
+      "required": true,
+      "description": "Build and compilation tests"
+    }
+  },
+  "coverage_requirements": {
+    "minimum_coverage": 70,
+    "enforce_coverage": true,
+    "coverage_reporters": ["text", "html", "json"]
+  },
+  "reporting": {
+    "generate_html": true,
+    "generate_json": true,
+    "output_directory": "test-results",
+    "include_screenshots": true,
+    "include_videos": false,
+    "retention_days": 30
+  },
+  "phase_validation": {
+    "platform": {
+      "required_tests": ["build", "smoke"],
+      "minimum_pass_rate": 100
+    },
+    "module": {
+      "required_tests": ["build", "smoke", "integration"],
+      "minimum_pass_rate": 95
+    },
+    "feature": {
+      "required_tests": ["build", "smoke"],
+      "minimum_pass_rate": 90
+    }
+  },
+  "commands": {
+    "run_tests": "mcp://playwright/run",
+    "check_status": "mcp://playwright/status",
+    "get_results": "mcp://playwright/results",
+    "generate_report": "mcp://playwright/report"
+  }
+}

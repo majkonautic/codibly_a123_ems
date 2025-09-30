@@ -1,0 +1,273 @@
+{
+  "meta": {
+    "version": "2.0",
+    "framework": "CCU 2.0",
+    "phase": "discovery",
+    "timestamp": "2025-09-30T11:45:00Z",
+    "track": "standard",
+    "target": "platform",
+    "exploration_method": "code_analysis",
+    "scope": {
+      "platform": "ems-scada",
+      "source_path": "/Users/bartoszmajewski/Documents/REPO/Codibly/Spencer/A123/a123_ems"
+    }
+  },
+  "discovery": {
+    "initial_concept": "Energy Management System with SCADA monitoring capabilities",
+    "expanded_concept": "Comprehensive renewable energy portfolio monitoring platform with real-time SCADA integration for solar, wind, battery, and substation assets",
+    "application_type": "web_application",
+    "industry": "renewable_energy",
+
+    "identified_modules": {
+      "authentication": {
+        "purpose": "User authentication and authorization management",
+        "core_features": ["login", "jwt-sessions", "role-based-access", "protected-routes"],
+        "functionality_details": {
+          "how_it_works": "NextAuth.js with credentials provider and JWT strategy",
+          "user_workflows": ["Login with username/password", "Session persistence", "Role verification"],
+          "data_handled": ["user credentials", "roles", "session tokens"],
+          "settings_options": ["session timeout", "password policies"],
+          "edge_cases": ["expired tokens", "concurrent sessions", "role changes"]
+        },
+        "dependencies": []
+      },
+      "assets": {
+        "purpose": "Manage renewable energy generation and storage assets",
+        "core_features": ["asset-registration", "capacity-tracking", "status-monitoring", "geolocation"],
+        "functionality_details": {
+          "how_it_works": "CRUD operations for energy assets with real-time status updates",
+          "user_workflows": ["Register new asset", "Update asset status", "View asset details", "Track location"],
+          "data_handled": ["asset metadata", "capacity specs", "geographic coordinates", "operational status"],
+          "settings_options": ["asset types", "capacity units", "status definitions"],
+          "edge_cases": ["offline assets", "capacity exceeded", "location conflicts"]
+        },
+        "dependencies": ["authentication"]
+      },
+      "performance": {
+        "purpose": "Track and visualize asset performance metrics",
+        "core_features": ["real-time-metrics", "historical-trends", "efficiency-tracking", "availability-monitoring"],
+        "functionality_details": {
+          "how_it_works": "Time-series data collection with real-time visualization using Recharts",
+          "user_workflows": ["View current performance", "Analyze historical trends", "Compare metrics", "Export data"],
+          "data_handled": ["generation data", "efficiency percentages", "availability rates", "commitment values"],
+          "settings_options": ["metric intervals", "chart types", "aggregation periods"],
+          "edge_cases": ["data gaps", "negative generation", "efficiency >100%"]
+        },
+        "dependencies": ["assets", "authentication"]
+      },
+      "alerts": {
+        "purpose": "Monitor and manage system alerts and notifications",
+        "core_features": ["alert-creation", "severity-levels", "categorization", "read-status"],
+        "functionality_details": {
+          "how_it_works": "Event-driven alert generation with categorized severity and tracking",
+          "user_workflows": ["View active alerts", "Acknowledge alerts", "Filter by severity", "View alert details"],
+          "data_handled": ["alert messages", "severity levels", "timestamps", "asset associations"],
+          "settings_options": ["alert thresholds", "notification rules", "severity definitions"],
+          "edge_cases": ["alert storms", "false positives", "cascading alerts"]
+        },
+        "dependencies": ["assets", "authentication"]
+      },
+      "map": {
+        "purpose": "Geographic visualization of asset portfolio",
+        "core_features": ["interactive-maps", "marker-clustering", "status-visualization", "location-search"],
+        "functionality_details": {
+          "how_it_works": "Google Maps and Leaflet integration for geographic asset display",
+          "user_workflows": ["View portfolio map", "Click asset markers", "Filter by status", "Zoom regions"],
+          "data_handled": ["GPS coordinates", "asset markers", "cluster data", "map tiles"],
+          "settings_options": ["map providers", "clustering thresholds", "marker styles"],
+          "edge_cases": ["overlapping assets", "offline regions", "coordinate errors"]
+        },
+        "dependencies": ["assets", "authentication"]
+      },
+      "reports": {
+        "purpose": "Generate operational and performance reports",
+        "core_features": ["data-aggregation", "trend-analysis", "export-capabilities", "custom-reports"],
+        "functionality_details": {
+          "how_it_works": "Data aggregation and analysis with customizable report generation",
+          "user_workflows": ["Generate daily reports", "View summaries", "Export data", "Schedule reports"],
+          "data_handled": ["aggregated metrics", "time-series data", "calculated KPIs", "report templates"],
+          "settings_options": ["report periods", "metric selection", "export formats"],
+          "edge_cases": ["large datasets", "missing data periods", "calculation errors"]
+        },
+        "dependencies": ["assets", "performance", "authentication"]
+      },
+      "dashboard": {
+        "purpose": "Central monitoring interface for portfolio overview",
+        "core_features": ["portfolio-summary", "real-time-updates", "key-metrics", "status-overview"],
+        "functionality_details": {
+          "how_it_works": "Real-time data aggregation with Socket.io for live updates",
+          "user_workflows": ["Monitor portfolio", "Drill into details", "View alerts", "Access quick actions"],
+          "data_handled": ["portfolio totals", "current generation", "system status", "recent alerts"],
+          "settings_options": ["refresh intervals", "widget layout", "metric preferences"],
+          "edge_cases": ["connection loss", "data delays", "calculation mismatches"]
+        },
+        "dependencies": ["assets", "performance", "alerts", "authentication"]
+      },
+      "settings": {
+        "purpose": "System configuration and user management",
+        "core_features": ["user-management", "system-preferences", "configuration", "access-control"],
+        "functionality_details": {
+          "how_it_works": "Administrative interface for system and user configuration",
+          "user_workflows": ["Manage users", "Configure system", "Set preferences", "Define roles"],
+          "data_handled": ["user accounts", "system settings", "preferences", "permissions"],
+          "settings_options": ["user roles", "system parameters", "interface preferences"],
+          "edge_cases": ["permission conflicts", "invalid configurations", "setting dependencies"]
+        },
+        "dependencies": ["authentication"]
+      }
+    },
+
+    "core_features": [
+      {
+        "name": "Real-time SCADA Monitoring",
+        "module": "dashboard",
+        "functionality": "Live monitoring of energy assets with sub-second updates via Socket.io",
+        "user_flow": "Login → Dashboard → View real-time metrics → Drill into asset details",
+        "data_requirements": ["telemetry streams", "performance metrics", "status updates"],
+        "success_metrics": ["<1s latency", "99.9% uptime", "concurrent user support"]
+      },
+      {
+        "name": "Performance Analytics",
+        "module": "performance",
+        "functionality": "Historical and real-time performance analysis with visual charts",
+        "user_flow": "Select asset → Choose time range → View charts → Export data",
+        "data_requirements": ["time-series data", "efficiency calculations", "availability metrics"],
+        "success_metrics": ["data accuracy", "chart responsiveness", "export reliability"]
+      },
+      {
+        "name": "Alert Management",
+        "module": "alerts",
+        "functionality": "Categorized alert system with severity levels and tracking",
+        "user_flow": "Receive alert → View details → Take action → Mark resolved",
+        "data_requirements": ["event triggers", "alert rules", "acknowledgment tracking"],
+        "success_metrics": ["alert latency <5s", "zero missed criticals", "audit trail completeness"]
+      },
+      {
+        "name": "Geographic Asset Tracking",
+        "module": "map",
+        "functionality": "Interactive mapping of distributed energy assets",
+        "user_flow": "Open map → View asset locations → Click for details → Filter by status",
+        "data_requirements": ["GPS coordinates", "asset metadata", "status information"],
+        "success_metrics": ["map load time <3s", "accurate positioning", "smooth interactions"]
+      }
+    ],
+
+    "identified_integrations": [
+      {
+        "service": "Weather API",
+        "purpose": "Enhanced generation forecasting for weather-dependent assets",
+        "features_enhanced": ["performance forecasting", "alert predictions", "maintenance planning"]
+      },
+      {
+        "service": "Energy Market APIs",
+        "purpose": "Market price integration for revenue optimization",
+        "features_enhanced": ["trading decisions", "curtailment optimization", "revenue reporting"]
+      },
+      {
+        "service": "Grid Operator APIs",
+        "purpose": "Grid requirements and dispatch instructions",
+        "features_enhanced": ["compliance reporting", "dispatch response", "grid stability"]
+      }
+    ],
+
+    "user_personas": [
+      {
+        "type": "Portfolio Manager",
+        "needs": ["portfolio overview", "performance metrics", "revenue tracking"],
+        "workflows": ["daily monitoring", "performance analysis", "report generation"]
+      },
+      {
+        "type": "Grid Operator",
+        "needs": ["real-time monitoring", "dispatch control", "compliance data"],
+        "workflows": ["live monitoring", "dispatch management", "incident response"]
+      },
+      {
+        "type": "Maintenance Team",
+        "needs": ["alert management", "asset status", "work scheduling"],
+        "workflows": ["alert response", "maintenance planning", "field operations"]
+      },
+      {
+        "type": "Performance Analyst",
+        "needs": ["detailed analytics", "trend analysis", "optimization opportunities"],
+        "workflows": ["data analysis", "report creation", "performance tuning"]
+      }
+    ],
+
+    "business_model": "B2B SaaS for renewable energy portfolio operators",
+
+    "success_criteria": [
+      "99.9% system uptime for critical monitoring",
+      "Sub-second data latency for real-time updates",
+      "Critical alerts addressed within 5 minutes",
+      "95% forecast accuracy for generation",
+      "2-5% improvement in portfolio efficiency",
+      "90% daily active usage by operators"
+    ],
+
+    "technical_requirements": [
+      "High availability architecture for 24/7 operations",
+      "Scalable to handle 10,000+ assets",
+      "Support for 100+ concurrent users",
+      "Data retention for 5+ years of historical data",
+      "Sub-second real-time data processing",
+      "Geographic redundancy for disaster recovery"
+    ]
+  },
+
+  "analysis": {
+    "feasibility_assessment": "High feasibility with solid foundation requiring architectural evolution for scale",
+    "completeness_score": 75,
+    "gaps_identified": [
+      "Predictive analytics capability missing",
+      "No market integration for trading",
+      "Limited weather forecasting integration",
+      "Compliance reporting automation needed",
+      "Mobile application not available"
+    ],
+    "similar_patterns": [],
+    "recommendations": [
+      "Migrate from SQLite to PostgreSQL/TimescaleDB for production scale",
+      "Implement predictive maintenance using ML models",
+      "Add weather API integration for better forecasting",
+      "Develop mobile companion app for field teams",
+      "Implement message queue for async processing"
+    ]
+  },
+
+  "mcp_context": {
+    "mem0_session_id": null,
+    "patterns_found": 0,
+    "context7_libraries": [],
+    "sequential_thoughts": 8,
+    "claude_context_indexed": true,
+    "similar_projects": []
+  },
+
+  "outputs": {
+    "files_generated": [
+      "discovery.json",
+      "discovery-summary.md",
+      "modules-overview.md",
+      "integration-points.md"
+    ],
+    "next_phase": {
+      "command": "/ccu:specify",
+      "parameters": "--target=platform --track=standard --from=discovery",
+      "confidence_threshold_met": true
+    }
+  },
+
+  "confidence": {
+    "overall": 85,
+    "by_module": {
+      "authentication": 90,
+      "assets": 88,
+      "performance": 85,
+      "alerts": 87,
+      "map": 83,
+      "reports": 80,
+      "dashboard": 86,
+      "settings": 75
+    }
+  }
+}

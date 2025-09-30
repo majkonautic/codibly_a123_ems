@@ -1,0 +1,345 @@
+# Orchestration Strategy Questions for Planning Phase
+# Asked during /ccu:plan to determine execution strategy
+# Version: 1.0
+
+meta:
+  version: "1.0"
+  framework: "CCU 2.0"
+  phase: 6
+  purpose: "Determine optimal orchestration strategy for development execution"
+
+# ===================================================================
+# TRACK-SPECIFIC QUESTIONS
+# ===================================================================
+
+instant_track:
+  questions_count: 0
+  description: "INSTANT track uses automatic orchestration - no questions needed"
+  auto_strategy: "rapid_mvp"
+
+rapid_track:
+  questions_count: 1
+  questions:
+    - id: "execution_strategy"
+      sequence: 1
+      category: "orchestration"
+      prompt: |
+        🚀 EXECUTION STRATEGY
+        ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+        Based on your {modules.count} modules ({modules.names}), how should we execute development?
+
+      options:
+        - id: "sequential"
+          label: "Sequential Module Development (/ccu:develop)"
+          description: |
+            • Build each module one at a time
+            • Single agent carries full context
+            • Easier debugging and iteration
+            • Total time: ~{time.sequential} minutes
+            • Best for: Learning, debugging, simple projects
+          command: "/ccu:develop"
+          icon: "📝"
+
+        - id: "parallel"
+          label: "Parallel Agent Orchestration (/ccu:deliver) [RECOMMENDED]"
+          description: |
+            • Multiple specialist agents work simultaneously
+            • {agents.count} agents in {waves.count} waves
+            • Each agent has isolated 200k token context
+            • Total time: ~{time.parallel} minutes ({time.savings}% faster!)
+            • Best for: Speed, quality, production projects
+          command: "/ccu:deliver"
+          icon: "⚡"
+          default: true
+
+        - id: "hybrid"
+          label: "Hybrid Approach (/ccu:deliver --mode=hybrid)"
+          description: |
+            • Critical path sequential, rest parallel
+            • Balance of speed and safety
+            • Total time: ~{time.hybrid} minutes
+            • Best for: Complex dependencies, phased rollout
+          command: "/ccu:deliver --mode=hybrid"
+          icon: "🔀"
+
+      ai_recommendation: |
+        Based on complexity analysis: {complexity.level}
+        Recommended: {recommended.option} - {recommended.reason}
+
+standard_track:
+  questions_count: 2
+  questions:
+    - id: "execution_strategy"
+      sequence: 1
+      category: "orchestration"
+      prompt: |
+        🚀 EXECUTION STRATEGY
+        ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+        Complexity detected: {complexity.level} ({complexity.score} points)
+        Modules: {modules.count} | Estimated effort: {effort.hours} hours
+
+        How should we orchestrate the development?
+
+      options:
+        - id: "sequential"
+          label: "Traditional Sequential (/ccu:develop)"
+          description: |
+            • Module-by-module development
+            • Single context thread
+            • Time: ~{time.sequential} minutes
+            • Risk: Lower (easier to debug)
+
+        - id: "core_trio"
+          label: "Core Trio Pattern (/ccu:deliver) [RECOMMENDED]"
+          description: |
+            • Wave 1: Product Manager + Designer + Architect (parallel)
+            • Wave 2: Backend + Frontend + QA (parallel)
+            • Wave 3: Integration & Review
+            • Time: ~{time.parallel} minutes ({time.savings}% faster!)
+            • Risk: Managed (checkpoints every 5 min)
+          default: true
+
+        - id: "custom"
+          label: "Custom Wave Configuration"
+          description: |
+            • Define your own wave structure
+            • Choose specific agents per wave
+            • Full control over parallelization
+          interactive: true
+
+    - id: "wave_breakdown"
+      sequence: 2
+      category: "orchestration"
+      condition: "execution_strategy != sequential"
+      prompt: |
+        📊 WAVE CONFIGURATION
+        ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+        How should we structure the execution waves?
+
+      options:
+        - id: "standard_waves"
+          label: "Standard 3-Wave Pattern"
+          description: |
+            Wave 1: Planning (10 min) - PM, Designer, Architect
+            Wave 2: Implementation (20 min) - Backend, Frontend, QA
+            Wave 3: Integration (10 min) - Architect review
+          default: true
+
+        - id: "compressed_waves"
+          label: "Compressed 2-Wave Pattern"
+          description: |
+            Wave 1: Planning + Backend (15 min)
+            Wave 2: Frontend + Testing + Integration (15 min)
+
+        - id: "extended_waves"
+          label: "Extended 4-Wave Pattern"
+          description: |
+            Wave 1: Deep Planning (15 min)
+            Wave 2: Core Development (20 min)
+            Wave 3: Testing & Review (15 min)
+            Wave 4: Polish & Documentation (10 min)
+
+enterprise_track:
+  questions_count: 3
+  questions:
+    - id: "execution_strategy"
+      sequence: 1
+      category: "orchestration"
+      prompt: |
+        🏢 ENTERPRISE EXECUTION STRATEGY
+        ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+        Enterprise complexity detected: {complexity.level}
+        Modules: {modules.count} | Teams required: {teams.estimate}
+        Compliance: {compliance.required} | Security: {security.level}
+
+        Select orchestration approach:
+
+      options:
+        - id: "enterprise_comprehensive"
+          label: "Enterprise Comprehensive Pattern [RECOMMENDED]"
+          description: |
+            • 4-5 waves with specialized teams
+            • Includes compliance and security validation
+            • Full documentation generation
+            • Time: ~{time.enterprise} minutes
+            • Parallel agents: up to {agents.max}
+          default: true
+
+        - id: "phased_enterprise"
+          label: "Phased Enterprise Rollout"
+          description: |
+            • Phase 1: Core platform (Day 1)
+            • Phase 2: Service layer (Day 2)
+            • Phase 3: Integration & Testing (Day 3)
+            • Allows for stakeholder checkpoints
+
+        - id: "microservices"
+          label: "Microservices Parallel Development"
+          description: |
+            • Each service gets dedicated agent
+            • Up to 6 services in parallel
+            • Service mesh coordination
+            • Time: Varies by service count
+
+    - id: "team_structure"
+      sequence: 2
+      category: "organization"
+      prompt: |
+        👥 TEAM ORGANIZATION
+        ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+        How should we organize the development teams?
+
+      options:
+        - id: "feature_teams"
+          label: "Feature Teams"
+          description: |
+            • Cross-functional teams per feature
+            • Each team has backend, frontend, QA
+            • Parallel feature development
+
+        - id: "layer_teams"
+          label: "Layer-Based Teams"
+          description: |
+            • Dedicated backend team
+            • Dedicated frontend team
+            • Dedicated QA/DevOps team
+            • Clear handoffs between layers
+          default: true
+
+        - id: "service_teams"
+          label: "Service Teams"
+          description: |
+            • Team per microservice
+            • Full ownership per service
+            • Independent deployment
+
+    - id: "compliance_validation"
+      sequence: 3
+      category: "governance"
+      prompt: |
+        🔒 COMPLIANCE & VALIDATION
+        ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+        What level of validation and compliance checking is required?
+
+      options:
+        - id: "standard_validation"
+          label: "Standard Validation"
+          description: |
+            • Code quality checks
+            • Security scanning
+            • Test coverage validation
+            • Performance benchmarks
+
+        - id: "regulatory_compliance"
+          label: "Regulatory Compliance"
+          description: |
+            • GDPR compliance checks
+            • HIPAA validation (if healthcare)
+            • PCI DSS (if payments)
+            • SOC 2 requirements
+            • Audit trail generation
+          default: true
+
+        - id: "comprehensive_governance"
+          label: "Comprehensive Governance"
+          description: |
+            • All regulatory checks
+            • Architecture review board
+            • Security team sign-off
+            • Change advisory board
+            • Documentation review
+
+# ===================================================================
+# DYNAMIC QUESTION GENERATION
+# ===================================================================
+
+dynamic_questions:
+  complexity_based:
+    - trigger: "complexity.score > 200"
+      add_question:
+        prompt: "This is a complex project. Should we auto-split into smaller deliverables?"
+        options:
+          - "Yes, split into 2-day chunks"
+          - "Yes, split by module"
+          - "No, keep as single deliverable"
+
+    - trigger: "modules.count > 5"
+      add_question:
+        prompt: "With {modules.count} modules, should we limit parallel agents?"
+        options:
+          - "No limit (use all available)"
+          - "Limit to 4 parallel agents"
+          - "Limit to 6 parallel agents"
+
+  architecture_based:
+    - trigger: "architecture.type == 'microservices'"
+      add_question:
+        prompt: "Should each microservice get a dedicated agent?"
+        options:
+          - "Yes, one agent per service"
+          - "No, group related services"
+          - "Mixed approach"
+
+    - trigger: "architecture.type == 'serverless'"
+      add_question:
+        prompt: "How should we handle serverless function development?"
+        options:
+          - "Group functions by domain"
+          - "Develop all functions in parallel"
+          - "Sequential with shared libraries first"
+
+# ===================================================================
+# AI RECOMMENDATION ENGINE
+# ===================================================================
+
+recommendation_engine:
+  factors:
+    - name: "complexity"
+      weight: 0.3
+      rules:
+        - "LIGHT -> sequential or rapid_mvp"
+        - "STANDARD -> core_trio or implementation_wave"
+        - "DEEP -> enterprise_comprehensive"
+
+    - name: "time_pressure"
+      weight: 0.3
+      rules:
+        - "urgent -> maximize parallelization"
+        - "normal -> balanced approach"
+        - "flexible -> optimize for quality"
+
+    - name: "team_experience"
+      weight: 0.2
+      rules:
+        - "new_team -> sequential for learning"
+        - "experienced -> full parallel"
+        - "mixed -> hybrid approach"
+
+    - name: "risk_tolerance"
+      weight: 0.2
+      rules:
+        - "low_risk -> more checkpoints"
+        - "medium_risk -> standard checkpoints"
+        - "high_risk -> rapid iteration"
+
+  output_format: |
+    📊 AI Analysis Complete
+    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    Complexity: {complexity.level} ({complexity.score})
+    Time Savings: {time.savings}% with parallel execution
+    Risk Level: {risk.level}
+
+    ✅ Recommendation: {recommendation.strategy}
+    Reason: {recommendation.reasoning}
+
+    This will use:
+    • {agents.count} specialist agents
+    • {waves.count} execution waves
+    • {time.parallel} minutes total time
+    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━

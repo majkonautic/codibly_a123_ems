@@ -1,0 +1,237 @@
+# CCU Framework - Worktree Wave Configuration
+# Defines how git worktrees are created and managed for each wave of parallel execution
+
+# Wave execution patterns with worktree mappings
+waves:
+  # Wave 1: Foundation Setup (Sequential)
+  wave_1_foundation:
+    name: "Foundation Setup"
+    execution: sequential
+    worktree:
+      name: foundation-setup
+      branch: feature/foundation
+      base_branch: main
+    agents:
+      - solution-architect
+    output_structure:
+      - src/config/
+      - src/lib/
+      - src/types/
+      - src/utils/
+      - package.json
+      - tsconfig.json
+    duration_minutes: 10
+
+  # Wave 2: Core Infrastructure (Parallel)
+  wave_2_infrastructure:
+    name: "Core Infrastructure"
+    execution: parallel
+    parallel_worktrees:
+      backend:
+        name: backend-infra
+        branch: feature/backend-infra
+        base_branch: feature/foundation
+        agent: backend-developer
+        outputs:
+          - src/api/
+          - src/database/
+          - src/middleware/
+          - src/services/
+      frontend:
+        name: frontend-infra
+        branch: feature/frontend-infra
+        base_branch: feature/foundation
+        agent: frontend-developer
+        outputs:
+          - src/components/
+          - src/layouts/
+          - src/styles/
+          - src/hooks/
+      quality:
+        name: quality-infra
+        branch: feature/quality-infra
+        base_branch: feature/foundation
+        agent: quality-engineer
+        outputs:
+          - tests/unit/
+          - tests/integration/
+          - tests/e2e/
+          - .github/workflows/
+    duration_minutes: 20
+
+  # Wave 3: Module Development (Dynamic Parallel)
+  wave_3_modules:
+    name: "Module Development"
+    execution: parallel_dynamic
+    worktree_pattern:
+      name_template: "module-{module_name}"
+      branch_template: "feature/module-{module_name}"
+      base_branch: main
+    module_assignments:
+      auth:
+        agent: backend-developer
+        priority: high
+        outputs:
+          - src/modules/auth/
+          - tests/modules/auth/
+      dashboard:
+        agent: frontend-developer
+        priority: high
+        outputs:
+          - src/modules/dashboard/
+          - tests/modules/dashboard/
+      analytics:
+        agent: solution-architect
+        priority: medium
+        outputs:
+          - src/modules/analytics/
+          - tests/modules/analytics/
+      reporting:
+        agent: backend-developer
+        priority: medium
+        outputs:
+          - src/modules/reporting/
+          - tests/modules/reporting/
+      settings:
+        agent: frontend-developer
+        priority: low
+        outputs:
+          - src/modules/settings/
+          - tests/modules/settings/
+    duration_minutes: 30
+
+  # Wave 4: Integration (Sequential with Merging)
+  wave_4_integration:
+    name: "Integration & Testing"
+    execution: sequential
+    worktree:
+      name: integration
+      branch: feature/integration
+      base_branch: main
+    merge_strategy:
+      auto_merge: true
+      merge_order:
+        - feature/foundation
+        - feature/backend-infra
+        - feature/frontend-infra
+        - feature/quality-infra
+        - feature/module-*
+      conflict_resolution: manual
+    agents:
+      - solution-architect
+      - quality-engineer
+    outputs:
+      - final integrated codebase
+      - deployment configuration
+      - documentation
+    duration_minutes: 15
+
+# Complexity-based wave selection
+complexity_mapping:
+  instant:
+    waves:
+      - wave_1_foundation
+    single_worktree: true
+    max_parallel_agents: 1
+
+  rapid:
+    waves:
+      - wave_1_foundation
+      - wave_2_infrastructure
+    max_parallel_agents: 3
+
+  standard:
+    waves:
+      - wave_1_foundation
+      - wave_2_infrastructure
+      - wave_3_modules
+      - wave_4_integration
+    max_parallel_agents: 6
+
+  enterprise:
+    waves:
+      - wave_1_foundation
+      - wave_2_infrastructure
+      - wave_3_modules
+      - wave_4_integration
+    additional_waves:
+      - security_audit
+      - performance_optimization
+      - compliance_validation
+    max_parallel_agents: 10
+
+# Worktree management configuration
+worktree_config:
+  base_directory: ccu_worktree
+  auto_cleanup: true
+  preserve_on_failure: true
+  branch_naming:
+    prefix: feature/
+    separator: "-"
+    include_timestamp: false
+  merge_config:
+    strategy: no-fast-forward
+    commit_message_template: "Merge {branch} - {wave_name} completion"
+    delete_branch_after_merge: false
+
+# Git operations configuration
+git_config:
+  stash_before_switch: true
+  auto_commit:
+    enabled: true
+    message_template: "Wave {wave_number}: {agent_name} - {task_description}"
+  push_config:
+    auto_push: false
+    remote: origin
+    push_on_completion: true
+
+# Checkpoint and recovery
+checkpoint_config:
+  checkpoint_directory: ccu_workspace/07-delivery/checkpoints
+  checkpoint_interval_minutes: 5
+  preserve_checkpoints_after_success: false
+  checkpoint_structure:
+    pattern: "session-{timestamp}/wave-{wave_id}/agent-{agent_name}"
+    include_artifacts: true
+
+# Output redirection rules
+output_rules:
+  code_files:
+    destination: worktree
+    patterns:
+      - "*.ts"
+      - "*.tsx"
+      - "*.js"
+      - "*.jsx"
+      - "*.json"
+      - "*.yaml"
+      - "*.yml"
+      - "*.md"
+      - "Dockerfile"
+      - "*.sh"
+
+  checkpoint_files:
+    destination: checkpoint
+    patterns:
+      - "*.checkpoint"
+      - "*.state"
+      - "progress.json"
+      - "agent-log.txt"
+
+  artifacts:
+    destination: artifacts
+    patterns:
+      - "*.artifact"
+      - "handoff-*.json"
+      - "summary-*.md"
+
+# Monitoring and alerts
+monitoring:
+  health_check_interval_seconds: 30
+  stuck_detection_minutes: 5
+  max_restart_attempts: 3
+  alert_on:
+    - merge_conflict
+    - agent_failure
+    - worktree_creation_failure
+    - checkpoint_failure

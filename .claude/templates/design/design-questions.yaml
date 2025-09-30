@@ -1,0 +1,459 @@
+# Design Questions - Phase 3: UX/UI Design
+# SINGLE SOURCE OF TRUTH for all design-related questions
+# This file focuses ONLY on user experience, interface, and visual design
+
+meta:
+  version: "2.0"
+  framework: "Claude Code Ultimate 2.0"
+  phase: 3
+  domain: "UX/UI Design"
+  output: "design-system.json"
+  principle: "Visual design and user experience decisions"
+
+# ===================================================================
+# COMPLEXITY LEVELS - Design Questions
+# ===================================================================
+complexity_levels:
+
+  # ===================================================================
+  # INSTANT - Zero Questions, Auto Design
+  # ===================================================================
+  instant:
+    philosophy: "Apply default design patterns automatically"
+    questions_count: 0
+
+    auto_generation_process:
+      step_1_personas:
+        source: "discovery-output.json user_types"
+        transform: "Convert each user type into a basic persona with goals"
+        output: "personas.md"
+
+      step_2_user_flows:
+        source: "specification-output.json features"
+        transform: "Generate simple linear flows for each core feature"
+        output: "user-flows.md"
+
+      step_3_wireframes:
+        source: "features and layout pattern"
+        transform: "Auto-generate text-based wireframe descriptions"
+        output: "wireframes.md"
+
+      step_4_components:
+        source: "features and UI requirements"
+        transform: "Map features to shadcn/ui components automatically"
+        output: "component-list.md"
+
+    auto_decisions:
+      theme: "slate"
+      layout: "dashboard"
+      components: "shadcn/ui defaults"
+      responsive: "mobile-first"
+      dark_mode: "system"
+      animations: "subtle"
+      sidebar: "collapsible"
+      radius: "0.5rem"
+
+    generation_prompt: |
+      Based on the discovery and specification data, automatically generate:
+      1. User personas from discovered user types
+      2. Simple user flows for each core feature
+      3. Basic wireframe descriptions
+      4. Essential UI components list
+      5. Mobile-responsive layout approach
+
+    output: |
+      {
+        "theme": "slate",
+        "layout": "dashboard",
+        "sidebar": "collapsible",
+        "components": ["auto-detected from spec"],
+        "responsive": true,
+        "generated_artifacts": [
+          "personas.md",
+          "user-flows.md",
+          "wireframes.md",
+          "component-list.md"
+        ]
+      }
+
+  # ===================================================================
+  # RAPID - 3 Essential Design Questions
+  # ===================================================================
+  rapid:
+    philosophy: "Quick design decisions for functional UI with module-specific components"
+    questions_count: "3 + 1 per module"
+
+    questions:
+      - id: "visual_style"
+        category: "🎨 VISUAL STYLE"
+        question: "What visual style fits your brand?"
+        format_type: "single_choice"
+        options:
+          - label: "[1] Clean & Minimal"
+            value: "minimal"
+            description: "Focus on content, lots of whitespace"
+            theme: "zinc"
+          - label: "[2] Modern & Bold"
+            value: "modern"
+            description: "Strong colors, clear hierarchy"
+            theme: "blue"
+          - label: "[3] Professional & Traditional"
+            value: "professional"
+            description: "Conservative, trustworthy appearance"
+            theme: "slate"
+          - label: "[4] Playful & Creative"
+            value: "creative"
+            description: "Vibrant, engaging, animated"
+            theme: "violet"
+
+      - id: "theme_preference"
+        category: "🎨 THEME PREFERENCE"
+        question: "What theme suits your brand?"
+        format_type: "single_choice"
+        options:
+          - label: "[1] Professional"
+            value: "professional"
+            description: "Slate/neutral tones, conservative"
+            colors: "slate, gray, neutral"
+          - label: "[2] Modern"
+            value: "modern"
+            description: "Zinc/violet accents, contemporary"
+            colors: "zinc, violet, purple"
+          - label: "[3] Friendly"
+            value: "friendly"
+            description: "Blue/green tones, approachable"
+            colors: "blue, green, teal"
+          - label: "[4] Dark Mode First"
+            value: "dark_first"
+            description: "High contrast, dark backgrounds"
+            colors: "zinc, gray, white text"
+          - label: "[5] Light & Airy"
+            value: "light_airy"
+            description: "White backgrounds, minimal shadows"
+            colors: "white, sky, light gray"
+          - label: "[6] Brand Colors"
+            value: "custom_brand"
+            description: "Custom colors based on your brand"
+            requires_input: ["primary_color", "secondary_color", "base_tone", "contrast_level"]
+
+      - id: "layout_pattern"
+        category: "📐 LAYOUT PATTERN"
+        question: "Which layout best suits your application?"
+        format_type: "visual_selection"
+        options:
+          - label: "[1] Analytics Dashboard"
+            value: "analytics_dashboard"
+            preview: |
+              ┌─────┬──────────────┐
+              │ Nav │   KPI Cards  │
+              │     ├──────┬───────┤
+              │     │Charts│Tables │
+              └─────┴──────┴───────┘
+          - label: "[2] Data Management"
+            value: "data_management"
+            preview: |
+              ┌─────┬──────────────┐
+              │ Nav │ Filters/Search│
+              │     ├──────────────┤
+              │     │  Data Table  │
+              └─────┴──────────────┘
+          - label: "[3] Workspace"
+            value: "workspace"
+            preview: |
+              ┌─────┬────────┬─────┐
+              │Tools│ Canvas │Props│
+              └─────┴────────┴─────┘
+          - label: "[4] Social/Community"
+            value: "social_community"
+            preview: |
+              ┌─────┬────────┬─────┐
+              │ Nav │  Feed  │Chat │
+              └─────┴────────┴─────┘
+          - label: "[5] E-commerce"
+            value: "ecommerce"
+            preview: |
+              ┌─────────────────┐
+              │   Header/Cart   │
+              ├─────┬───────────┤
+              │Fltr │  Products │
+              └─────┴───────────┘
+          - label: "[6] Content Platform"
+            value: "content_platform"
+            preview: |
+              ┌─────────────────┐
+              │   Hero/Feature  │
+              ├─────┬───────────┤
+              │Tags │  Content  │
+              └─────┴───────────┘
+          - label: "[7] SaaS Application"
+            value: "saas_application"
+            preview: |
+              ┌─────┬───────────┐
+              │ Nav │ Dashboard │
+              │     ├───────────┤
+              │     │ Settings  │
+              └─────┴───────────┘
+          - label: "[8] Mobile-First PWA"
+            value: "mobile_first"
+            preview: |
+              ┌─────────────────┐
+              │    Content      │
+              ├─────────────────┤
+              │   Bottom Nav    │
+              └─────────────────┘
+          - label: "[9] Custom Composition"
+            value: "custom"
+            description: "Define your own layout structure"
+
+      - id: "user_density"
+        category: "📊 INFORMATION DENSITY"
+        question: "How much information per screen?"
+        format_type: "single_choice"
+        options:
+          - label: "[1] Spacious (Consumer)"
+            value: "spacious"
+            description: "Large text, plenty of spacing, few items"
+          - label: "[2] Balanced (Prosumer)"
+            value: "balanced"
+            description: "Standard density, moderate information"
+          - label: "[3] Dense (Enterprise)"
+            value: "dense"
+            description: "Compact, data-rich, power users"
+
+    # Module-specific component selection (dynamic based on detected modules)
+    module_components:
+      format_type: "module_ui_selection"
+      question_template: "For {module_name} module, select UI elements:"
+      contextual_suggestions:
+        dashboard:
+          suggested: ["charts", "stats-cards", "data-tables", "filters", "date-picker"]
+          question: "Dashboard visualization needs:"
+        user_profile:
+          suggested: ["forms", "avatar", "tabs", "activity-list", "settings-toggle"]
+          question: "Profile management elements:"
+        settings:
+          suggested: ["form-sections", "toggles", "select-menus", "tabs", "save-actions"]
+          question: "Settings interface components:"
+        auth:
+          suggested: ["form", "social-buttons", "captcha", "remember-me", "password-strength"]
+          question: "Authentication interface needs:"
+        products:
+          suggested: ["product-cards", "filters", "sort", "pagination", "quick-view"]
+          question: "Product catalog components:"
+        analytics:
+          suggested: ["charts", "metrics", "date-range", "export", "comparison"]
+          question: "Analytics display components:"
+        default:
+          suggested: ["tables", "forms", "cards", "modals", "navigation"]
+          question: "Select UI components:"
+
+  # ===================================================================
+  # STANDARD - 5 Essential Design Questions for Working UI
+  # ===================================================================
+  standard:
+    philosophy: "Balanced design decisions for functional, professional UI"
+    questions_count: 5
+    principle: "Professional design that ships > Perfect design that doesn't"
+
+    categories:
+      design_system:
+        name: "🎨 DESIGN SYSTEM (2 questions)"
+        questions:
+          - id: "design_foundation"
+            question: "Choose your design system foundation"
+            format_type: "smart_choice"
+            options:
+              - label: "shadcn/ui with customization"
+                value: "shadcn_custom"
+                auto_configures: ["colors", "typography", "spacing", "components"]
+                description: "Modern, flexible, production-ready"
+              - label: "Material Design 3"
+                value: "material3"
+                description: "Google's latest design system"
+              - label: "Custom design system"
+                value: "custom_system"
+                description: "Build your own from scratch"
+
+          - id: "brand_identity"
+            question: "Define your brand identity"
+            format_type: "brand_config"
+            inputs:
+              - "Primary color (hex)"
+              - "Secondary color (hex)"
+              - "Font preference (modern/classic/playful)"
+              - "Personality (professional/friendly/innovative)"
+
+      user_experience:
+        name: "📱 USER EXPERIENCE (3 questions)"
+        questions:
+          - id: "user_personas"
+            question: "Who are your primary users? (Select up to 3)"
+            format_type: "multi_select"
+            ai_suggests: "Based on your features"
+            options:
+              - "Business professionals"
+              - "Developers/Technical users"
+              - "Creative professionals"
+              - "Students/Educators"
+              - "General consumers"
+              - "Enterprise teams"
+              - "Small business owners"
+
+          - id: "interaction_patterns"
+            question: "Select interaction patterns for better UX"
+            format_type: "pattern_selection"
+            options:
+              - label: "Progressive disclosure"
+                value: "progressive"
+                description: "Show advanced options on demand"
+              - label: "Wizard/Step-by-step"
+                value: "wizard"
+                description: "Guide users through complex tasks"
+              - label: "Inline editing"
+                value: "inline"
+                description: "Edit data without modals"
+              - label: "Bulk actions"
+                value: "bulk"
+                description: "Operate on multiple items"
+
+          - id: "responsive_strategy"
+            question: "Define your responsive design approach"
+            format_type: "responsive_config"
+            options:
+              - label: "Mobile-first responsive"
+                value: "mobile_first"
+                breakpoints: ["640px", "768px", "1024px", "1280px"]
+              - label: "Desktop-first responsive"
+                value: "desktop_first"
+                breakpoints: ["1280px", "1024px", "768px", "640px"]
+              - label: "Adaptive design"
+                value: "adaptive"
+                description: "Specific layouts for each device"
+
+  # ===================================================================
+  # ENTERPRISE - 10 Consolidated Design System Questions
+  # ===================================================================
+  enterprise:
+    philosophy: "Full design system with governance"
+    questions_count: 10
+
+    categories:
+      design_system:
+        name: "🎨 DESIGN SYSTEM (3 questions)"
+        questions:
+          - id: "design_tokens_components"
+            question: "Design tokens and component architecture?"
+            format_type: "design_system_framework"
+            consolidates:
+              - "Token structure (colors, spacing, typography)"
+              - "Component variation strategy"
+              - "Theme modes and variations"
+
+          - id: "brand_compliance"
+            question: "Brand guidelines and compliance framework?"
+            format_type: "brand_governance"
+            consolidates:
+              - "Brand asset requirements"
+              - "Compliance standards"
+              - "Visual consistency rules"
+
+          - id: "design_governance"
+            question: "Design approval and governance process?"
+            format_type: "design_workflow"
+            consolidates:
+              - "Approval workflows"
+              - "Version control"
+              - "Design system maintenance"
+
+      accessibility:
+        name: "♿ ACCESSIBILITY (3 questions)"
+        questions:
+          - id: "wcag_compliance"
+            question: "WCAG compliance and screen reader strategy?"
+            format_type: "accessibility_framework"
+            consolidates:
+              - "WCAG level (AA/AAA)"
+              - "Screen reader optimization"
+              - "Alternative text strategies"
+
+          - id: "interaction_accessibility"
+            question: "Keyboard navigation and interaction patterns?"
+            format_type: "interaction_accessibility"
+            consolidates:
+              - "Keyboard navigation maps"
+              - "Focus management"
+              - "Touch targets"
+
+          - id: "visual_accessibility"
+            question: "Color contrast and ARIA implementation?"
+            format_type: "visual_accessibility"
+            consolidates:
+              - "Color contrast requirements"
+              - "ARIA labels and roles"
+              - "Visual indicators"
+
+      advanced_ux:
+        name: "🚀 ADVANCED UX (4 questions)"
+        questions:
+          - id: "interaction_patterns"
+            question: "Micro-interactions and animation strategy?"
+            format_type: "interaction_design"
+            consolidates:
+              - "Micro-interaction definitions"
+              - "Animation principles"
+              - "Transition effects"
+
+          - id: "loading_performance"
+            question: "Loading strategies and performance patterns?"
+            format_type: "performance_ux"
+            consolidates:
+              - "Skeleton screens"
+              - "Progressive loading"
+              - "Perceived performance"
+
+          - id: "state_management_ui"
+            question: "Error and empty state design patterns?"
+            format_type: "state_design"
+            consolidates:
+              - "Error state designs"
+              - "Empty state treatments"
+              - "Success states"
+              - "Loading states"
+
+          - id: "user_guidance"
+            question: "User onboarding and help systems?"
+            format_type: "guidance_framework"
+            consolidates:
+              - "Onboarding flows"
+              - "Tooltips and hints"
+              - "Help documentation"
+
+# ===================================================================
+# OUTPUT STRUCTURE - What gets saved to design-system.json
+# ===================================================================
+output_structure:
+  instant:
+    - theme
+    - layout
+    - components
+
+  rapid:
+    - visual_style
+    - layout_pattern
+    - user_density
+    - theme_config
+    - component_list
+
+  standard:
+    - complete_design_system
+    - wireframes
+    - user_flows
+    - component_inventory
+
+  enterprise:
+    - full_design_system
+    - design_tokens
+    - accessibility_compliance
+    - brand_guidelines
+    - component_library
+    - interaction_specifications

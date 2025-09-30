@@ -1,0 +1,437 @@
+# Security Questions - Phase 4: Security Recommendations & Choices
+# COLLABORATIVE SECURITY - AI recommends based on your app, you choose what fits
+# This file helps users select appropriate security for their needs and timeline
+
+meta:
+  version: "3.0"
+  framework: "Claude Code Ultimate 2.0"
+  phase: 4
+  domain: "Security Recommendations"
+  output: "security-choices.json"
+  principle: "User-driven security with AI guidance"
+  focus: "Right-sized security for actual needs"
+  principle: "Protection, authentication, and compliance decisions"
+
+# ===================================================================
+# COMPLEXITY LEVELS - Security Questions
+# ===================================================================
+complexity_levels:
+
+  # ===================================================================
+  # INSTANT - Zero Questions, Basic Security
+  # ===================================================================
+  instant:
+    philosophy: "Apply minimum viable security automatically"
+    questions_count: 0
+
+    auto_generation_process:
+      step_1_threat_model:
+        source: "features and data from specification"
+        action: "Identify basic threats for feature set"
+        output: "threat-model.md"
+
+      step_2_auth_requirements:
+        source: "user types and features"
+        action: "Define authentication needs"
+        output: "auth-requirements.md"
+
+      step_3_data_protection:
+        source: "data entities and business rules"
+        action: "Apply appropriate encryption"
+        output: "data-protection.md"
+
+      step_4_access_control:
+        source: "user roles and features"
+        action: "Generate permission matrix"
+        output: "access-control.md"
+
+    auto_decisions:
+      authentication: "jwt"
+      authorization: "role-based"
+      encryption: "at-rest"
+      session: "secure-cookies"
+      cors: "same-origin"
+      https: "enforced"
+      rate_limiting: "basic"
+      password_policy: "min-8-chars"
+      2fa: "optional"
+
+    generation_prompt: |
+      Based on the application features and data, automatically:
+      1. Generate basic threat model
+      2. Define authentication requirements
+      3. Set up role-based access control
+      4. Apply standard security headers
+      5. Configure basic rate limiting
+
+    output: |
+      {
+        "auth": "JWT with refresh tokens",
+        "roles": ["admin", "user"],
+        "encryption": "AES-256",
+        "compliance": "none",
+        "threats_mitigated": ["basic"],
+        "generated_artifacts": [
+          "threat-model.md",
+          "auth-requirements.md",
+          "data-protection.md",
+          "access-control.md"
+        ]
+      }
+
+  # ===================================================================
+  # RAPID - 3 Essential Security Questions
+  # ===================================================================
+  rapid:
+    philosophy: "Core security decisions only"
+    questions_count: 3
+
+    questions:
+      - id: "auth_method"
+        category: "🔐 AUTHENTICATION"
+        question: "Based on your {app_type}, we recommend {suggested_auth}. What would you prefer?"
+        format_type: "recommendation_choice"
+        ai_analyzes:
+          - app_type_from_discovery
+          - user_scale_from_discovery
+          - features_needing_auth
+        options:
+          - label: "[1] Simple Email & Password"
+            value: "email-password"
+            trade_off: "Quick to implement, good for MVP"
+            dev_time: "1-2 hours"
+          - label: "[2] Social Login (Google/GitHub)"
+            value: "oauth"
+            trade_off: "Better UX, requires OAuth setup"
+            dev_time: "2-4 hours"
+          - label: "[3] Magic Links (Passwordless)"
+            value: "magic-link"
+            trade_off: "Modern UX, needs email service"
+            dev_time: "3-4 hours"
+          - label: "[4] No auth needed yet"
+            value: "none"
+            trade_off: "Fastest prototype, add later"
+            dev_time: "0 hours"
+
+      - id: "data_protection"
+        category: "🔒 DATA PROTECTION"
+        question: "Your app handles {detected_data}. Choose protection level:"
+        format_type: "protection_choice"
+        ai_detects:
+          - data_types_from_entities
+          - sensitive_fields_identified
+        options:
+          - label: "[1] Minimal - Password hashing only"
+            value: "minimal"
+            good_for: "Prototypes, internal tools"
+            implements: "bcrypt for passwords"
+          - label: "[2] Standard - Recommended"
+            value: "standard"
+            good_for: "Most applications"
+            implements: "Encryption at rest, HTTPS"
+          - label: "[3] Enhanced - Sensitive data"
+            value: "enhanced"
+            good_for: "Financial, health, personal data"
+            implements: "Field encryption, audit logs"
+
+      - id: "compliance_timing"
+        category: "📋 COMPLIANCE"
+        question: "Do you need compliance features now?"
+        format_type: "timing_choice"
+        context: "We can add compliance later without major rework"
+        options:
+          - label: "[1] Not needed - Personal/internal use"
+            value: "none"
+            focus: "Ship features first"
+          - label: "[2] Prepare structure - Add later"
+            value: "prepare"
+            focus: "Build compliant-ready architecture"
+          - label: "[3] Need now - Specific requirements"
+            value: "immediate"
+            follow_up: "Which? (GDPR/HIPAA/PCI/SOC2)"
+
+  # ===================================================================
+  # STANDARD - 5 Security Questions for Production Systems
+  # ===================================================================
+  standard:
+    philosophy: "Production-ready security with compliance awareness"
+    questions_count: 5
+    principle: "Security that protects without over-engineering"
+
+    categories:
+      authentication:
+        name: "🔐 AUTHENTICATION (2 questions)"
+        questions:
+          - id: "auth_strategy"
+            question: "Choose authentication strategy for production"
+            format_type: "auth_choice"
+            ai_recommends: "Based on {user_count} and {app_type}"
+            options:
+              - label: "JWT with Refresh Tokens"
+                value: "jwt_refresh"
+                description: "Stateless auth with token rotation"
+                security: "High"
+                complexity: "Medium"
+              - label: "Session-based with Redis"
+                value: "session_redis"
+                description: "Server-side sessions with caching"
+                security: "High"
+                complexity: "Low"
+              - label: "OAuth 2.0 + Internal Auth"
+                value: "oauth_hybrid"
+                description: "Social login with fallback"
+                security: "High"
+                complexity: "Medium"
+
+          - id: "mfa_strategy"
+            question: "Multi-factor authentication approach"
+            format_type: "mfa_choice"
+            options:
+              - label: "Optional MFA"
+                value: "optional"
+                description: "Users can enable TOTP/SMS"
+                adoption: "Higher"
+              - label: "Required for Admin"
+                value: "admin_required"
+                description: "Enforce MFA for privileged users"
+                adoption: "Balanced"
+              - label: "Required for All"
+                value: "all_required"
+                description: "Maximum security"
+                adoption: "Lower"
+
+      authorization:
+        name: "🔑 AUTHORIZATION (2 questions)"
+        questions:
+          - id: "permission_model"
+            question: "Define permission model complexity"
+            format_type: "permission_choice"
+            options:
+              - label: "Role-Based (RBAC)"
+                value: "rbac"
+                description: "Users have roles, roles have permissions"
+                example: "Admin, Editor, Viewer"
+                complexity: "Low"
+              - label: "Attribute-Based (ABAC)"
+                value: "abac"
+                description: "Permissions based on attributes"
+                example: "Department, Location, Time"
+                complexity: "Medium"
+              - label: "Policy-Based"
+                value: "policy"
+                description: "Complex rules and policies"
+                example: "Conditional access policies"
+                complexity: "High"
+
+          - id: "api_security"
+            question: "API security requirements"
+            format_type: "api_security"
+            options:
+              - label: "API Keys"
+                value: "api_keys"
+                description: "Simple key-based auth"
+                rate_limiting: "Basic"
+              - label: "OAuth 2.0 Scopes"
+                value: "oauth_scopes"
+                description: "Fine-grained API permissions"
+                rate_limiting: "Advanced"
+              - label: "mTLS"
+                value: "mtls"
+                description: "Mutual TLS for service-to-service"
+                rate_limiting: "Custom"
+
+      data_protection:
+        name: "🔒 DATA PROTECTION (1 question)"
+        questions:
+          - id: "encryption_strategy"
+            question: "Data encryption and protection level"
+            format_type: "encryption_choice"
+            options:
+              - label: "Standard Encryption"
+                value: "standard"
+                includes:
+                  - "TLS 1.3 in transit"
+                  - "AES-256 at rest"
+                  - "Bcrypt for passwords"
+              - label: "Enhanced Encryption"
+                value: "enhanced"
+                includes:
+                  - "All standard features"
+                  - "Field-level encryption for PII"
+                  - "Key rotation"
+                  - "Hardware security modules"
+              - label: "Compliance-Ready"
+                value: "compliance"
+                includes:
+                  - "All enhanced features"
+                  - "Audit logging"
+                  - "Data retention policies"
+                  - "Right to erasure"
+
+  # ===================================================================
+  # ENTERPRISE - 15 Consolidated Security Questions
+  # ===================================================================
+  enterprise:
+    philosophy: "Enterprise-grade security framework"
+    questions_count: 15
+
+    categories:
+      identity_management:
+        name: "👤 IDENTITY MANAGEMENT (4 questions)"
+        questions:
+          - id: "identity_authentication"
+            question: "Identity provider and authentication strategy?"
+            format_type: "identity_framework"
+            consolidates:
+              - "Identity provider setup (SAML/OIDC/OAuth)"
+              - "Multi-factor authentication requirements"
+              - "SSO integration"
+
+          - id: "password_account_policy"
+            question: "Password policy and account lifecycle?"
+            format_type: "account_management"
+            consolidates:
+              - "Password complexity requirements"
+              - "Account provisioning/deprovisioning"
+              - "Password rotation policies"
+
+          - id: "privileged_access"
+            question: "Privileged access management (PAM)?"
+            format_type: "pam_framework"
+            consolidates:
+              - "Admin access controls"
+              - "Privileged session management"
+              - "Just-in-time access"
+
+          - id: "session_management"
+            question: "Session and token management?"
+            format_type: "session_config"
+            consolidates:
+              - "Session timeout policies"
+              - "Token refresh strategies"
+              - "Concurrent session limits"
+
+      compliance_framework:
+        name: "📋 COMPLIANCE (4 questions)"
+        questions:
+          - id: "regulatory_compliance"
+            question: "Regulatory compliance and audit framework?"
+            format_type: "compliance_governance"
+            consolidates:
+              - "Regulatory requirements (GDPR/HIPAA/PCI)"
+              - "Audit trail requirements"
+              - "Compliance reporting needs"
+
+          - id: "data_privacy_residency"
+            question: "Data privacy and residency controls?"
+            format_type: "privacy_governance"
+            consolidates:
+              - "Data residency requirements"
+              - "Privacy control implementation"
+              - "Right to be forgotten"
+
+          - id: "compliance_monitoring"
+            question: "Compliance monitoring and attestation?"
+            format_type: "compliance_monitoring"
+            consolidates:
+              - "Continuous compliance checks"
+              - "Attestation procedures"
+              - "Policy enforcement"
+
+          - id: "third_party_compliance"
+            question: "Third-party and vendor compliance?"
+            format_type: "vendor_compliance"
+            consolidates:
+              - "Vendor security assessments"
+              - "Supply chain security"
+              - "SLA compliance"
+
+      threat_management:
+        name: "🛡️ THREAT MANAGEMENT (4 questions)"
+        questions:
+          - id: "threat_vulnerability_model"
+            question: "Threat modeling and vulnerability management?"
+            format_type: "threat_framework"
+            consolidates:
+              - "STRIDE/OWASP threat modeling"
+              - "Vulnerability scanning strategy"
+              - "Patch management process"
+
+          - id: "incident_response"
+            question: "Incident response and recovery plan?"
+            format_type: "incident_framework"
+            consolidates:
+              - "Incident response playbooks"
+              - "Disaster recovery procedures"
+              - "Communication protocols"
+
+          - id: "security_monitoring"
+            question: "Security monitoring and SIEM strategy?"
+            format_type: "monitoring_framework"
+            consolidates:
+              - "SIEM configuration"
+              - "Log aggregation"
+              - "Real-time alerting"
+              - "Threat intelligence feeds"
+
+          - id: "security_testing"
+            question: "Security testing and penetration testing?"
+            format_type: "testing_framework"
+            consolidates:
+              - "Penetration testing schedule"
+              - "Security scanning (SAST/DAST)"
+              - "Red team exercises"
+
+      data_governance:
+        name: "🔒 DATA GOVERNANCE (3 questions)"
+        questions:
+          - id: "data_classification_encryption"
+            question: "Data classification and encryption strategy?"
+            format_type: "data_security_framework"
+            consolidates:
+              - "Data classification levels"
+              - "Encryption at rest and in transit"
+              - "Key management service (KMS)"
+
+          - id: "data_protection_dlp"
+            question: "Data loss prevention and backup security?"
+            format_type: "data_protection_framework"
+            consolidates:
+              - "DLP policies and rules"
+              - "Backup encryption"
+              - "Data retention policies"
+
+          - id: "data_lifecycle"
+            question: "Data lifecycle and secure destruction?"
+            format_type: "data_lifecycle_framework"
+            consolidates:
+              - "Data retention schedules"
+              - "Secure deletion procedures"
+              - "Archive security"
+
+# ===================================================================
+# OUTPUT STRUCTURE - What gets saved to security-config.json
+# ===================================================================
+output_structure:
+  instant:
+    - authentication_method
+    - basic_authorization
+    - minimal_encryption
+
+  rapid:
+    - auth_configuration
+    - data_protection_level
+    - compliance_requirements
+
+  standard:
+    - complete_auth_system
+    - rbac_configuration
+    - threat_mitigation
+    - encryption_strategy
+
+  enterprise:
+    - identity_management_system
+    - compliance_framework
+    - threat_management_program
+    - data_governance_policies
+    - security_operations_center

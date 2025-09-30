@@ -1,0 +1,20 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(chmod:*)",
+      "Bash(git:*)",
+      "WebSearch",
+      "WebFetch(domain:*)",
+      "Read(*)",
+      "Bash(timeout:*)",
+      "Write(*)",
+      "Edit(*)",
+      "MultiEdit(*)",
+      "TodoWrite",
+      "Glob",
+      "Grep"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}

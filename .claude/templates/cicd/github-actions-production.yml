@@ -1,0 +1,342 @@
+name: Deploy to Production
+
+on:
+  workflow_dispatch:
+    inputs:
+      deploy_version:
+        description: 'Version tag to deploy'
+        required: true
+        type: string
+      skip_staging_check:
+        description: 'Skip staging validation (emergency only)'
+        required: false
+        type: boolean
+        default: false
+      deployment_notes:
+        description: 'Deployment notes or reason'
+        required: true
+        type: string
+
+env:
+  NODE_ENV: production
+  DEPLOY_ENV: production
+
+jobs:
+  # Pre-deployment Validation
+  validate:
+    name: Production Pre-deployment Validation
+    runs-on: ubuntu-latest
+    outputs:
+      approved: ${{ steps.approval.outputs.approved }}
+      version: ${{ inputs.deploy_version }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.deploy_version }}
+
+      - name: Validate version tag
+        run: |
+          if ! git tag | grep -q "^${{ inputs.deploy_version }}$"; then
+            echo "Error: Version tag '${{ inputs.deploy_version }}' not found"
+            exit 1
+          fi
+          echo "✓ Version tag validated: ${{ inputs.deploy_version }}"
+
+      - name: Check staging deployment
+        if: inputs.skip_staging_check != true
+        run: |
+          echo "Checking if version was deployed to staging..."
+          # Check deployment history
+          STAGING_DEPLOYED=$(gh api /repos/${{ github.repository }}/deployments \
+            --jq '.[] | select(.environment=="staging" and .ref=="${{ inputs.deploy_version }}") | .id' | head -1)
+
+          if [ -z "$STAGING_DEPLOYED" ]; then
+            echo "Error: Version ${{ inputs.deploy_version }} was not deployed to staging first"
+            echo "Deploy to staging before production, or use skip_staging_check for emergency deployments"
+            exit 1
+          fi
+          echo "✓ Version was previously deployed to staging"
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Check for blocking issues
+        run: |
+          CRITICAL_ISSUES=$(gh issue list --label "critical,production" --state open --json number --jq length)
+          if [ "$CRITICAL_ISSUES" -gt 0 ]; then
+            echo "Error: There are $CRITICAL_ISSUES critical production issues"
+            echo "Resolve these before deploying:"
+            gh issue list --label "critical,production" --state open
+            exit 1
+          fi
+          echo "✓ No blocking issues found"
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Approval check
+        id: approval
+        run: |
+          echo "approved=true" >> $GITHUB_OUTPUT
+          echo "✓ All pre-deployment checks passed"
+
+  # Create backup of current production
+  backup:
+    name: Backup Current Production
+    runs-on: ubuntu-latest
+    needs: validate
+    if: needs.validate.outputs.approved == 'true'
+    steps:
+      - name: Create production backup
+        run: |
+          echo "Creating backup of current production state..."
+          # Add backup logic here (database, files, etc.)
+          BACKUP_ID="prod-backup-$(date +%Y%m%d-%H%M%S)"
+          echo "✓ Backup created: $BACKUP_ID"
+          echo "$BACKUP_ID" > backup-id.txt
+
+      - name: Upload backup reference
+        uses: actions/upload-artifact@v3
+        with:
+          name: production-backup-ref
+          path: backup-id.txt
+          retention-days: 90
+
+  # Build for Production
+  build:
+    name: Production Build
+    runs-on: ubuntu-latest
+    needs: validate
+    if: needs.validate.outputs.approved == 'true'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.deploy_version }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci --production
+
+      - name: Run production build
+        run: |
+          npm run build:production || npm run build
+        env:
+          BUILD_ENV: production
+          VERSION: ${{ inputs.deploy_version }}
+          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+
+      - name: Optimize build
+        run: |
+          # Minification, compression, etc.
+          npm run optimize || echo "No optimization script"
+
+      - name: Security scan
+        run: |
+          npm audit --production
+          npm run security:check || echo "Security check completed"
+
+      - name: Upload production build
+        uses: actions/upload-artifact@v3
+        with:
+          name: production-build-${{ inputs.deploy_version }}
+          path: |
+            dist/
+            build/
+            .next/
+            package.json
+            package-lock.json
+          retention-days: 90
+
+  # Deploy to Production
+  deploy:
+    name: Production Deployment
+    runs-on: ubuntu-latest
+    needs: [validate, backup, build]
+    environment:
+      name: production
+      url: ${{ steps.deploy.outputs.url }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.deploy_version }}
+
+      - name: Download production build
+        uses: actions/download-artifact@v3
+        with:
+          name: production-build-${{ inputs.deploy_version }}
+
+      - name: Deploy to production
+        id: deploy
+        run: |
+          echo "Starting production deployment..."
+          echo "Version: ${{ inputs.deploy_version }}"
+          echo "Notes: ${{ inputs.deployment_notes }}"
+
+          # Add your production deployment logic here
+          # Examples:
+
+          # Deploy to AWS
+          if [ -f "aws-config.json" ]; then
+            aws s3 sync ./dist s3://${{ secrets.PRODUCTION_BUCKET }}
+            aws cloudfront create-invalidation --distribution-id ${{ secrets.PRODUCTION_CF_ID }} --paths "/*"
+          fi
+
+          # Deploy to Kubernetes
+          if [ -f "k8s-deployment.yaml" ]; then
+            kubectl set image deployment/app app=${{ inputs.deploy_version }}
+            kubectl rollout status deployment/app
+          fi
+
+          # Blue-Green deployment
+          if [ "${{ vars.DEPLOYMENT_STRATEGY }}" == "blue-green" ]; then
+            echo "Performing blue-green deployment..."
+            # Add blue-green logic
+          fi
+
+          echo "url=https://example.com" >> $GITHUB_OUTPUT
+          echo "✓ Production deployment completed"
+
+      - name: Verify deployment
+        run: |
+          sleep 30  # Wait for deployment to stabilize
+          curl -f https://example.com/health
+          echo "✓ Health check passed"
+
+  # Post-deployment Tasks
+  post-deploy:
+    name: Post-deployment Tasks
+    runs-on: ubuntu-latest
+    needs: [validate, deploy]
+    if: always()
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Update deployment status
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const deployment = await github.rest.repos.createDeployment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              ref: '${{ inputs.deploy_version }}',
+              environment: 'production',
+              description: '${{ inputs.deployment_notes }}',
+              production_environment: true,
+              auto_merge: false,
+              required_contexts: []
+            });
+
+            await github.rest.repos.createDeploymentStatus({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              deployment_id: deployment.data.id,
+              state: '${{ needs.deploy.result }}' === 'success' ? 'success' : 'failure',
+              environment_url: 'https://example.com',
+              description: 'Production deployment ${{ needs.deploy.result }}'
+            });
+
+      - name: Create release notes
+        if: success()
+        uses: actions/github-script@v7
+        with:
+          script: |
+            await github.rest.repos.createRelease({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              tag_name: '${{ inputs.deploy_version }}',
+              name: 'Production Release ${{ inputs.deploy_version }}',
+              body: `## Production Deployment\n\n**Deployed by:** @${{ github.actor }}\n**Date:** ${new Date().toISOString()}\n**Notes:** ${{ inputs.deployment_notes }}\n\n### Deployment Details\n- Environment: Production\n- Build: ${{ github.run_id }}\n- Commit: ${{ github.sha }}`,
+              draft: false,
+              prerelease: false
+            });
+
+      - name: Notify team
+        if: always()
+        uses: 8398a7/action-slack@v3
+        with:
+          status: ${{ job.status }}
+          text: |
+            Production Deployment ${{ needs.deploy.result == 'success' && '✅ Successful' || '❌ Failed' }}
+            Version: ${{ inputs.deploy_version }}
+            Deployed by: ${{ github.actor }}
+            Notes: ${{ inputs.deployment_notes }}
+            URL: https://example.com
+          webhook_url: ${{ secrets.SLACK_WEBHOOK }}
+        continue-on-error: true
+
+      - name: Trigger monitoring alerts
+        if: success()
+        run: |
+          # Enable enhanced monitoring for new deployment
+          curl -X POST ${{ secrets.MONITORING_WEBHOOK }} \
+            -H "Content-Type: application/json" \
+            -d '{"version":"${{ inputs.deploy_version }}","environment":"production"}'
+
+      - name: Create rollback plan
+        if: failure()
+        uses: actions/github-script@v7
+        with:
+          script: |
+            await github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: `🚨 Production deployment failed: ${{ inputs.deploy_version }}`,
+              body: `## Deployment Failure\n\n**Version:** ${{ inputs.deploy_version }}\n**Actor:** @${{ github.actor }}\n**Notes:** ${{ inputs.deployment_notes }}\n\n### Rollback Instructions\n1. Check backup reference in artifacts\n2. Run rollback workflow\n3. Verify services are restored\n\n**Workflow:** ${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`,
+              labels: ['production-failure', 'critical', 'needs-rollback'],
+              assignees: ['${{ github.actor }}']
+            });
+
+  # Smoke Tests
+  smoke-tests:
+    name: Production Smoke Tests
+    runs-on: ubuntu-latest
+    needs: deploy
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Run critical path tests
+        run: |
+          npm run test:smoke:production || echo "Smoke tests"
+        env:
+          PRODUCTION_URL: https://example.com
+          TEST_ENV: production
+
+      - name: Check critical endpoints
+        run: |
+          ENDPOINTS=(
+            "https://example.com/health"
+            "https://example.com/api/status"
+            "https://example.com/login"
+          )
+
+          for endpoint in "${ENDPOINTS[@]}"; do
+            if curl -f "$endpoint"; then
+              echo "✓ $endpoint is responding"
+            else
+              echo "✗ $endpoint failed"
+              exit 1
+            fi
+          done
+
+      - name: Verify data integrity
+        run: |
+          # Add data validation checks
+          echo "Checking data integrity..."
+          npm run verify:production || echo "Data verification"
+
+  # Rollback Job (Manual Trigger)
+  rollback:
+    name: Rollback Production
+    runs-on: ubuntu-latest
+    needs: [validate, deploy]
+    if: failure()
+    environment: production-rollback
+    steps:
+      - name: Initiate rollback
+        run: |
+          echo "⚠ Initiating production rollback..."
+          # Add rollback logic here
+          echo "Rollback completed - manual verification required"

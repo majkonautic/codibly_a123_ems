@@ -1,0 +1,662 @@
+# Architecture Questions - Phase 5: Architecture Recommendations & Choices
+# COLLABORATIVE ARCHITECTURE - AI recommends based on your app, you choose what fits
+# This file helps users select appropriate architecture for their needs and timeline
+
+meta:
+  version: "3.0"
+  framework: "Claude Code Ultimate 2.0"
+  phase: 5
+  domain: "Architecture Recommendations"
+  output: "architecture-choices.json"
+  principle: "User-driven architecture with AI guidance"
+  focus: "Right-sized architecture for actual needs"
+
+# ===================================================================
+# COMPLEXITY LEVELS - Architecture Questions
+# ===================================================================
+complexity_levels:
+
+  # ===================================================================
+  # INSTANT - Zero Questions, Best Practices
+  # ===================================================================
+  instant:
+    philosophy: "Apply proven architecture patterns automatically"
+    questions_count: 0
+
+    auto_generation_process:
+      step_1_analyze:
+        source: "specification-output.json"
+        action: "Analyze features complexity and requirements"
+        decision: "Select simplest viable architecture"
+
+      step_2_select_stack:
+        source: "features and design components"
+        action: "Map to appropriate technology stack"
+        decision: "Default to Next.js full-stack"
+
+      step_3_structure:
+        source: "modules and features"
+        action: "Generate folder structure"
+        output: "architecture-structure.md"
+
+      step_4_integration:
+        source: "business rules"
+        action: "Define integration points"
+        output: "integration-map.md"
+
+    auto_decisions:
+      pattern: "simple-application"
+      backend: "next-api"
+      database: "postgresql"
+      orm: "prisma"
+      cache: "none"
+      api_style: "rest"
+      deployment: "vercel"
+      auth: "nextauth"
+      state: "zustand"
+
+    generation_prompt: |
+      Based on the specification and design data, automatically:
+      1. Select simplest viable architecture pattern
+      2. Choose appropriate tech stack
+      3. Generate folder structure
+      4. Define API endpoints
+      5. Map database schema
+
+    output: |
+      {
+        "architecture": "Simple Application",
+        "stack": "Next.js + Prisma + PostgreSQL",
+        "api": "REST via Next.js routes",
+        "deployment": "Vercel",
+        "scaling": "Automatic",
+        "generated_artifacts": [
+          "architecture-structure.md",
+          "integration-map.md",
+          "api-endpoints.md",
+          "database-schema.sql"
+        ]
+      }
+
+  # ===================================================================
+  # RAPID - 4 Core Architecture Questions
+  # ===================================================================
+  rapid:
+    philosophy: "Essential technical decisions with clear trade-offs"
+    questions_count: 4
+
+    questions:
+      - id: "architecture_pattern"
+        category: "🏗️ ARCHITECTURE PATTERN"
+        question: "Based on your {features_count} features and {user_scale}, we recommend {suggested_pattern}. What would you prefer?"
+        format_type: "recommendation_choice"
+        ai_analyzes:
+          - features_from_specification
+          - expected_user_scale
+          - team_size_implications
+          - components_from_design
+        options:
+          - label: "[1] Simple Application (Recommended for MVPs)"
+            value: "simple"
+            trade_off: "Fastest to build and deploy"
+            dev_time: "2-4 weeks"
+            complexity: "Low"
+            best_for: "Most apps under 10k users"
+            monthly_cost: "$0-50"
+            preview: |
+              src/
+              ├── app/
+              ├── api/
+              └── lib/
+          - label: "[2] Modular Application"
+            value: "modular"
+            trade_off: "Better organization, slightly more setup"
+            dev_time: "3-6 weeks"
+            complexity: "Medium"
+            best_for: "Growing apps with clear domains"
+            monthly_cost: "$50-200"
+            preview: |
+              modules/
+              ├── auth/
+              ├── billing/
+              └── users/
+          - label: "[3] Distributed Services"
+            value: "distributed"
+            trade_off: "Maximum flexibility, more complexity"
+            dev_time: "6-12 weeks"
+            complexity: "High"
+            best_for: "Large teams or special scaling needs"
+            monthly_cost: "$200-1000+"
+            preview: |
+              services/
+              ├── api/
+              ├── web/
+              └── worker/
+
+      - id: "database_choice"
+        category: "💾 DATABASE"
+        question: "Your app handles {detected_entities}. We recommend {suggested_db}. Choose your database:"
+        format_type: "database_recommendation"
+        ai_detects:
+          - entity_types_from_specification
+          - data_relationships
+          - expected_data_volume
+          - realtime_requirements
+        options:
+          - label: "[1] PostgreSQL (Recommended)"
+            value: "postgresql"
+            best_for: "Relational data, ACID compliance"
+            setup_time: "30 minutes"
+            monthly_cost: "$0-50"
+            scaling: "Handles millions of records"
+            trade_off: "Industry standard, great for most apps"
+          - label: "[2] MongoDB"
+            value: "mongodb"
+            best_for: "Document storage, flexible schema"
+            setup_time: "20 minutes"
+            monthly_cost: "$0-100"
+            scaling: "Horizontal scaling built-in"
+            trade_off: "Good for unstructured data"
+          - label: "[3] MySQL"
+            value: "mysql"
+            best_for: "Traditional relational, wide support"
+            setup_time: "30 minutes"
+            monthly_cost: "$0-50"
+            scaling: "Proven at scale"
+            trade_off: "Familiar to most developers"
+          - label: "[4] SQLite"
+            value: "sqlite"
+            best_for: "Embedded, serverless, simple"
+            setup_time: "5 minutes"
+            monthly_cost: "$0"
+            scaling: "Single file, limited concurrency"
+            trade_off: "Perfect for prototypes"
+          - label: "[5] Supabase"
+            value: "supabase"
+            best_for: "Postgres + Auth + Realtime built-in"
+            setup_time: "10 minutes"
+            monthly_cost: "$0-25"
+            scaling: "Managed PostgreSQL"
+            trade_off: "Fastest to production"
+
+      - id: "api_design"
+        category: "🔌 API DESIGN"
+        question: "For your {component_count} UI components and {api_endpoints_count} endpoints, we suggest {api_type}. What's your preference?"
+        format_type: "api_recommendation"
+        ai_analyzes:
+          - ui_components_from_design
+          - api_endpoints_from_specification
+          - data_fetching_patterns
+          - frontend_framework
+        options:
+          - label: "[1] REST API (Recommended for most)"
+            value: "rest"
+            description: "Standard HTTP endpoints"
+            dev_time: "1-2 days"
+            learning_curve: "Low"
+            trade_off: "Works everywhere, well understood"
+            best_for: "Most applications"
+          - label: "[2] GraphQL"
+            value: "graphql"
+            description: "Query language for APIs"
+            dev_time: "3-5 days"
+            learning_curve: "Medium"
+            trade_off: "Flexible queries, more setup"
+            best_for: "Complex data requirements"
+          - label: "[3] tRPC (TypeScript projects)"
+            value: "trpc"
+            description: "Type-safe RPC"
+            dev_time: "2-3 days"
+            learning_curve: "Low (if using TypeScript)"
+            trade_off: "Perfect type safety, TypeScript only"
+            best_for: "Full-stack TypeScript apps"
+          - label: "[4] Server Actions (Next.js 13+)"
+            value: "server_actions"
+            description: "Direct server functions"
+            dev_time: "1 day"
+            learning_curve: "Low"
+            trade_off: "Simplest for Next.js apps"
+            best_for: "Next.js applications"
+
+      - id: "deployment_infrastructure"
+        category: "☁️ DEPLOYMENT"
+        question: "For {app_complexity} complexity and {expected_traffic}, we recommend {deployment_suggestion}. Choose deployment:"
+        format_type: "deployment_recommendation"
+        ai_analyzes:
+          - application_complexity
+          - expected_traffic_patterns
+          - scaling_requirements
+          - budget_constraints
+        options:
+          - label: "[1] Vercel/Netlify (Recommended for most)"
+            value: "serverless"
+            best_for: "Auto-scaling, zero-config"
+            setup_time: "10 minutes"
+            monthly_cost: "$0-20 to start"
+            trade_off: "Zero DevOps, automatic scaling"
+            complexity: "None - just push code"
+          - label: "[2] Docker + Cloud Run/App Service"
+            value: "container"
+            best_for: "Portable, predictable"
+            setup_time: "2-4 hours"
+            monthly_cost: "$10-100"
+            trade_off: "Good control, moderate complexity"
+            complexity: "Medium - need Docker knowledge"
+          - label: "[3] Traditional VPS"
+            value: "vps"
+            best_for: "Full control, cost-effective"
+            setup_time: "4-8 hours"
+            monthly_cost: "$5-40"
+            trade_off: "Most control, more maintenance"
+            complexity: "High - manage everything"
+          - label: "[4] AWS/Azure/GCP (Enterprise)"
+            value: "cloud"
+            best_for: "Full control, enterprise features"
+            setup_time: "1-2 days"
+            monthly_cost: "$50-500+"
+            trade_off: "Maximum flexibility, steep learning curve"
+            complexity: "Very High - cloud expertise needed"
+
+  # ===================================================================
+  # STANDARD - 5 Architecture Questions for Production Systems
+  # ===================================================================
+  standard:
+    philosophy: "Production-ready architecture with scalability considerations"
+    questions_count: 5
+    principle: "Balance between simplicity and future growth"
+
+    categories:
+      system_architecture:
+        name: "🏗️ SYSTEM ARCHITECTURE (2 questions)"
+        questions:
+          - id: "architecture_pattern"
+            question: "Select your system architecture pattern"
+            format_type: "architecture_choice"
+            ai_recommends: "Based on {module_count} modules and {team_size}"
+            options:
+              - label: "Modular Monolith"
+                value: "modular_monolith"
+                description: "Single deployable with clear module boundaries"
+                best_for: "Most teams under 10 developers"
+                scaling: "Up to 100k users"
+              - label: "Service-Oriented (SOA)"
+                value: "soa"
+                description: "Separate services for major domains"
+                best_for: "Multiple teams or complex domains"
+                scaling: "Up to 1M users"
+              - label: "Microservices"
+                value: "microservices"
+                description: "Fine-grained services with independent deployment"
+                best_for: "Large teams with DevOps expertise"
+                scaling: "Unlimited"
+
+          - id: "data_architecture"
+            question: "Define your data architecture strategy"
+            format_type: "data_strategy"
+            options:
+              - label: "Single Database"
+                value: "single_db"
+                description: "One database for all modules"
+                consistency: "Strong"
+                complexity: "Low"
+              - label: "Database per Module"
+                value: "per_module"
+                description: "Separate schemas or databases per module"
+                consistency: "Strong within module"
+                complexity: "Medium"
+              - label: "CQRS Pattern"
+                value: "cqrs"
+                description: "Separate read and write models"
+                consistency: "Eventual"
+                complexity: "High"
+
+      integration:
+        name: "🔌 INTEGRATION (2 questions)"
+        questions:
+          - id: "api_strategy"
+            question: "Choose your API architecture"
+            format_type: "api_choice"
+            options:
+              - label: "REST + OpenAPI"
+                value: "rest_openapi"
+                description: "RESTful APIs with OpenAPI documentation"
+                tooling: "Excellent"
+                learning: "Low"
+              - label: "GraphQL Federation"
+                value: "graphql_federation"
+                description: "Unified graph with federated services"
+                tooling: "Good"
+                learning: "Medium"
+              - label: "gRPC + REST Gateway"
+                value: "grpc_gateway"
+                description: "Internal gRPC, external REST"
+                tooling: "Good"
+                learning: "High"
+
+          - id: "messaging_pattern"
+            question: "Select messaging and event patterns"
+            format_type: "messaging_choice"
+            options:
+              - label: "Direct API Calls"
+                value: "direct"
+                description: "Synchronous communication only"
+                complexity: "Low"
+              - label: "Message Queue"
+                value: "queue"
+                description: "Async processing with queues"
+                complexity: "Medium"
+              - label: "Event Streaming"
+                value: "streaming"
+                description: "Event-driven with streaming platform"
+                complexity: "High"
+
+      deployment:
+        name: "☁️ DEPLOYMENT (1 question)"
+        questions:
+          - id: "deployment_strategy"
+            question: "Choose deployment and scaling strategy"
+            format_type: "deployment_choice"
+            ai_suggests: "Based on traffic patterns and budget"
+            options:
+              - label: "Containerized with Auto-scaling"
+                value: "container_auto"
+                description: "Docker + Kubernetes/ECS"
+                setup: "Medium complexity"
+                cost: "$100-500/month"
+              - label: "Serverless Functions"
+                value: "serverless"
+                description: "AWS Lambda/Vercel Functions"
+                setup: "Low complexity"
+                cost: "Pay per use"
+              - label: "Platform-as-a-Service"
+                value: "paas"
+                description: "Heroku/Render/Railway"
+                setup: "Very low complexity"
+                cost: "$50-200/month"
+            best_for: "Async workflows, high scale"
+            monthly_cost: "$300-800"
+            scaling: "Highly scalable"
+
+      - id: "data_architecture"
+        category: "💾 DATA ARCHITECTURE"
+        question: "Your app processes {data_volume} with {query_patterns}. We suggest {suggested_data_stack}. Select your data strategy:"
+        format_type: "data_recommendation"
+        ai_detects:
+          - data_volume_estimates
+          - query_complexity
+          - consistency_requirements
+          - reporting_needs
+        options:
+          - label: "[1] PostgreSQL + Caching (Recommended)"
+            value: "postgres_cache"
+            trade_off: "Production-ready with good performance"
+            setup_time: "2-4 hours"
+            complexity: "Medium"
+            best_for: "Most production applications"
+            monthly_cost: "$20-100"
+            includes: "Redis for sessions/cache"
+          - label: "[2] PostgreSQL + Read Replicas"
+            value: "postgres_replicas"
+            trade_off: "Scale reads, more complexity"
+            setup_time: "4-8 hours"
+            complexity: "Medium-High"
+            best_for: "Read-heavy workloads"
+            monthly_cost: "$100-300"
+            includes: "Master + 2 replicas"
+          - label: "[3] Polyglot Persistence"
+            value: "polyglot"
+            trade_off: "Best tool for each job, most complex"
+            setup_time: "8-16 hours"
+            complexity: "High"
+            best_for: "Diverse data requirements"
+            monthly_cost: "$200-500"
+            includes: "SQL + NoSQL + Cache"
+
+      - id: "integration_patterns"
+        category: "🔌 INTEGRATION PATTERNS"
+        question: "With {external_systems} integrations and {api_consumers}, we recommend {suggested_integration}. Choose integration approach:"
+        format_type: "integration_recommendation"
+        ai_analyzes:
+          - external_system_count
+          - api_consumer_types
+          - data_sync_requirements
+          - real_time_needs
+        options:
+          - label: "[1] RESTful + Webhooks (Recommended)"
+            value: "rest_webhooks"
+            trade_off: "Standard and reliable"
+            dev_time: "1-2 weeks"
+            complexity: "Low-Medium"
+            best_for: "Most integrations"
+            documentation: "OpenAPI/Swagger"
+          - label: "[2] GraphQL Federation"
+            value: "graphql_federation"
+            trade_off: "Unified API, more setup"
+            dev_time: "2-4 weeks"
+            complexity: "Medium-High"
+            best_for: "Multiple data sources"
+            documentation: "GraphQL schema"
+          - label: "[3] Event Streaming"
+            value: "event_streaming"
+            trade_off: "Real-time updates, complex"
+            dev_time: "3-6 weeks"
+            complexity: "High"
+            best_for: "Real-time requirements"
+            includes: "Kafka/EventBridge"
+
+      - id: "performance_strategy"
+        category: "⚡ PERFORMANCE"
+        question: "For {concurrent_users} users and {response_time} requirements, we suggest {performance_approach}. Select strategy:"
+        format_type: "performance_recommendation"
+        ai_analyzes:
+          - expected_concurrent_users
+          - response_time_requirements
+          - data_access_patterns
+          - geographic_distribution
+        options:
+          - label: "[1] Standard Optimization (Recommended)"
+            value: "standard"
+            trade_off: "Good performance, simple to maintain"
+            techniques: "DB indexes, HTTP caching, CDN"
+            complexity: "Low-Medium"
+            improvement: "2-5x faster"
+            dev_time: "1 week"
+          - label: "[2] Advanced Caching"
+            value: "advanced_cache"
+            trade_off: "Much faster, cache invalidation complexity"
+            techniques: "Multi-layer cache, edge caching"
+            complexity: "Medium-High"
+            improvement: "5-10x faster"
+            dev_time: "2-3 weeks"
+          - label: "[3] Full Performance Stack"
+            value: "full_stack"
+            trade_off: "Maximum speed, significant complexity"
+            techniques: "CQRS, read replicas, queue workers"
+            complexity: "High"
+            improvement: "10-50x faster"
+            dev_time: "4-6 weeks"
+
+      - id: "devops_infrastructure"
+        category: "🚀 DEVOPS & INFRASTRUCTURE"
+        question: "Based on {deployment_frequency} and {team_expertise}, we recommend {devops_suggestion}. Choose your DevOps approach:"
+        format_type: "devops_recommendation"
+        ai_analyzes:
+          - deployment_frequency
+          - team_devops_expertise
+          - compliance_requirements
+          - budget_constraints
+        options:
+          - label: "[1] Managed Platform (Recommended)"
+            value: "managed"
+            trade_off: "Minimal DevOps, some limitations"
+            platforms: "Vercel, Render, Railway"
+            setup_time: "1-2 hours"
+            monthly_cost: "$20-100"
+            maintenance: "Near zero"
+          - label: "[2] Container Platform"
+            value: "container_platform"
+            trade_off: "Good balance of control and ease"
+            platforms: "ECS, Cloud Run, App Service"
+            setup_time: "4-8 hours"
+            monthly_cost: "$50-300"
+            maintenance: "Moderate"
+          - label: "[3] Kubernetes"
+            value: "kubernetes"
+            trade_off: "Maximum control and scale"
+            platforms: "EKS, GKE, AKS"
+            setup_time: "2-4 days"
+            monthly_cost: "$200-1000+"
+            maintenance: "Significant"
+
+  # ===================================================================
+  # ENTERPRISE - 8 Strategic Architecture Questions
+  # ===================================================================
+  enterprise:
+    philosophy: "Enterprise-grade architecture with strategic decisions"
+    questions_count: 8
+    principle: "Strategic architecture for scale, compliance, and governance"
+
+    categories:
+      domain_strategy:
+        name: "🏢 DOMAIN & ARCHITECTURE (2 questions)"
+        questions:
+          - id: "domain_boundaries"
+            question: "Domain boundaries and service architecture?"
+            format_type: "consolidated_domain"
+            consolidates:
+              - "Bounded context identification"
+              - "Service boundary definition"
+              - "Team topology mapping"
+              - "Data ownership model"
+              - "Communication patterns"
+              - "Event storming results"
+
+          - id: "platform_strategy"
+            question: "Platform engineering and developer experience?"
+            format_type: "consolidated_platform"
+            consolidates:
+              - "Internal developer platform"
+              - "Service catalog and templates"
+              - "CI/CD pipeline strategy"
+              - "Self-service capabilities"
+              - "Golden paths definition"
+              - "Platform team structure"
+
+      cloud_data:
+        name: "☁️ CLOUD & DATA (2 questions)"
+        questions:
+          - id: "cloud_infrastructure"
+            question: "Cloud infrastructure and multi-region strategy?"
+            format_type: "consolidated_cloud"
+            consolidates:
+              - "Cloud provider selection (AWS/Azure/GCP)"
+              - "Multi-cloud vs single cloud"
+              - "Region and availability zones"
+              - "Disaster recovery strategy"
+              - "Data residency requirements"
+              - "Hybrid cloud needs"
+
+          - id: "data_platform"
+            question: "Enterprise data platform and analytics?"
+            format_type: "consolidated_data"
+            consolidates:
+              - "Data warehouse/lakehouse architecture"
+              - "Real-time vs batch processing"
+              - "Analytics and BI tools"
+              - "ML/AI infrastructure"
+              - "Data governance and lineage"
+              - "Master data management"
+
+      observability_governance:
+        name: "🔍 OBSERVABILITY & GOVERNANCE (2 questions)"
+        questions:
+          - id: "observability_stack"
+            question: "Observability and monitoring strategy?"
+            format_type: "consolidated_observability"
+            consolidates:
+              - "Metrics, logs, and traces"
+              - "APM and performance monitoring"
+              - "Incident management"
+              - "SLA/SLO monitoring"
+              - "Cost observability"
+              - "Security monitoring"
+
+          - id: "governance_compliance"
+            question: "Governance, compliance, and audit framework?"
+            format_type: "consolidated_governance"
+            consolidates:
+              - "Regulatory compliance (GDPR/HIPAA/PCI/SOC2)"
+              - "Policy as code"
+              - "Audit trail and logging"
+              - "Change management"
+              - "Cost governance (FinOps)"
+              - "Security governance"
+
+      integration_migration:
+        name: "🔌 INTEGRATION & MIGRATION (2 questions)"
+        questions:
+          - id: "integration_patterns"
+            question: "API and integration architecture?"
+            format_type: "consolidated_integration"
+            consolidates:
+              - "API gateway strategy"
+              - "Event-driven architecture"
+              - "Message queuing"
+              - "Service mesh"
+              - "External integrations"
+              - "Partner APIs"
+
+          - id: "migration_modernization"
+            question: "Legacy migration and modernization approach?"
+            format_type: "consolidated_migration"
+            consolidates:
+              - "Migration strategy (lift-shift/refactor/rebuild)"
+              - "Phasing and timeline"
+              - "Risk mitigation"
+              - "Data migration"
+              - "Cutover planning"
+              - "Rollback strategy"
+
+            timeline: "1-3 months"
+            risk_level: "High"
+            rollback_capability: "Complex"
+
+
+
+# ===================================================================
+# OUTPUT STRUCTURE - What gets saved to architecture-choices.json
+# ===================================================================
+output_structure:
+  instant:
+    - architecture_pattern
+    - technology_stack
+    - database_config
+    - api_style
+    - auto_applied_choices
+
+  rapid:
+    - architecture_pattern_choice
+    - database_strategy_choice
+    - api_design_choice
+    - deployment_target_choice
+    - ai_recommendations_shown
+    - user_selected_options
+
+  standard:
+    - system_design_choice
+    - data_architecture_choice
+    - integration_patterns_choice
+    - performance_strategy_choice
+    - devops_infrastructure_choice
+    - recommendations_with_rationale
+
+  enterprise:
+    - domain_boundaries
+    - platform_strategy
+    - cloud_infrastructure
+    - data_platform
+    - observability_stack
+    - governance_compliance
+    - integration_patterns
+    - migration_modernization
+    - consolidated_architecture_decisions
