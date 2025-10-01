@@ -11,8 +11,8 @@
           "type": "http",
           "url": "https://firecrawl.mcp.majewscy.tech/",
           "headers": {
-            "x-api-key": "sadfasldkjf4owiru5ewkfsdljsldfkjlKDLFKJS342rfd",
-            "x-firecrawl-api-key": "fc-8fc7ca27425b44fd860ad1acf5117f20"
+            "x-api-key": "YOUR_FIRECRAWL_MCP_API_KEY",
+            "x-firecrawl-api-key": "YOUR_FIRECRAWL_API_KEY"
           }
         },
         "mem0": {
