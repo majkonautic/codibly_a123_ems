@@ -18,6 +18,9 @@ out/
 .env.development.local
 .env.test.local
 .env.production.local
+.env.production
+a123_ems/.env
+a123_ems/.env.production
 
 # Logs
 logs
